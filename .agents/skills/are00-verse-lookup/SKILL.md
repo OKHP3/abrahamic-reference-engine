@@ -1,0 +1,353 @@
+---
+name: are00-verse-lookup
+description: Fetch a scripture passage from Judaism, Christianity, or Islam using free anonymous public APIs. Provides endpoint patterns, parameter formats, normalization rules, translation ID map, and error/fallback handling for all three in-scope Abrahamic traditions. Use when an agent needs to retrieve live or cached verse text from Sefaria (Judaism), bible-api.com (Christianity), or Quran.com with AlQuran.cloud fallback (Islam).
+version: 1.0.0
+license: MIT
+author: OKHP3
+---
+
+# ARE00 -- Verse Lookup Skill
+
+## Scope
+
+This skill covers exactly three traditions. Both qualifying criteria must be met for inclusion:
+1. Abrahamic lineage (traceable descent from the Abrahamic scriptural family)
+2. 1% or greater US population per Pew Research Center Religious Landscape Study
+
+**In scope:** Judaism (~2% US), Christianity (~63% US), Islam (~1% US)
+**Out of scope:** Hinduism (not Abrahamic), Buddhism (not Abrahamic), Baha'i (Abrahamic but <1% US), any other tradition not meeting both criteria
+
+Pew citation: https://www.pewresearch.org/religion/religious-landscape-study/
+
+---
+
+## Judaism -- Sefaria API
+
+**Base URL:** `https://www.sefaria.org/api/texts`
+**Auth:** None required
+**License:** CC BY-SA 2.0
+
+### Endpoint pattern
+
+```
+GET https://www.sefaria.org/api/texts/{ref}?lang={lang}
+```
+
+| Parameter | Values | Notes |
+|-----------|--------|-------|
+| `ref` | URL-encoded reference string | e.g. `Genesis%201:1` |
+| `lang` | `en` (English), `he` (Hebrew), `he-en` (bilingual) | Default: `en` |
+
+### Reference format
+
+```
+{Book} {Chapter}:{Verse}
+{Book} {Chapter}:{VerseStart}-{VerseEnd}
+```
+
+Examples:
+- `Genesis 1:1`
+- `Psalms 23:1-6`
+- `Deuteronomy 6:4-9`
+- `Isaiah 53:1-12`
+
+Book names follow Sefaria conventions (English transliteration). Use `Psalms` not `Psalm`. Use `Numbers`, `Leviticus`, etc.
+
+### Response structure
+
+```json
+{
+  "ref": "Genesis 1:1",
+  "heRef": "בראשית א׳:א׳",
+  "text": "In the beginning God created the heavens and the earth.",
+  "he": "בְּרֵאשִׁית, בָּרָא אֱלֹהִים",
+  "book": "Genesis",
+  "categories": ["Tanakh", "Torah"],
+  "type": "text",
+  "license": "CC-BY"
+}
+```
+
+`text` and `he` may be arrays (one element per verse in a range) -- flatten by joining with a space and stripping HTML tags.
+
+### Normalization
+
+```
+strip HTML tags: replace /<[^>]+>/g with ''
+flatten array: join with ' '
+trim whitespace
+```
+
+### Error conditions
+
+| Condition | Response | Handling |
+|-----------|----------|----------|
+| Reference not found | `{"error": "..."}` in JSON | Read `json.error` and surface it |
+| HTTP error | 4xx/5xx status | Throw with status + statusText |
+| Empty text | `text` is empty string or array of empty strings | Throw "Sefaria returned empty text for ref: {ref}" |
+
+### Attribution
+
+`Sefaria.org -- CC BY-SA 2.0`
+
+Source URL pattern: `https://www.sefaria.org/{ref}?lang=bi`
+
+---
+
+## Christianity -- bible-api.com
+
+**Base URL:** `https://bible-api.com`
+**Auth:** None required
+**License:** KJV and WEB are public domain; others may vary
+
+### Endpoint pattern
+
+```
+GET https://bible-api.com/{reference}?translation={id}
+```
+
+| Parameter | Values | Notes |
+|-----------|--------|-------|
+| `reference` | URL-encoded reference string | Case-insensitive book names |
+| `translation` | See translation table below | Default: `kjv` |
+
+### Reference format
+
+```
+{book} {chapter}:{verse}
+{book} {chapter}:{verseStart}-{verseEnd}
+```
+
+Examples:
+- `john 3:16`
+- `matthew 5:3-12`
+- `romans 8:28-39`
+- `1 corinthians 13:4-7`
+
+Book names are case-insensitive. Numbered books use the numeral prefix: `1 corinthians`, `2 timothy`.
+
+### Free translations (no API key required)
+
+| ID | Name | License | Notes |
+|----|------|---------|-------|
+| `kjv` | King James Version (1611) | Public domain | Default; culturally prevalent |
+| `web` | World English Bible | Public domain | Modern update; includes deuterocanonicals |
+| `asv` | American Standard Version | Public domain | 1901 formal equivalent |
+| `bbe` | Bible in Basic English | Public domain | Simplified vocabulary |
+| `darby` | Darby Translation | Public domain | Literal; 19th century |
+| `akjv` | American King James Version | Public domain | Modernized spelling of KJV |
+| `ylt` | Young's Literal Translation | Public domain | Highly literal; 1862 |
+
+**Licensed translations (require API key -- not available in free build):** ESV, NRSV, NABRE, NIV, CSB
+
+### Response structure
+
+```json
+{
+  "reference": "John 3:16",
+  "verses": [
+    {"book_name": "John", "chapter": 3, "verse": 16, "text": "For God so loved..."}
+  ],
+  "text": "For God so loved the world...",
+  "translation_id": "kjv",
+  "translation_name": "King James Version",
+  "translation_note": "Public domain"
+}
+```
+
+Use `json.text` for the passage text. Normalize by replacing `\n` with ` ` and trimming.
+
+### Error conditions
+
+| Condition | Response | Handling |
+|-----------|----------|----------|
+| Reference not found | `{"error": "..."}` in JSON | Read `json.error` and surface it |
+| HTTP error | 4xx/5xx status | Throw with status + statusText |
+| Empty text | `text` is empty or null | Throw reference error |
+
+### Canon notes by denomination
+
+| Denomination | Canon | Available translations |
+|-------------|-------|----------------------|
+| Evangelical Protestant | 66 books (39 OT + 27 NT) | kjv, web, asv, bbe, darby |
+| Catholic | 73 books (includes deuterocanonicals) | web, kjv, douay |
+| Mainline Protestant | 66 books | kjv, web, asv, bbe |
+| LDS / Restorationist | Standard Works (Bible KJV + 3 additional volumes) | kjv only via bible-api.com |
+| Orthodox Christian | Varies by jurisdiction; generally broader than Protestant 66 | web, kjv |
+
+**Note:** Deuterocanonical books (Tobit, Judith, 1-2 Maccabees, Wisdom, Sirach, Baruch) are available via the `web` translation on bible-api.com but absent from `kjv`.
+
+### Attribution
+
+`{translation_name} -- served via bible-api.com. {translation_note}`
+
+Source URL pattern: `https://bible-api.com/{reference}?translation={id}`
+
+---
+
+## Islam -- Quran.com API v4 (primary) + AlQuran.cloud (fallback)
+
+### Primary: Quran.com API v4
+
+**Base URL:** `https://api.quran.com/api/v4`
+**Auth:** None required
+**License:** Free for non-commercial use
+
+#### Endpoint pattern
+
+```
+GET https://api.quran.com/api/v4/verses/by_key/{surah}:{ayah}?language=en&translations={translationId}&words=false
+```
+
+| Parameter | Values | Notes |
+|-----------|--------|-------|
+| `surah` | Integer 1-114 | Surah (chapter) number |
+| `ayah` | Integer | Ayah (verse) number within surah |
+| `translations` | Integer ID (see table) | Default: `20` (Sahih International) |
+| `language` | `en` | English metadata |
+| `words` | `false` | Suppress word-by-word data |
+
+#### Reference key format
+
+```
+{surah}:{ayah}
+```
+
+Examples:
+- `1:1` -- Al-Fatiha verse 1
+- `2:255` -- Ayat al-Kursi
+- `112:1` -- Al-Ikhlas verse 1
+- `24:35` -- An-Nur verse 35
+
+#### Translation IDs (Quran.com)
+
+| ID | Name | Style |
+|----|------|-------|
+| `20` | Sahih International | Modern; balanced literal/dynamic |
+| `21` | Pickthall | Early 20th c.; archaic style |
+| `22` | Yusuf Ali | With explanatory notes |
+| `23` | Arberry | Literary; "The Koran Interpreted" |
+| `24` | Shakir | More literal |
+
+#### Response structure
+
+```json
+{
+  "verse": {
+    "id": 1,
+    "verse_number": 1,
+    "verse_key": "1:1",
+    "text_uthmani": "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    "translations": [
+      {
+        "id": 20,
+        "text": "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        "resource_name": "Sahih International"
+      }
+    ]
+  }
+}
+```
+
+Use `json.verse.translations[0].text`. Strip HTML tags before displaying. Strip footnote markers like `<sup>1</sup>`.
+
+### Fallback: AlQuran.cloud
+
+**Base URL:** `https://api.alquran.cloud/v1`
+**Auth:** None required
+
+#### Endpoint pattern
+
+```
+GET https://api.alquran.cloud/v1/ayah/{surah}:{ayah}/{edition}
+```
+
+| Edition | Name |
+|---------|------|
+| `en.asad` | Muhammad Asad |
+| `en.arberry` | A.J. Arberry |
+| `en.sahih` | Sahih International |
+| `en.pickthall` | Pickthall |
+
+#### Response structure
+
+```json
+{
+  "code": 200,
+  "status": "OK",
+  "data": {
+    "number": 1,
+    "text": "In the Name of Allah...",
+    "numberInSurah": 1,
+    "surah": {
+      "number": 1,
+      "name": "الفاتحة",
+      "englishName": "Al-Fatiha",
+      "englishNameTranslation": "The Opening"
+    },
+    "edition": {
+      "identifier": "en.asad",
+      "name": "Muhammad Asad",
+      "englishName": "Muhammad Asad"
+    }
+  }
+}
+```
+
+### Fallback logic
+
+```
+try Quran.com primary
+  on success: return passage
+  on failure: warn, try AlQuran.cloud fallback
+    on success: return passage
+    on failure: throw combined error message
+```
+
+### Attribution
+
+`{translation_resource_name} -- served via Quran.com`
+
+Source URL pattern: `https://quran.com/{surah}:{ayah}`
+
+---
+
+## Unified fetchPassage interface
+
+```typescript
+interface FetchPassageOptions {
+  tradition: 'judaism' | 'christianity' | 'islam'
+  reference: string   // Sefaria ref | bible-api ref | surah:ayah key
+  translationId?: string
+}
+
+interface Passage {
+  reference: string
+  displayReference: string
+  tradition: 'judaism' | 'christianity' | 'islam'
+  primaryText: string
+  translationId: string
+  translationName: string
+  sourceUrl: string
+  attribution: string
+}
+```
+
+Route by `tradition`:
+- `'judaism'` -- Sefaria (`fetchSefariaText(reference, 'en')`)
+- `'christianity'` -- bible-api.com (`fetchBiblePassage(reference, translationId as BibleApiTranslation)`)
+- `'islam'` -- Quran.com with fallback (`fetchAyah(reference, translationId?.replace('quran-', '') ?? '20')`)
+
+---
+
+## Quick reference examples
+
+| Tradition | Reference | Translation | Result |
+|-----------|-----------|-------------|--------|
+| Judaism | `Genesis 1:1` | (default) | "In the beginning God created..." |
+| Judaism | `Psalms 23:1` | (default) | "The LORD is my shepherd..." |
+| Christianity | `john 3:16` | `kjv` | "For God so loved the world..." |
+| Christianity | `matthew 5:3-12` | `web` | The Beatitudes |
+| Islam | `1:1` | `20` | Al-Fatiha opening |
+| Islam | `2:255` | `20` | Ayat al-Kursi |
+| Islam | `112:1` | `20` | Al-Ikhlas -- God is one |

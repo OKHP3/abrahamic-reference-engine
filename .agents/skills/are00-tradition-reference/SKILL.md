@@ -1,0 +1,271 @@
+---
+name: are00-tradition-reference
+description: Compact structured reference for each of the three in-scope Abrahamic traditions -- Judaism, Christianity (5 denominations), and Islam. Covers canon scope, key texts, US population share with Pew citation, available translations, API provider, and a clear out-of-scope section. Use when an agent needs authoritative metadata about any of the three traditions before generating content, making API calls, or answering scope questions.
+version: 1.0.0
+license: MIT
+author: OKHP3
+---
+
+# ARE00 -- Tradition Reference Skill
+
+## Scope criteria
+
+Two criteria must BOTH be met for a tradition to be in scope:
+1. **Abrahamic lineage** -- traceable descent from the Abrahamic scriptural family (Judaism, Christianity, or Islam, and their direct derivatives)
+2. **1% or greater US population** -- per Pew Research Center Religious Landscape Study
+
+Failing either criterion excludes the tradition regardless of global significance, historical importance, or US cultural presence.
+
+**Pew Research Center citation:** https://www.pewresearch.org/religion/religious-landscape-study/ (2023)
+
+---
+
+## In-scope traditions (3 total)
+
+| Tradition | US Share (Pew 2023) | In scope | Abrahamic | Meets 1% |
+|-----------|---------------------|----------|-----------|----------|
+| Christianity | ~63% | YES | YES | YES |
+| Judaism | ~2% | YES | YES | YES |
+| Islam | ~1% | YES | YES | YES |
+
+---
+
+## Explicitly out of scope
+
+| Tradition | US Share | Abrahamic | Meets 1% | Reason excluded |
+|-----------|----------|-----------|----------|-----------------|
+| Hinduism | ~1% | NO | YES | Not Abrahamic |
+| Buddhism | ~1% | NO | YES | Not Abrahamic |
+| Sikhism | <0.5% | NO | NO | Not Abrahamic; below 1% |
+| Baha'i | ~0.1% | YES | NO | Abrahamic but below 1% threshold |
+| Druze | <0.1% | YES | NO | Abrahamic but below 1% threshold |
+| Wicca / Paganism | <0.5% | NO | NO | Not Abrahamic; below 1% |
+| Unaffiliated / Secular | ~26% | N/A | N/A | Not a scriptural tradition |
+
+Exclusion is a methodological boundary, not a judgment of worth or spiritual validity.
+
+---
+
+## Judaism
+
+**US population share:** ~2% (Pew Research Center, 2023)
+**Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+
+### Canon
+
+| Division | Contents | Books |
+|---------|----------|-------|
+| Torah | The Five Books of Moses (Pentateuch) | Genesis, Exodus, Leviticus, Numbers, Deuteronomy |
+| Nevi'im | The Prophets | 8 books (Joshua through Malachi) |
+| Ketuvim | The Writings | 11 books (Psalms, Proverbs, Job, etc.) |
+| **Tanakh total** | | **24 books** |
+
+Secondary authoritative texts: Talmud Bavli, Talmud Yerushalmi, Midrash Rabbah, Mishneh Torah (Maimonides), Zohar, Shulchan Arukh
+
+### Key themes
+
+- Covenant (brit) between God and Israel
+- Tikkun olam -- repair of the world
+- Shabbat and sacred time
+- Torah study as lifelong obligation
+- Justice (tzedakah) and ethical monotheism
+
+### Interpretive traditions
+
+- PaRDeS: Peshat (plain), Remez (allegorical), Derash (homiletic), Sod (mystical)
+- Talmudic dialectic: argument and counter-argument preserved, not resolved
+- Maimonidean rationalism vs. Kabbalistic mysticism
+- Modern movements: Orthodox, Conservative, Reform, Reconstructionist
+
+### Key passages
+
+| Reference | Lookup key | Note |
+|-----------|------------|------|
+| Genesis 1:1 | `Genesis 1:1` | Opening of the Torah |
+| Deuteronomy 6:4-5 | `Deuteronomy 6:4-5` | The Shema -- central prayer |
+| Exodus 20:1-17 | `Exodus 20:1-17` | The Ten Commandments |
+| Psalms 23 | `Psalms 23` | The Lord is my Shepherd |
+| Isaiah 6:1-8 | `Isaiah 6:1-8` | Isaiah's call |
+| Micah 6:8 | `Micah 6:8` | Do justice, love mercy, walk humbly |
+
+### Available translations
+
+| ID | Name | License | Notes |
+|----|------|---------|-------|
+| `sefaria-en` | Sefaria English | CC BY-SA 2.0 | Default; mixed from public domain sources |
+| `sefaria-he-en` | Sefaria Hebrew + English | CC BY-SA 2.0 | Bilingual display |
+
+### API provider
+
+**Sefaria.org** -- free, no authentication required
+- Endpoint: `GET https://www.sefaria.org/api/texts/{ref}?lang=en`
+- Reference format: `{Book} {Chapter}:{Verse}` (e.g. `Genesis 1:1`)
+- Documentation: https://developers.sefaria.org/
+
+---
+
+## Christianity
+
+**US population share:** ~63% total (Pew Research Center, 2023)
+**Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+
+Christianity is subdivided by denomination. Five denominations meet the 1%+ US threshold.
+
+### Canon overview by denomination
+
+| Denomination | US Share | Canon | Books | Deuterocanonicals |
+|-------------|----------|-------|-------|-------------------|
+| Evangelical Protestant | ~25% | Protestant | 66 (39 OT + 27 NT) | Excluded |
+| Catholic | ~20% | Catholic | 73 (46 OT + 27 NT) | Included (7 books) |
+| Mainline Protestant | ~16% | Protestant | 66 (39 OT + 27 NT) | Excluded |
+| LDS / Restorationist | ~2% | Standard Works | 66 (KJV) + 3 additional | Excluded from Bible; additional LDS scriptures |
+| Orthodox Christian | ~1% | Orthodox | Varies by jurisdiction (typically 76-78) | Included (broader set) |
+
+### Denomination reference
+
+#### Evangelical Protestant (~25% US)
+
+- **Description:** Personal conversion, biblical inerrancy/infallibility, centrality of Christ's atonement, evangelism imperative. Includes Baptist, Pentecostal, non-denominational.
+- **Distinctives:** Born-again experience, sola scriptura, believer's baptism (typically by immersion).
+- **Key texts:** Holy Bible (66 books)
+- **Representative passages:** John 3:16 (`john 3:16`), Romans 10:9-10 (`romans 10:9-10`), 2 Timothy 3:16-17 (`2 timothy 3:16-17`)
+- **Preferred translations:** KJV, ESV (key req.), NIV (key req.), WEB
+- **API translations (free):** `kjv`, `web`, `asv`, `bbe`, `darby`
+
+#### Catholic (~20% US)
+
+- **Description:** Apostolic succession, Eucharist as central sacrament, Magisterium as teaching authority. Seven sacraments. Largest single denomination worldwide.
+- **Distinctives:** Scripture + Tradition + Magisterium; 73-book canon; veneration of Mary and saints.
+- **Key texts:** Holy Bible (73 books), Catechism of the Catholic Church
+- **Representative passages:** Matthew 16:18-19 (`matthew 16:18-19`), John 6:51-58 (`john 6:51-58`), Luke 1:46-55 (`luke 1:46-55`)
+- **Preferred translations:** NABRE (key req.), Douay-Rheims, WEB (has deuterocanonicals)
+- **API translations (free):** `web` (includes deuterocanonicals), `kjv` (excludes deuterocanonicals)
+
+#### Mainline Protestant (~16% US)
+
+- **Description:** Historic denominations (Methodist, Presbyterian, Lutheran, Episcopal/Anglican, United Church of Christ). Ecumenical, critical-scholarly, social justice oriented.
+- **Distinctives:** Theological diversity; many ordain women and LGBTQ+ clergy; Wesleyan Quadrilateral (Scripture, Tradition, Reason, Experience).
+- **Key texts:** Holy Bible (66 books), Westminster Confession, Book of Common Prayer
+- **Representative passages:** Micah 6:8 (`micah 6:8`), Matthew 25:31-46 (`matthew 25:31-46`), Romans 12:1-2 (`romans 12:1-2`)
+- **Preferred translations:** NRSV (key req.), WEB, KJV
+- **API translations (free):** `kjv`, `web`, `asv`, `bbe`
+
+#### LDS / Restorationist (~2% US)
+
+- **Description:** Restoration movement founded by Joseph Smith. Modern prophetic revelation, pre-mortal existence, eternal family relationships sealed in temples.
+- **Distinctives:** Standard Works (four-volume canon); continuing prophetic succession; temple ordinances.
+- **Key texts:** Holy Bible (KJV), Book of Mormon, Doctrine and Covenants, Pearl of Great Price
+- **Representative passages:** James 1:5 (`james 1:5`), John 17:3 (`john 17:3`)
+- **Note:** Book of Mormon, D&C, and Pearl of Great Price are not available via bible-api.com. KJV Bible only.
+- **API translations (free):** `kjv`
+
+#### Orthodox Christian (~1% US)
+
+- **Description:** Eastern Orthodox traces apostolic continuity through seven Ecumenical Councils. Theosis (participation in divine nature) as the goal of Christian life. Highly liturgical.
+- **Distinctives:** Divine Liturgy (John Chrysostom / Basil); icon veneration; Septuagint (LXX) as authoritative OT; broader canon than Protestant.
+- **Key texts:** Holy Bible (Orthodox canon), Church Fathers, Philokalia
+- **Representative passages:** John 1:1-14 (`john 1:1-14`), 2 Peter 1:4 (`2 peter 1:4`), Matthew 3:13-17 (`matthew 3:13-17`)
+- **API translations (free):** `web` (closest to Orthodox usage), `kjv`
+
+### Available translations (Christianity -- all denominations)
+
+| ID | Name | License | Denominations | Notes |
+|----|------|---------|---------------|-------|
+| `kjv` | King James Version (1611) | Public domain | Evangelical, LDS, mainline, Catholic | Standard for Evangelical and LDS use |
+| `web` | World English Bible | Public domain | All | Includes deuterocanonicals; best for Catholic/Orthodox |
+| `asv` | American Standard Version (1901) | Public domain | Evangelical, mainline | Formal equivalent |
+| `bbe` | Bible in Basic English | Public domain | All | Simplified vocabulary |
+| `darby` | Darby Translation | Public domain | Evangelical | Literal; 19th century |
+| `akjv` | American King James Version | Public domain | Evangelical | Modernized KJV spelling |
+| `ylt` | Young's Literal Translation | Public domain | Academic | Highly literal; 1862 |
+| `esv` | English Standard Version | **Licensed** | Evangelical | Requires API key; NOT in free build |
+| `nrsv` | New Revised Standard Version | **Licensed** | Mainline, academic | Requires API key; NOT in free build |
+| `nabre` | New American Bible Revised Edition | **Licensed** | Catholic | US liturgical standard; requires API key |
+
+### API provider (Christianity)
+
+**bible-api.com** -- free, no authentication required
+- Endpoint: `GET https://bible-api.com/{reference}?translation={id}`
+- Reference format: `{book} {chapter}:{verse}` (lowercase; e.g. `john 3:16`)
+- Documentation: https://bible-api.com/
+
+---
+
+## Islam
+
+**US population share:** ~1% (Pew Research Center, 2023)
+**Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+
+### Canon
+
+| Text | Contents | Structure |
+|------|----------|-----------|
+| Quran | Direct word of God as revealed to Prophet Muhammad | 114 surahs (chapters), 6,236 ayat (verses); organized by descending length, not chronology |
+| Hadith | Sayings and actions of the Prophet (secondary source) | Six major collections (Kutub al-Sittah); Sahih al-Bukhari and Sahih Muslim are most authoritative |
+
+Major Hadith collections: Sahih al-Bukhari, Sahih Muslim, Sunan Abu Dawud, Jami' at-Tirmidhi, Sunan an-Nasa'i, Sunan Ibn Majah
+
+### Key themes
+
+- Tawhid: the absolute oneness of God
+- Prophethood (Nubuwwah): Adam to Muhammad as final messenger
+- The Five Pillars: Shahada, Salat, Zakat, Sawm, Hajj
+- Akhirah: the afterlife and Day of Judgment
+- Submission (Islam) and peace (Salam) as core meanings
+
+### Interpretive traditions
+
+- Tafsir: exegetical commentary on the Quran
+- Fiqh: Islamic jurisprudence derived from Quran and Hadith
+- Four major Sunni law schools: Hanafi, Maliki, Shafi'i, Hanbali
+- Shia tradition: authority of the Imams alongside scripture
+- Sufi tradition: mystical and devotional interpretation
+
+### Key passages
+
+| Reference | Surah:Ayah key | Note |
+|-----------|----------------|------|
+| Al-Fatiha 1:1-7 | `1:1` | The Opening; recited in every prayer |
+| Ayat al-Kursi 2:255 | `2:255` | The Throne Verse |
+| Al-Ikhlas 112:1-4 | `112:1` | The Sincerity; on the oneness of God |
+| An-Nur 24:35 | `24:35` | The Light Verse |
+| Al-Baqarah 2:285-286 | `2:285` | The Messenger believes |
+| Al-Alaq 96:1-5 | `96:1` | First revelation: "Read" |
+
+### Available translations
+
+| ID (Quran.com) | Name | Style |
+|----------------|------|-------|
+| `20` | Sahih International | Modern; balanced; default |
+| `21` | Pickthall | Early 20th c.; archaic style |
+| `22` | Yusuf Ali | With explanatory notes |
+| `23` | Arberry | Literary; "The Koran Interpreted" |
+| `24` | Shakir | More literal |
+
+Use `translationId` values as the integer in the Quran.com `translations` query parameter. In this codebase, prefix with `quran-` (e.g. `quran-20`) and strip the prefix before passing to the API.
+
+### API provider (Islam)
+
+**Primary: Quran.com API v4** -- free, no authentication required
+- Endpoint: `GET https://api.quran.com/api/v4/verses/by_key/{surah}:{ayah}?language=en&translations={id}&words=false`
+- Reference format: `{surah}:{ayah}` (e.g. `2:255`)
+- Documentation: https://api-docs.quran.com/
+
+**Fallback: AlQuran.cloud**
+- Endpoint: `GET https://api.alquran.cloud/v1/ayah/{surah}:{ayah}/{edition}`
+- Editions: `en.asad`, `en.arberry`, `en.sahih`, `en.pickthall`
+
+**Hadith: fawazahmed0/hadith-api** -- free via jsDelivr CDN (CC BY-4.0)
+- CDN: `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/`
+- Collections: `bukhari`, `muslim`, `abudawud`, `tirmidhi`, `nasai`, `ibnmajah`
+- No authentication required
+
+---
+
+## Quick lookup table
+
+| Tradition | US% | API | Base URL | Ref format | Default translation |
+|-----------|-----|-----|----------|-----------|---------------------|
+| Judaism | 2% | Sefaria | `sefaria.org/api/texts` | `Genesis 1:1` | Sefaria English |
+| Christianity | 63% | bible-api.com | `bible-api.com` | `john 3:16` | KJV |
+| Islam | 1% | Quran.com v4 | `api.quran.com/api/v4` | `2:255` | Sahih International (ID 20) |
