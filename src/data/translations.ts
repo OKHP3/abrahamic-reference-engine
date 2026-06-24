@@ -77,6 +77,66 @@ export const TRANSLATIONS: Translation[] = [
     apiTranslationId: 'darby',
   },
   {
+    id: 'esv',
+    name: 'English Standard Version',
+    shortName: 'ESV',
+    family: 'christianity',
+    denominationIds: [
+      'christianity-evangelical',
+      'christianity-mainline',
+    ],
+    license: 'licensed',
+    attribution: 'ESV (c) 2001 Crossway Bibles. Requires ESV API key; not available in free tier.',
+    apiProvider: 'api.esv.org',
+    apiTranslationId: 'esv',
+    notes: 'Modern essentially literal translation popular in evangelical circles. API key required -- not enabled in this free build.',
+  },
+  {
+    id: 'nrsv',
+    name: 'New Revised Standard Version',
+    shortName: 'NRSV',
+    family: 'christianity',
+    denominationIds: [
+      'christianity-mainline',
+      'christianity-catholic',
+      'christianity-orthodox',
+    ],
+    license: 'licensed',
+    attribution: 'NRSV (c) 1989 National Council of Churches. Requires API.Bible key.',
+    apiProvider: 'api.scripture.api.bible',
+    apiTranslationId: 'nrsv',
+    notes: 'Inclusive-language update to RSV; standard in academic and ecumenical settings. API key required -- not enabled in this free build.',
+  },
+  {
+    id: 'nabre',
+    name: 'New American Bible Revised Edition',
+    shortName: 'NABRE',
+    family: 'christianity',
+    denominationIds: [
+      'christianity-catholic',
+    ],
+    license: 'licensed',
+    attribution: 'NABRE (c) USCCB. Official US Catholic liturgical translation. Requires API.Bible key.',
+    apiProvider: 'api.scripture.api.bible',
+    apiTranslationId: 'nabre',
+    notes: 'Official English translation for US Catholic liturgy; includes Deuterocanonical books. API key required -- not enabled in this free build.',
+  },
+  {
+    id: 'douay',
+    name: 'Douay-Rheims Bible',
+    shortName: 'Douay',
+    family: 'christianity',
+    denominationIds: [
+      'christianity-catholic',
+      'christianity-orthodox',
+    ],
+    license: 'public-domain',
+    attribution: 'Douay-Rheims Bible (1582/1610). Public domain.',
+    apiProvider: 'bible-api.com',
+    apiTranslationId: 'drc',
+    notes: '16th-century translation from the Latin Vulgate; traditional Catholic usage.',
+  },
+  {
     id: 'quran-20',
     name: 'Sahih International',
     shortName: 'Sahih Intl',
@@ -95,7 +155,7 @@ export const TRANSLATIONS: Translation[] = [
     family: 'islam',
     denominationIds: ['islam'],
     license: 'public-domain',
-    attribution: 'The Meaning of The Glorious Qur\'an by Marmaduke Pickthall (1930). Public domain.',
+    attribution: "The Meaning of The Glorious Qur'an by Marmaduke Pickthall (1930). Public domain.",
     apiProvider: 'quran.com',
     apiTranslationId: '21',
     notes: 'Early 20th-century translation. Archaic English style.',
@@ -113,7 +173,7 @@ export const TRANSLATIONS: Translation[] = [
     notes: 'Classic translation with extensive footnotes.',
   },
   {
-    id: 'quran-arberry',
+    id: 'quran-23',
     name: 'Arberry',
     shortName: 'Arberry',
     family: 'islam',
@@ -122,7 +182,19 @@ export const TRANSLATIONS: Translation[] = [
     attribution: 'The Koran Interpreted by A.J. Arberry (1955). Served via alquran.cloud.',
     apiProvider: 'alquran.cloud',
     apiTranslationId: 'en.arberry',
-    notes: 'Literary translation titled The Koran Interpreted.',
+    notes: 'Literary translation titled The Koran Interpreted. Translation ID 23 on Quran.com.',
+  },
+  {
+    id: 'quran-24',
+    name: 'Shakir',
+    shortName: 'Shakir',
+    family: 'islam',
+    denominationIds: ['islam'],
+    license: 'public-domain',
+    attribution: 'Translation by M.H. Shakir. Served via Quran.com API.',
+    apiProvider: 'quran.com',
+    apiTranslationId: '24',
+    notes: 'More literal rendering. Translation ID 24 on Quran.com.',
   },
   {
     id: 'sefaria-en',
@@ -159,6 +231,10 @@ export const TRANSLATIONS_BY_FAMILY = {
   judaism: TRANSLATIONS.filter(t => t.family === 'judaism'),
   islam: TRANSLATIONS.filter(t => t.family === 'islam'),
 }
+
+export const FREE_TRANSLATIONS = TRANSLATIONS.filter(
+  t => t.license !== 'licensed'
+)
 
 export const DEFAULT_TRANSLATIONS: Record<'christianity' | 'judaism' | 'islam', string> = {
   christianity: 'kjv',

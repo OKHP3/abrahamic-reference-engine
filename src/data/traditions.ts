@@ -19,6 +19,9 @@ export const DENOMINATIONS: Denomination[] = [
     keyTexts: ['Holy Bible (66 books)', 'Old Testament', 'New Testament'],
     canonScope: 'Protestant canon (66 books): 39 OT + 27 NT',
     slug: 'evangelical-protestant',
+    availableTranslations: ['kjv', 'web', 'asv', 'bbe', 'darby'],
+    defaultTranslationId: 'kjv',
+    apiProvider: 'bible-api.com',
   },
   {
     id: 'christianity-catholic',
@@ -32,6 +35,9 @@ export const DENOMINATIONS: Denomination[] = [
     keyTexts: ['Holy Bible (73 books)', 'Catechism of the Catholic Church'],
     canonScope: 'Catholic canon (73 books): 46 OT (including deuterocanonicals) + 27 NT',
     slug: 'catholic',
+    availableTranslations: ['web', 'kjv', 'douay'],
+    defaultTranslationId: 'web',
+    apiProvider: 'bible-api.com',
   },
   {
     id: 'christianity-mainline',
@@ -45,6 +51,9 @@ export const DENOMINATIONS: Denomination[] = [
     keyTexts: ['Holy Bible (66 books)', 'Westminster Confession', 'Book of Common Prayer'],
     canonScope: 'Protestant canon (66 books): 39 OT + 27 NT',
     slug: 'mainline-protestant',
+    availableTranslations: ['kjv', 'web', 'asv', 'bbe'],
+    defaultTranslationId: 'kjv',
+    apiProvider: 'bible-api.com',
   },
   {
     id: 'christianity-lds',
@@ -58,6 +67,9 @@ export const DENOMINATIONS: Denomination[] = [
     keyTexts: ['Holy Bible (KJV)', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price'],
     canonScope: 'Standard Works: Bible (KJV) + three additional volumes of LDS scripture',
     slug: 'lds-restorationist',
+    availableTranslations: ['kjv'],
+    defaultTranslationId: 'kjv',
+    apiProvider: 'bible-api.com',
   },
   {
     id: 'christianity-orthodox',
@@ -71,6 +83,9 @@ export const DENOMINATIONS: Denomination[] = [
     keyTexts: ['Holy Bible (expanded OT)', 'Church Fathers', 'Divine Liturgy'],
     canonScope: 'Orthodox canon: varies by jurisdiction, includes additional OT books beyond Protestant canon',
     slug: 'orthodox',
+    availableTranslations: ['web', 'kjv'],
+    defaultTranslationId: 'web',
+    apiProvider: 'bible-api.com',
   },
   {
     id: 'judaism',
@@ -80,10 +95,13 @@ export const DENOMINATIONS: Denomination[] = [
     pewPercent: 2,
     pewCitation: PEW_2023,
     description:
-      'The oldest Abrahamic faith, centered on the covenant between God and the Jewish people. The Tanakh (Hebrew Bible) forms the foundational scripture, supplemented by the Talmud, Midrash, and rabbinic literature.',
-    keyTexts: ['Tanakh (Torah, Nevi\'im, Ketuvim)', 'Talmud (Babylonian and Jerusalem)', 'Midrash'],
-    canonScope: 'Tanakh: 24 books (Torah 5 + Nevi\'im 8 + Ketuvim 11)',
+      "The oldest Abrahamic faith, centered on the covenant between God and the Jewish people. The Tanakh (Hebrew Bible) forms the foundational scripture, supplemented by the Talmud, Midrash, and rabbinic literature.",
+    keyTexts: ["Tanakh (Torah, Nevi'im, Ketuvim)", 'Talmud (Babylonian and Jerusalem)', 'Midrash'],
+    canonScope: "Tanakh: 24 books (Torah 5 + Nevi'im 8 + Ketuvim 11)",
     slug: 'judaism',
+    availableTranslations: ['sefaria-en', 'sefaria-he-en'],
+    defaultTranslationId: 'sefaria-en',
+    apiProvider: 'sefaria.org',
   },
   {
     id: 'islam',
@@ -93,10 +111,13 @@ export const DENOMINATIONS: Denomination[] = [
     pewPercent: 1,
     pewCitation: PEW_2023,
     description:
-      'The youngest of the Abrahamic faiths, founded in the 7th century CE by the Prophet Muhammad. The Quran is considered the direct word of God (Allah), supplemented by the Hadith (sayings and actions of the Prophet).',
+      "The youngest of the Abrahamic faiths, founded in the 7th century CE by the Prophet Muhammad. The Quran is considered the direct word of God (Allah), supplemented by the Hadith (sayings and actions of the Prophet).",
     keyTexts: ['The Quran (114 surahs)', 'Hadith collections (Sahih Bukhari, Sahih Muslim, etc.)'],
     canonScope: 'Quran: 114 surahs, 6,236 ayat; Hadith: multiple authenticated collections',
     slug: 'islam',
+    availableTranslations: ['quran-20', 'quran-21', 'quran-22', 'quran-23', 'quran-24'],
+    defaultTranslationId: 'quran-20',
+    apiProvider: 'quran.com',
   },
 ]
 

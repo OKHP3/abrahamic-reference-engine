@@ -44,6 +44,9 @@ export interface Denomination {
   keyTexts: string[]
   canonScope: string
   slug: string
+  availableTranslations: string[]
+  defaultTranslationId: string
+  apiProvider: string
 }
 
 export interface TraditionGroup {
