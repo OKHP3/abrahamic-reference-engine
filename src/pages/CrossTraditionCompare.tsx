@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { COMPARE_THEMES, FEATURED_THEME_IDS } from '../data/compareThemes'
+import { COMPARE_THEMES } from '../data/compareThemes'
 import { fetchPassage } from '../api'
 import TraditionBadge from '../components/TraditionBadge'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -24,24 +24,6 @@ interface PanelState {
   displayRef: string
   translationName: string
   sourceUrl: string
-}
-
-function buildStaticPassage(theme: (typeof COMPARE_THEMES)[number], family: TraditionFamily): Passage {
-  const p = theme.passages[family]
-  return {
-    reference: p.displayRef,
-    displayReference: p.displayRef,
-    tradition: family,
-    primaryText: p.staticText,
-    translationId: p.apiProvider,
-    translationName: p.translationName,
-    sourceUrl: family === 'judaism'
-      ? `https://www.sefaria.org/${encodeURIComponent(p.lookup)}?lang=bi`
-      : family === 'christianity'
-      ? `https://bible-api.com/${encodeURIComponent(p.lookup)}`
-      : `https://quran.com/${p.lookup}`,
-    attribution: `${p.translationName} -- ${p.apiProvider}`,
-  }
 }
 
 function TraditionPanel({

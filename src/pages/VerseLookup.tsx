@@ -1,13 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { fetchPassage } from '../api'
-import { DENOMINATIONS } from '../data/traditions'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
 import { COMPARE_THEMES, FEATURED_THEME_IDS } from '../data/compareThemes'
 import VerseCard from '../components/VerseCard'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
 import TraditionBadge from '../components/TraditionBadge'
+import ScopeExplainer from '../components/ScopeExplainer'
 import type { Passage, TraditionFamily, ApiStatus } from '../types'
 
 const TRADITION_EXAMPLES: Record<TraditionFamily, Array<{ label: string; ref: string }>> = {
@@ -43,7 +43,7 @@ const TRADITION_LABELS: Record<TraditionFamily, string> = {
   islam: 'Islam',
 }
 
-function getSuggestedThemes(family: TraditionFamily) {
+function getSuggestedThemes() {
   const featured = FEATURED_THEME_IDS.slice(0, 3)
   return featured.map(id => COMPARE_THEMES.find(t => t.id === id)).filter(Boolean)
 }
@@ -116,7 +116,7 @@ export default function VerseLookup() {
     doFetch(tradition, ref, translationId)
   }
 
-  const suggestedThemes = getSuggestedThemes(tradition)
+  const suggestedThemes = getSuggestedThemes()
 
   return (
     <div>
@@ -290,6 +290,8 @@ export default function VerseLookup() {
           </div>
         </div>
       )}
+
+      <ScopeExplainer compact className="mb-6" />
 
       <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
         <Link

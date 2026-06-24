@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { DENOMINATIONS, TRADITION_GROUPS } from '../data/traditions'
 import { TRADITION_KNOWLEDGE, DENOMINATION_KNOWLEDGE } from '../data/knowledge'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
