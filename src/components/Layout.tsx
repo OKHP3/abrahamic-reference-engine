@@ -1,15 +1,29 @@
+import { useState, useCallback } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import ModeNav from './ModeNav'
 
 export default function Layout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const openSidebar = useCallback(() => setSidebarOpen(true), [])
+  const closeSidebar = useCallback(() => setSidebarOpen(false), [])
+
   return (
     <div className="flex min-h-screen bg-bg-base">
-      <Sidebar />
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/60 md:hidden"
+          aria-hidden="true"
+          onClick={closeSidebar}
+        />
+      )}
 
-      <div className="flex flex-col flex-1 min-w-0 ml-72">
-        <ModeNav />
-        <main className="flex-1 px-8 py-8 max-w-4xl">
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+
+      <div className="flex flex-col flex-1 min-w-0 md:ml-72">
+        <ModeNav onMenuClick={openSidebar} />
+        <main className="flex-1 px-5 py-8 md:px-8 max-w-4xl w-full">
           <Outlet />
         </main>
       </div>
