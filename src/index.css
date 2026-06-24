@@ -66,4 +66,11 @@
   .page-placeholder {
     @apply flex flex-col items-center justify-center min-h-96 text-center;
   }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
