@@ -23,6 +23,14 @@ export interface PewCitation {
   source: string
   year: number
   url: string
+  percentage?: number
+}
+
+export interface Tradition {
+  family: TraditionFamily
+  label: string
+  pewPercent: number
+  description: string
 }
 
 export interface Denomination {

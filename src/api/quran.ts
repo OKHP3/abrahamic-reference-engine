@@ -84,7 +84,7 @@ async function fetchFromQuranCom(
 
 async function fetchFromAlQuranCloud(
   key: string,
-  edition = 'en.asad'
+  edition = 'en.arberry'
 ): Promise<Passage> {
   const url = `${ALQURAN_BASE}/ayah/${key}/${edition}`
   const res = await fetch(url)
@@ -108,9 +108,9 @@ async function fetchFromAlQuranCloud(
     tradition: 'islam',
     primaryText: data.text.trim(),
     translationId: 'quran-arberry',
-    translationName: data.edition.englishName,
+    translationName: data.edition.englishName || 'Arberry',
     sourceUrl,
-    attribution: `${data.edition.englishName} -- served via AlQuran.cloud`,
+    attribution: `${data.edition.englishName || 'Arberry'} -- served via AlQuran.cloud`,
   }
 }
 

@@ -1,8 +1,8 @@
-import type { Hadith, HadithCollection } from '../types'
+import type { Passage, Hadith, HadithCollection } from '../types'
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions'
 
-const COLLECTION_DISPLAY_NAMES: Record<HadithCollection, string> = {
+export const COLLECTION_DISPLAY_NAMES: Record<HadithCollection, string> = {
   bukhari: 'Sahih al-Bukhari',
   muslim: 'Sahih Muslim',
   abudawud: 'Sunan Abu Dawud',
@@ -27,7 +27,7 @@ interface FawazHadithResponse {
 export async function fetchHadith(
   collection: HadithCollection,
   number: number
-): Promise<Hadith> {
+): Promise<Passage> {
   const editionKey = `eng-${collection}`
   const url = `${CDN_BASE}/${editionKey}/${number}.json`
 
@@ -48,14 +48,18 @@ export async function fetchHadith(
   }
 
   const displayName = COLLECTION_DISPLAY_NAMES[collection]
+  const reference = `${displayName} #${number}`
   const sourceUrl = `https://sunnah.com/${collection}:${number}`
 
   return {
-    collection,
-    number,
-    text: entry.text.trim(),
-    attribution: `${displayName} #${number} -- via github.com/fawazahmed0/hadith-api (CC BY-4.0)`,
+    reference,
+    displayReference: reference,
+    tradition: 'islam',
+    primaryText: entry.text.trim(),
+    translationId: 'hadith-en',
+    translationName: `${displayName} (English)`,
     sourceUrl,
+    attribution: `${displayName} #${number} -- via github.com/fawazahmed0/hadith-api (CC BY-4.0)`,
   }
 }
 
@@ -70,4 +74,18 @@ export const HADITH_COLLECTION_SIZES: Record<HadithCollection, number> = {
   tirmidhi: 3956,
   nasai: 5761,
   ibnmajah: 4341,
+}
+
+export function buildHadithMeta(
+  collection: HadithCollection,
+  number: number,
+  text: string
+): Hadith {
+  return {
+    collection,
+    number,
+    text,
+    attribution: `${COLLECTION_DISPLAY_NAMES[collection]} #${number} -- via github.com/fawazahmed0/hadith-api (CC BY-4.0)`,
+    sourceUrl: `https://sunnah.com/${collection}:${number}`,
+  }
 }

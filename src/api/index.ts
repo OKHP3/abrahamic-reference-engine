@@ -7,12 +7,19 @@ export type { QuranComVerse, QuranComResponse } from './quran'
 export { fetchBiblePassage, normalizeBibleRef, normalizeBibleRange } from './bible'
 export type { BibleApiTranslation, BibleApiResponse } from './bible'
 
-export { fetchHadith, getCollectionDisplayName, HADITH_COLLECTION_SIZES } from './hadith'
+export {
+  fetchHadith,
+  getCollectionDisplayName,
+  HADITH_COLLECTION_SIZES,
+  buildHadithMeta,
+  COLLECTION_DISPLAY_NAMES,
+} from './hadith'
 
-import type { Passage, HadithCollection } from '../types'
+import type { Passage } from '../types'
 import { fetchSefariaText } from './sefaria'
 import { fetchAyah } from './quran'
-import { fetchBiblePassage, BibleApiTranslation } from './bible'
+import { fetchBiblePassage } from './bible'
+import type { BibleApiTranslation } from './bible'
 
 export interface FetchPassageOptions {
   tradition: 'judaism' | 'christianity' | 'islam'
