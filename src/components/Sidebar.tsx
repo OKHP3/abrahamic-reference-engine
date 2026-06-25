@@ -54,13 +54,23 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ].join(' ')}
       aria-label="Tradition navigation"
     >
-      <div className="px-5 py-5 border-b border-border-subtle flex-shrink-0 flex items-center justify-between">
-        <NavLink to="/browse" className="block no-underline" onClick={onClose}>
-          <div className="text-xs font-sans font-bold tracking-widest uppercase text-gold">
-            ARE00
-          </div>
-          <div className="text-xs font-sans text-muted mt-0.5">
-            Abrahamic Reference Engine
+      <div className="px-5 py-4 border-b border-border-subtle flex-shrink-0 flex items-center justify-between">
+        <NavLink to="/browse" className="flex items-center gap-3 no-underline group" onClick={onClose}>
+          <img
+            src={`${import.meta.env.BASE_URL}android-chrome-192x192.png`}
+            alt=""
+            aria-hidden="true"
+            width="36"
+            height="36"
+            className="rounded-lg opacity-90 flex-shrink-0"
+          />
+          <div>
+            <div className="text-xs font-sans font-bold tracking-widest uppercase text-gold group-hover:text-gold-light transition-colors duration-150">
+              ARE
+            </div>
+            <div className="text-xs font-sans text-muted mt-0.5 leading-tight">
+              Abrahamic Reference Engine
+            </div>
           </div>
         </NavLink>
 

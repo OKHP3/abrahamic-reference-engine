@@ -33,8 +33,12 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare
 - GitHub Pages deploy workflow in place (.github/workflows/deploy-pages.yml)
-- Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on NODE_ENV)
+- Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on `command`)
 - React Router basename driven by `import.meta.env.BASE_URL` -- empty in dev, `/abrahamic-reference-engine` in prod
+- Dark / light mode toggle: CSS custom property system, persists to localStorage, respects system preference
+- Full favicon package: SVG, ICO, PNG (16/32/180/192/512), WebP (192/512), site.webmanifest
+- Social preview image: 1280x640 PNG + WebP (ancient stone tablets / scrolls, no identifiable script)
+- SEO: full OG tags, Twitter Card, schema.org JSON-LD, canonical URL, robots meta in index.html
 
 ---
 

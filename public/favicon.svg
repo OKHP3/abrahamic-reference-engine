@@ -1,4 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#1a1a1a"/>
-  <text x="16" y="22" font-family="Georgia, serif" font-size="16" font-weight="bold" fill="#c9a84c" text-anchor="middle">A</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#0f0900"/>
+  <path d="M4 58 L4 26 A12 12 0 0 0 28 26 L28 58 Z" fill="#3d2508" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="9" y1="33" x2="23" y2="33" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+  <line x1="9" y1="39" x2="23" y2="39" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="9" y1="45" x2="23" y2="45" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="9" y1="51" x2="19" y2="51" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.3"/>
+  <path d="M36 58 L36 26 A12 12 0 0 0 60 26 L60 58 Z" fill="#2e1c06" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="41" y1="33" x2="55" y2="33" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+  <line x1="41" y1="39" x2="55" y2="39" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="41" y1="45" x2="55" y2="45" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="41" y1="51" x2="51" y2="51" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity="0.3"/>
 </svg>

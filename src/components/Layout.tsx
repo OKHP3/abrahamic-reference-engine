@@ -23,7 +23,7 @@ export default function Layout() {
 
       <div className="flex flex-col flex-1 min-w-0 md:ml-72">
         <ModeNav onMenuClick={openSidebar} />
-        <main className="flex-1 px-5 py-8 md:px-8 max-w-4xl w-full">
+        <main className="flex-1 px-4 py-6 sm:px-6 md:px-8 w-full max-w-4xl">
           <Outlet />
         </main>
       </div>
