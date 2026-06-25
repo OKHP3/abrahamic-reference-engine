@@ -95,6 +95,7 @@ export interface Hadith {
   collection: HadithCollection
   number: number
   text: string
+  bookName?: string
   attribution: string
   sourceUrl: string
 }

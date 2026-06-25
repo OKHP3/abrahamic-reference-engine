@@ -65,7 +65,7 @@ export const DENOMINATIONS: Denomination[] = [
     description:
       'The Latter-day Saint movement, founded by Joseph Smith in the 19th century as a restoration of original Christianity. Uses the Bible alongside additional scriptures revealed through Joseph Smith.',
     keyTexts: ['Holy Bible (KJV)', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price'],
-    canonScope: 'Standard Works: Bible (KJV) + three additional volumes of LDS scripture',
+    canonScope: 'Standard Works (4 volumes): Bible (KJV, 66 books), Book of Mormon (15 books), Doctrine and Covenants (138 sections), Pearl of Great Price -- LDS-specific volumes not available via bible-api.com',
     slug: 'lds-restorationist',
     availableTranslations: ['kjv'],
     defaultTranslationId: 'kjv',
@@ -81,7 +81,7 @@ export const DENOMINATIONS: Denomination[] = [
     description:
       'Eastern Orthodox and Oriental Orthodox churches tracing their lineage to the early church councils. Emphasizes Tradition, liturgy, theosis, and the Church Fathers alongside Scripture.',
     keyTexts: ['Holy Bible (expanded OT)', 'Church Fathers', 'Divine Liturgy'],
-    canonScope: 'Orthodox canon: varies by jurisdiction, includes additional OT books beyond Protestant canon',
+    canonScope: 'Orthodox canon (Septuagint-based): typically 76-78 books -- 49 OT + 27 NT; includes Catholic deuterocanonicals plus 3 Maccabees and Psalm 151; some jurisdictions add 4 Maccabees',
     slug: 'orthodox',
     availableTranslations: ['web', 'kjv'],
     defaultTranslationId: 'web',

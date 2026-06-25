@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { COMPARE_THEMES } from '../data/compareThemes'
 import { fetchPassage } from '../api'
@@ -154,6 +154,8 @@ export default function CrossTraditionCompare() {
   const [activeThemeId, setActiveThemeId] = useState(
     COMPARE_THEMES.some(t => t.id === initialThemeId) ? initialThemeId : COMPARE_THEMES[0].id
   )
+  const [copied, setCopied] = useState(false)
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const activeTheme = COMPARE_THEMES.find(t => t.id === activeThemeId)!
 
@@ -186,6 +188,22 @@ export default function CrossTraditionCompare() {
     setSearchParams({ theme: id })
     const theme = COMPARE_THEMES.find(t => t.id === id)!
     setPanels(buildInitialPanels(theme))
+  }
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
+    }
+  }, [])
+
+  function copyLink() {
+    if (!navigator.clipboard) return
+    const url = window.location.origin + window.location.pathname + '?theme=' + activeThemeId
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {})
   }
 
   async function refreshPanel(family: TraditionFamily) {
@@ -256,13 +274,27 @@ export default function CrossTraditionCompare() {
             </h2>
             <p className="text-sm text-ink leading-relaxed">{activeTheme.description}</p>
           </div>
-          <button
-            onClick={refreshAll}
-            className="text-xs font-sans text-gold-muted hover:text-gold border border-gold-muted hover:border-gold px-3 py-1.5 rounded transition-all duration-150 flex-shrink-0"
-            aria-label="Refresh all passages from live APIs"
-          >
-            Refresh all
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={copyLink}
+              className={[
+                'text-xs font-sans border px-3 py-1.5 rounded transition-all duration-150',
+                copied
+                  ? 'text-gold border-gold bg-bg-active'
+                  : 'text-gold-muted hover:text-gold border-gold-muted hover:border-gold',
+              ].join(' ')}
+              aria-label="Copy shareable link to this theme comparison"
+            >
+              {copied ? 'Copied!' : 'Copy link'}
+            </button>
+            <button
+              onClick={refreshAll}
+              className="text-xs font-sans text-gold-muted hover:text-gold border border-gold-muted hover:border-gold px-3 py-1.5 rounded transition-all duration-150"
+              aria-label="Refresh all passages from live APIs"
+            >
+              Refresh all
+            </button>
+          </div>
         </div>
       </div>
 

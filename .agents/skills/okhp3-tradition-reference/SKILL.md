@@ -1,12 +1,12 @@
 ---
-name: are00-tradition-reference
+name: okhp3-tradition-reference
 description: Compact structured reference for each of the three in-scope Abrahamic traditions -- Judaism, Christianity (5 denominations), and Islam. Covers canon scope, key texts, US population share with Pew citation, available translations, API provider, and a clear out-of-scope section. Use when an agent needs authoritative metadata about any of the three traditions before generating content, making API calls, or answering scope questions.
 version: 1.0.0
 license: MIT
 author: OKHP3
 ---
 
-# ARE00 -- Tradition Reference Skill
+# OKHP3 -- Tradition Reference Skill
 
 ## Scope criteria
 
@@ -155,9 +155,24 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 - **Description:** Restoration movement founded by Joseph Smith. Modern prophetic revelation, pre-mortal existence, eternal family relationships sealed in temples.
 - **Distinctives:** Standard Works (four-volume canon); continuing prophetic succession; temple ordinances.
 - **Key texts:** Holy Bible (KJV), Book of Mormon, Doctrine and Covenants, Pearl of Great Price
-- **Representative passages:** James 1:5 (`james 1:5`), John 17:3 (`john 17:3`)
-- **Note:** Book of Mormon, D&C, and Pearl of Great Price are not available via bible-api.com. KJV Bible only.
-- **API translations (free):** `kjv`
+- **Representative passages:** James 1:5 (`james 1:5`), John 17:3 (`john 17:3`), 2 Ne. 2:25 (Book of Mormon), Moses 1:39 (Pearl of Great Price), D&C 76:22 (Doctrine and Covenants)
+- **API translations (free):** `kjv` (Bible only via bible-api.com)
+
+**Canon scope -- Standard Works (4 volumes):**
+
+| Volume | Contents | Books / Sections |
+|--------|----------|-----------------|
+| Holy Bible (KJV) | Old and New Testament | 66 books |
+| Book of Mormon | Narrative scripture from ancient American prophets | 15 books (1 Nephi -- Moroni) |
+| Doctrine and Covenants | Modern revelations, primarily through Joseph Smith | 138 sections + Official Declarations |
+| Pearl of Great Price | Moses, Abraham, Joseph Smith -- History, Articles of Faith | 5 texts |
+
+**LDS scripture API for non-Bible volumes:** `scriptures.nephi.org` -- community-maintained, no authentication required.
+- Base URL: `https://scriptures.nephi.org`
+- Covers all four Standard Works
+- Reference examples: `1 Ne. 3:7` (Book of Mormon), `D&C 76:22` (D&C), `Moses 1:39` (Pearl of Great Price)
+- No uptime guarantee -- implement graceful fallback when unavailable
+- Official text (no API): `https://www.churchofjesuschrist.org/study/scriptures`
 
 #### Orthodox Christian (~1% US)
 
@@ -165,7 +180,21 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 - **Distinctives:** Divine Liturgy (John Chrysostom / Basil); icon veneration; Septuagint (LXX) as authoritative OT; broader canon than Protestant.
 - **Key texts:** Holy Bible (Orthodox canon), Church Fathers, Philokalia
 - **Representative passages:** John 1:1-14 (`john 1:1-14`), 2 Peter 1:4 (`2 peter 1:4`), Matthew 3:13-17 (`matthew 3:13-17`)
-- **API translations (free):** `web` (closest to Orthodox usage), `kjv`
+- **API translations (free):** `web` (closest to Orthodox usage -- includes deuterocanonicals but not full Orthodox OT), `kjv`
+
+**Canon scope -- Septuagint-based (LXX):**
+
+| Canon layer | Contents | Books |
+|-------------|----------|-------|
+| Protestant OT core | Shared with all Christian traditions | 39 books |
+| Catholic deuterocanonicals | Tobit, Judith, 1-2 Maccabees, Wisdom, Sirach, Baruch + Greek additions to Esther/Daniel | 7 books + additions |
+| Orthodox additions | 3 Maccabees, Psalm 151 | Present in Greek Orthodox and most Eastern Orthodox canons |
+| Extended (some jurisdictions) | 4 Maccabees (appendix in Georgian/Slavonic traditions), 1 Esdras, Prayer of Manasseh | Varies by jurisdiction |
+| New Testament | Shared with all Christian traditions | 27 books |
+
+**Typical total:** 76-78 books (varies by jurisdiction -- Greek Orthodox, Russian Orthodox, Serbian Orthodox, etc. differ slightly).
+
+**API gap:** No free public unauthenticated API covers the full Orthodox OT. bible-api.com `web` covers the seven Catholic deuterocanonicals but omits 3 Maccabees, Psalm 151, and 4 Maccabees. Surface this limitation explicitly when a user requests those texts.
 
 ### Available translations (Christianity -- all denominations)
 
