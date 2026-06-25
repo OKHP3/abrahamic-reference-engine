@@ -155,6 +155,7 @@ export default function VerseLookup() {
     setHadithStatus('idle')
     setHadithIndex(0)
     setHadithError(null)
+    setSearchParams({ tradition: next })
   }
 
   function handleExample(ref: string) {

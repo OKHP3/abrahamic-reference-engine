@@ -190,9 +190,16 @@ export default function CrossTraditionCompare() {
     setPanels(buildInitialPanels(theme))
   }
 
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
+    }
+  }, [])
+
   function copyLink() {
     if (!navigator.clipboard) return
-    navigator.clipboard.writeText(window.location.href).then(() => {
+    const url = window.location.origin + window.location.pathname + '?theme=' + activeThemeId
+    navigator.clipboard.writeText(url).then(() => {
       setCopied(true)
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
       copyTimerRef.current = setTimeout(() => setCopied(false), 2000)
