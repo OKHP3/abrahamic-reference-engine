@@ -80,15 +80,22 @@ export default function HadithCard({
           <blockquote className="text-sm font-serif text-parchment leading-relaxed border-l-2 border-l-emerald-700 pl-3 mb-4">
             {hadith.text}
           </blockquote>
-          <div className="flex items-center justify-between gap-3 pt-3 border-t border-border-subtle">
-            <span className="text-2xs font-sans text-muted">
-              {displayCollection} #{hadith.number}
-            </span>
+          <div className="flex items-start justify-between gap-3 pt-3 border-t border-border-subtle">
+            <div className="min-w-0">
+              <span className="text-2xs font-sans text-muted block">
+                {displayCollection} #{hadith.number}
+              </span>
+              {hadith.bookName && (
+                <span className="text-2xs font-sans text-muted italic block mt-0.5">
+                  {hadith.bookName}
+                </span>
+              )}
+            </div>
             <a
               href={hadith.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-2xs font-sans text-emerald-600 hover:text-emerald-400 transition-colors no-underline"
+              className="text-2xs font-sans text-emerald-600 hover:text-emerald-400 transition-colors no-underline flex-shrink-0"
               aria-label={`Open ${displayCollection} #${hadith.number} on sunnah.com (opens in new tab)`}
             >
               sunnah.com &rarr;

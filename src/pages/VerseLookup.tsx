@@ -115,10 +115,17 @@ export default function VerseLookup() {
               if (results.length > 0) {
                 setHadiths(results)
                 setHadithStatus('success')
-              } else {
-                setHadithStatus('error')
-                setHadithError('No hadith returned from collection.')
+                return
               }
+              return fetchHadithBatch('muslim', numbers).then(fallback => {
+                if (fallback.length > 0) {
+                  setHadiths(fallback)
+                  setHadithStatus('success')
+                } else {
+                  setHadithStatus('error')
+                  setHadithError('No hadith returned from collection.')
+                }
+              })
             })
             .catch(() => {
               setHadithStatus('error')

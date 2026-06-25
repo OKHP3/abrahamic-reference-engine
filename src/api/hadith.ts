@@ -14,6 +14,10 @@ export const COLLECTION_DISPLAY_NAMES: Record<HadithCollection, string> = {
 interface FawazHadithEntry {
   hadithnumber: number
   text: string
+  reference?: {
+    book?: number
+    hadith?: number
+  }
 }
 
 interface FawazHadithResponse {
@@ -79,12 +83,14 @@ export const HADITH_COLLECTION_SIZES: Record<HadithCollection, number> = {
 export function buildHadithMeta(
   collection: HadithCollection,
   number: number,
-  text: string
+  text: string,
+  bookName?: string
 ): Hadith {
   return {
     collection,
     number,
     text,
+    bookName,
     attribution: `${COLLECTION_DISPLAY_NAMES[collection]} #${number} -- via github.com/fawazahmed0/hadith-api (CC BY-4.0)`,
     sourceUrl: `https://sunnah.com/${collection}:${number}`,
   }
@@ -103,7 +109,12 @@ export async function fetchHadithBatch(
       const json: FawazHadithResponse = await res.json()
       const entry = json.hadiths?.[0]
       if (!entry?.text) throw new Error('No text')
-      return buildHadithMeta(collection, n, entry.text.trim())
+      const bookNo = entry.reference?.book
+      const bookName =
+        bookNo != null
+          ? json.metadata?.section?.[String(bookNo)] ?? undefined
+          : undefined
+      return buildHadithMeta(collection, n, entry.text.trim(), bookName)
     })
   )
   return results
