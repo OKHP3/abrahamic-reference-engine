@@ -38,7 +38,9 @@ function formatDateOnly(d: Date): string {
 }
 
 function nowStamp(): string {
-  return new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+  const iso = new Date().toISOString();
+  // Avoid single character-class regex that Tailwind content scanner misreads
+  return iso.replace(/-/g, '').replace(/:/g, '').replace(/\./g, '').slice(0, 15) + 'Z';
 }
 
 function escapeText(value: string): string {
