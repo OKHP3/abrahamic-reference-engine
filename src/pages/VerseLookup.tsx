@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { fetchPassage, fetchNephiPassage, isLdsBibleRef, LdsApiUnavailableError } from '../api'
 import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
@@ -153,6 +153,8 @@ export default function VerseLookup() {
   const [hadithError, setHadithError] = useState<string | null>(null)
   const [fetchedRef, setFetchedRef] = useState('')
   const [fetchedTradition, setFetchedTradition] = useState<TraditionFamily>('judaism')
+  const [copied, setCopied] = useState(false)
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const freeTranslations = TRANSLATIONS_BY_FAMILY[tradition].filter(
     t => t.license !== 'licensed'
@@ -256,6 +258,21 @@ export default function VerseLookup() {
     },
     []
   )
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
+    }
+  }, [])
+
+  function copyLink() {
+    if (!navigator.clipboard) return
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true)
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {})
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -536,6 +553,20 @@ export default function VerseLookup() {
       {status === 'success' && passage && (
         <div className="mb-6">
           <VerseCard passage={passage} showBadge showAttribution />
+          <div className="mt-3 flex justify-end">
+            <button
+              type="button"
+              onClick={copyLink}
+              className={[
+                'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
+                copied
+                  ? 'text-gold border-gold bg-bg-elevated'
+                  : 'text-muted border-border-subtle bg-bg-elevated hover:text-parchment hover:border-border-mid',
+              ].join(' ')}
+            >
+              {copied ? 'Copied!' : 'Copy link'}
+            </button>
+          </div>
         </div>
       )}
 
