@@ -8,3 +8,7 @@ dist-ssr
 .DS_Store
 *.log
 .cache
+
+# Agent artifacts
+attached_assets/
+.local/state/

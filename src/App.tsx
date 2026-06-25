@@ -6,7 +6,7 @@ import CrossTraditionCompare from './pages/CrossTraditionCompare'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/abrahamic-reference-engine">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/browse" replace />} />
