@@ -172,10 +172,90 @@ Use `json.text` for the passage text. Normalize by replacing `\n` with ` ` and t
 | Evangelical Protestant | 66 books (39 OT + 27 NT) | kjv, web, asv, bbe, darby |
 | Catholic | 73 books (includes deuterocanonicals) | web, kjv, douay |
 | Mainline Protestant | 66 books | kjv, web, asv, bbe |
-| LDS / Restorationist | Standard Works (Bible KJV + 3 additional volumes) | kjv only via bible-api.com |
-| Orthodox Christian | Varies by jurisdiction; generally broader than Protestant 66 | web, kjv |
+| LDS / Restorationist | Standard Works (Bible KJV + 3 additional volumes) | kjv only via bible-api.com; see LDS section below |
+| Orthodox Christian | Septuagint-based; typically 76-78 books | web (best available), kjv |
 
-**Note:** Deuterocanonical books (Tobit, Judith, 1-2 Maccabees, Wisdom, Sirach, Baruch) are available via the `web` translation on bible-api.com but absent from `kjv`.
+**Note:** Deuterocanonical books (Tobit, Judith, 1-2 Maccabees, Wisdom, Sirach, Baruch) are available via the `web` translation on bible-api.com but absent from `kjv`. The `web` translation does not cover the full Orthodox OT (3 Maccabees, Psalm 151, 4 Maccabees are absent from all free bible-api.com translations).
+
+---
+
+## LDS / Restorationist -- Standard Works lookup
+
+LDS scripture lookup splits across two sources depending on which volume of the Standard Works is being referenced.
+
+### Bible references (KJV only)
+
+Use bible-api.com with `translation=kjv`. The LDS church uses the King James Version of the Bible without modification.
+
+```
+GET https://bible-api.com/{reference}?translation=kjv
+```
+
+Reference format: standard Christian book names, lowercase (e.g. `james 1:5`, `john 17:3`).
+
+### Book of Mormon, Doctrine and Covenants, Pearl of Great Price
+
+**API:** scriptures.nephi.org -- community-maintained, no authentication required.
+
+**Base URL:** `https://scriptures.nephi.org`
+
+**Important:** This is a community API with no uptime guarantee. Treat it as best-effort and implement a graceful fallback to a static error message when unavailable.
+
+#### Book of Mormon reference format
+
+```
+{book abbreviation} {chapter}:{verse}
+```
+
+| Book | Abbreviation |
+|------|-------------|
+| 1 Nephi | `1 Ne.` |
+| 2 Nephi | `2 Ne.` |
+| Jacob | `Jacob` |
+| Enos | `Enos` |
+| Jarom | `Jarom` |
+| Omni | `Omni` |
+| Words of Mormon | `W of M` |
+| Mosiah | `Mosiah` |
+| Alma | `Alma` |
+| Helaman | `Hel.` |
+| 3 Nephi | `3 Ne.` |
+| 4 Nephi | `4 Ne.` |
+| Mormon | `Morm.` |
+| Ether | `Ether` |
+| Moroni | `Moro.` |
+
+Examples: `1 Ne. 3:7`, `Alma 32:21`, `3 Ne. 11:10-11`
+
+#### Doctrine and Covenants reference format
+
+```
+D&C {section}:{verse}
+```
+
+Examples: `D&C 76:22`, `D&C 1:37`
+
+#### Pearl of Great Price reference format
+
+```
+{text} {chapter}:{verse}
+```
+
+Texts: `Moses`, `Abraham`, `JS-H` (Joseph Smith -- History), `JS-M` (Joseph Smith -- Matthew), `A of F` (Articles of Faith)
+
+Examples: `Moses 1:39`, `Abraham 3:22`, `A of F 1:13`
+
+### Fallback behavior for LDS non-Bible passages
+
+```
+try scriptures.nephi.org
+  on success: return passage
+  on failure: surface message "The LDS Standard Works (Book of Mormon, D&C, Pearl of
+    Great Price) are not available via a guaranteed free API at this time. Visit
+    https://www.churchofjesuschrist.org/study/scriptures to look up this passage."
+```
+
+Do not silently return empty content. Always surface the fallback message explicitly.
 
 ### Attribution
 
