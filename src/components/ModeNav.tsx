@@ -9,6 +9,7 @@ const MODES = [
   { to: '/browse', label: 'Browse', description: 'Explore traditions' },
   { to: '/lookup', label: 'Lookup', description: 'Find a passage' },
   { to: '/compare', label: 'Compare', description: 'Side-by-side themes' },
+  { to: '/observances', label: 'Observances', description: 'Religious holiday calendar' },
 ]
 
 function SunIcon() {
