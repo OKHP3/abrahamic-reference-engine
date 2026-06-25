@@ -8,7 +8,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import ScopeExplainer from '../components/ScopeExplainer'
 import type { TraditionFamily, Passage, ApiStatus } from '../types'
 
-const FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
+const FAMILIES: TraditionFamily[] = ['christianity', 'islam', 'judaism']
 
 const FAMILY_LABELS: Record<TraditionFamily, string> = {
   judaism: 'Judaism',

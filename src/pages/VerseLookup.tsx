@@ -319,7 +319,7 @@ export default function VerseLookup() {
                 Tradition
               </legend>
               <div className="flex gap-2 flex-wrap">
-                {(['judaism', 'christianity', 'islam'] as TraditionFamily[]).map(t => (
+                {(['christianity', 'islam', 'judaism'] as TraditionFamily[]).map(t => (
                   <button
                     key={t}
                     type="button"
@@ -603,7 +603,7 @@ export default function VerseLookup() {
                   className="p-4 border border-border-subtle rounded-lg bg-bg-elevated hover:border-gold hover:bg-bg-active transition-all duration-200 no-underline group"
                 >
                   <div className="flex gap-1 mb-2">
-                    {(['judaism', 'christianity', 'islam'] as TraditionFamily[]).map(f => (
+                    {(['christianity', 'islam', 'judaism'] as TraditionFamily[]).map(f => (
                       <TraditionBadge key={f} family={f} size="sm" />
                     ))}
                   </div>
