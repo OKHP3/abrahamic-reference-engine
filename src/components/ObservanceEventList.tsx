@@ -82,7 +82,7 @@ function EventRow({ event, isSelected, onSelect }: EventRowProps) {
           </span>
           {event.tradition === 'islam' && (
             <span
-              className="flex-shrink-0 text-2xs px-1.5 py-0.5 rounded bg-amber-400/10 text-amber-400/70 border border-amber-400/20 hidden sm:inline"
+              className="flex-shrink-0 text-2xs px-1.5 py-0.5 rounded bg-amber-400/10 text-dimmed border border-amber-400/20 hidden sm:inline"
               title="Actual observance may vary by one day based on local moon sighting"
             >
               moon sighting may vary

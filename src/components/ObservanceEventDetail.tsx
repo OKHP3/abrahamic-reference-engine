@@ -117,7 +117,7 @@ export default function ObservanceEventDetail({ event, accentColor }: Observance
 
       {/* Islamic moon sighting notice (also in detail for full context) */}
       {event.tradition === 'islam' && (
-        <p className="text-xs text-amber-400/80 italic">
+        <p className="text-xs text-dimmed italic">
           Islamic dates are calculated using the Umm al-Qura method.
           Actual observance may vary by one day based on local moon sighting.
         </p>

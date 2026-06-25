@@ -204,12 +204,12 @@ export default function ObservancesCalendar() {
       {(errors.judaism || errors.islam) && (
         <div className="space-y-1">
           {errors.judaism && (
-            <p className="text-xs text-amber-400/80 flex items-center gap-1.5">
+            <p className="text-xs text-dimmed flex items-center gap-1.5">
               <span aria-hidden="true">&#9888;</span> {errors.judaism}
             </p>
           )}
           {errors.islam && (
-            <p className="text-xs text-amber-400/80 flex items-center gap-1.5">
+            <p className="text-xs text-dimmed flex items-center gap-1.5">
               <span aria-hidden="true">&#9888;</span> {errors.islam}
             </p>
           )}
