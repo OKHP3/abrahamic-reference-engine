@@ -12,7 +12,7 @@ import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
 import type { Passage, Hadith, TraditionFamily, ApiStatus } from '../types'
 
-type ChristianDenomination = 'lds' | 'orthodox' | null
+type ChristianDenomination = 'catholic' | 'protestant' | 'lds' | 'orthodox' | null
 
 interface OrthodoxGapBook {
   name: string
@@ -122,7 +122,11 @@ export default function VerseLookup() {
   const initialRef = searchParams.get('ref') ?? ''
   const rawDenom = searchParams.get('denomination')
   const initialDenom: ChristianDenomination =
-    rawDenom === 'lds' ? 'lds' : rawDenom === 'orthodox' ? 'orthodox' : null
+    rawDenom === 'catholic' ? 'catholic'
+    : rawDenom === 'protestant' ? 'protestant'
+    : rawDenom === 'lds' ? 'lds'
+    : rawDenom === 'orthodox' ? 'orthodox'
+    : null
 
   const VALID_FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
   const validatedInitialTradition: TraditionFamily | null =
@@ -350,46 +354,41 @@ export default function VerseLookup() {
                   Denomination
                 </legend>
                 <div className="flex gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    onClick={() => handleDenominationChange(null)}
-                    className={[
-                      'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
-                      denomination === null
-                        ? 'text-violet-300 border-violet-700 bg-violet-950'
-                        : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
-                    ].join(' ')}
-                    aria-pressed={denomination === null}
-                  >
-                    Standard
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDenominationChange('lds')}
-                    className={[
-                      'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
-                      denomination === 'lds'
-                        ? 'text-violet-300 border-violet-700 bg-violet-950'
-                        : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
-                    ].join(' ')}
-                    aria-pressed={denomination === 'lds'}
-                  >
-                    LDS
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDenominationChange('orthodox')}
-                    className={[
-                      'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
-                      denomination === 'orthodox'
-                        ? 'text-violet-300 border-violet-700 bg-violet-950'
-                        : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
-                    ].join(' ')}
-                    aria-pressed={denomination === 'orthodox'}
-                  >
-                    Orthodox
-                  </button>
+                  {([
+                    { value: null,        label: 'All' },
+                    { value: 'catholic',  label: 'Catholic' },
+                    { value: 'protestant',label: 'Protestant' },
+                    { value: 'lds',       label: 'LDS' },
+                    { value: 'orthodox',  label: 'Orthodox' },
+                  ] as { value: ChristianDenomination; label: string }[]).map(({ value, label }) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => handleDenominationChange(value)}
+                      className={[
+                        'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
+                        denomination === value
+                          ? 'text-violet-300 border-violet-700 bg-violet-950'
+                          : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
+                      ].join(' ')}
+                      aria-pressed={denomination === value}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
+                {denomination === 'catholic' && (
+                  <p className="text-2xs text-muted mt-2">
+                    Roman Catholic -- includes the deuterocanonical books (Tobit, Judith, 1-2 Maccabees,
+                    Wisdom, Sirach, Baruch). Translation defaults to Douay-Rheims where available.
+                  </p>
+                )}
+                {denomination === 'protestant' && (
+                  <p className="text-2xs text-muted mt-2">
+                    Protestant -- 66-book canon. Deuterocanonical books are not included.
+                    Defaults to King James Version.
+                  </p>
+                )}
                 {denomination === 'lds' && (
                   <p className="text-2xs text-muted mt-2">
                     Latter-day Saint -- includes Bible (KJV) via bible-api.com and Standard

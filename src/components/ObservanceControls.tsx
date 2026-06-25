@@ -2,7 +2,7 @@ import type { Tradition } from '../lib/observanceHelpers'
 import type { ObservanceEvent } from '../lib/observanceHelpers'
 import { downloadYearICS } from '../lib/icsGenerator'
 
-export type ChristianDenomFilter = 'all' | 'catholic' | 'protestant' | 'orthodox'
+export type ChristianDenomFilter = 'all' | 'catholic' | 'protestant' | 'lds' | 'orthodox'
 
 interface ObservanceControlsProps {
   year: number
@@ -53,6 +53,7 @@ const DENOM_BUTTONS: { value: ChristianDenomFilter; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'catholic', label: 'Catholic' },
   { value: 'protestant', label: 'Protestant' },
+  { value: 'lds', label: 'LDS' },
   { value: 'orthodox', label: 'Orthodox' },
 ]
 
@@ -128,25 +129,27 @@ export default function ObservanceControls({
 
       {/* Christianity denomination sub-filter */}
       {selectedTraditions.has('christianity') && (
-        <div className="flex flex-wrap gap-2 pl-1 border-l-2 border-gold/30">
-          <span className="text-xs font-sans font-bold tracking-widest uppercase text-muted self-center">
+        <div className="pl-1 border-l-2 border-gold/30">
+          <span className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
             Denomination
           </span>
-          {DENOM_BUTTONS.map(({ value, label }) => (
-            <button
-              key={value}
-              onClick={() => onChristianFilterChange(value)}
-              className={[
-                BTN_BASE,
-                christianFilter === value
-                  ? 'text-gold border-gold bg-bg-active'
-                  : INACTIVE_BTN,
-              ].join(' ')}
-              aria-pressed={christianFilter === value}
-            >
-              {label}
-            </button>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            {DENOM_BUTTONS.map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => onChristianFilterChange(value)}
+                className={[
+                  BTN_BASE,
+                  christianFilter === value
+                    ? 'text-gold border-gold bg-bg-active'
+                    : INACTIVE_BTN,
+                ].join(' ')}
+                aria-pressed={christianFilter === value}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>

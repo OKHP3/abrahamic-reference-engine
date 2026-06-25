@@ -21,6 +21,7 @@ export type Denomination =
   | 'catholic'
   | 'orthodox'
   | 'protestant'
+  | 'lds'
   | 'evangelical'
   | 'restorationist';
 
