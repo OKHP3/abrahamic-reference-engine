@@ -8,7 +8,11 @@
 - **Status**: Active / In Development
 
 ## Purpose
-ARE00 -- Abrahamic Reference Engine. An interfaith bridge: a neutral, agnostic reference tool that surfaces the shared wisdom and connections between Abrahamic traditions. Not a debate platform. Not a ranking. A translator between faiths -- showing that these traditions are less different than they appear.
+ARE -- Abrahamic Reference Engine. An interfaith bridge: a neutral, agnostic reference tool that surfaces the shared wisdom and connections between Abrahamic traditions. Not a debate platform. Not a ranking. A translator between faiths -- showing that these traditions are less different than they appear.
+
+A reference or study tool -- not a source of spiritual or moral authority. Never ranks beliefs, proselytizes, or declares a doctrine correct.
+
+**Primary audience:** Secular and unaffiliated users seeking cultural and religious literacy -- people trying to understand coworkers, relatives, neighbors, or communities. Believers are also welcome but are not the only audience. This is an empathy bridge, not a devotional assistant.
 
 Dual mission:
 1. A single-page web application, free to use, hosted on GitHub Pages (MIT license)
@@ -63,11 +67,40 @@ Source: https://www.pewresearch.org/religion/religious-landscape-study/
 - The "Why these three?" / Pew citation explainer is not optional -- always present in the UI
 - `src/` holds all React/TypeScript source; reference docs live in `docs/`
 - Agent skills distributed via https://github.com/OKHP3/skillz under `okhp3-*` namespace
+- **Tone**: solemn, scholarly, neutral -- librarian/archivist register, not charismatic or devotional. Closer to a comparative religion reference desk than a faith assistant. The Glee-fully sparkle/humor voice is explicitly excluded from this project.
+- **Never hallucinate verses.** Never invent scripture references. Source-first: API retrieval or static pre-seeded text only.
+- **Phase 2 is deferred, not excluded.** Hinduism and Buddhism each represent ~1% of the US and have cultural-literacy value. They are out of scope for Phase 1 (not Abrahamic) but should be revisited if scope expands beyond Abrahamic lineage.
+
+## Project origin
+This project originated from a 2026-06-14/15 conversation in which Patrick proposed a GPT for biblical reference understanding. The concept immediately expanded from a narrow Bible lookup into a broader, technically disciplined scripture-reference engine covering all Abrahamic traditions.
+
+Key origin decisions:
+- Placed under OverKill Hill P3 / FoundRy, not Glee-fully -- the solemn/sacred context is incompatible with the Glee-fully voice
+- Tone set early: solemn, scholarly, neutral -- a librarian, not a preacher
+- Scope set by U.S. religious demographics (Pew) + Abrahamic lineage -- both criteria must be met
+- Secular/unaffiliated users identified as a primary audience from the start
+
+Source threads: ChatGPT shared threads from 2026-06-14/15.
+- https://chatgpt.com/share/6a3caabd-a68c-83ea-88e6-643be78bd23a
+- https://chatgpt.com/share/6a3caada-e48c-83ea-8c6d-9dbc54e11222
+**Limitation:** Both threads render client-side only. Programmatic extraction is not possible without a headless browser. The thread summaries above were captured via the Notion anchor page (895d08a0-f20f-4f8d-bb8d-c9dd55dee405).
 
 ## Related Repos
 - [foundry-unt00-un-nocked-truth](https://github.com/OKHP3/foundry-unt00-un-nocked-truth)
 - [foundry-psr00-pathscrib-r](https://github.com/OKHP3/foundry-psr00-pathscrib-r)
 - [foundry-hmt01-homestead-r](https://github.com/OKHP3/foundry-hmt01-homestead-r)
 
+## Notion extraction report (2026-06-25)
+Three Notion pages were read via the Notion API:
+
+| Page | Blocks | Outcome |
+|------|--------|---------|
+| Main project page (03572df2) | 0 | Empty page -- no content to extract |
+| ARE Notion Anchor (895d08a0) | 105 | Rich content extracted -- see Project origin section and Key Conventions tone additions |
+| Notion-GitHub Routing Hub (e2949892) | 27 | Structural routing index; table cells not exposed by block API at top level -- no extractable text rows for this repo |
+
+Net-new content merged from Notion: purpose reframing (audience + authority boundary), tone constraint, Phase 2 deferred note, project origin section, NIV added to translation_matrix.md.
+Content already captured: GitHub URL, repo name, Pew scope table, three traditions, mission constraints, related repos.
+
 ---
-*Generated: 2026-06-11 | Merged & updated: 2026-06-24 | Source: Notion Routing Hub + Local Scans + Session context*
+*Generated: 2026-06-11 | Merged & updated: 2026-06-25 | Source: Notion Routing Hub + Notion API extraction + Session context*

@@ -6,9 +6,10 @@ This document maps commonly used Bible editions and Qur’an translation IDs to 
 |------|---------------|------------------------|-------|
 | **KJV** | King James Version | Protestant | Historic 1611 translation; widely used among evangelicals and Baptists. |
 | **ESV** | English Standard Version | Protestant/Evangelical | Modern essentially literal translation; popular in evangelical circles. |
+| **NIV** | New International Version | Protestant/Evangelical | Widely used dynamic-equivalence translation (1978/2011); popular across evangelical and non-denominational churches. Available via bible-api.com. |
 | **NRSV** | New Revised Standard Version | Mainline Protestant/Ecumenical | Inclusive-language update to RSV; common in academic and ecumenical settings. |
-| **NABRE** | New American Bible Revised Edition | Catholic | Official English translation for liturgy in the United States; includes Deuterocanonical books. |
-| **Douay** | Douay–Rheims | Catholic | 16th‑century translation from the Latin Vulgate; traditional Catholic usage. |
+| **NABRE** | New American Bible Revised Edition | Catholic | Official English translation for liturgy in the United States; includes Deuterocanonical books (73-book canon). |
+| **Douay** | Douay-Rheims | Catholic | 16th-century translation from the Latin Vulgate; traditional Catholic usage. Includes Deuterocanonical books. |
 | **20** | Sahih International | Islam | Modern English Qur’an translation (ID 20 on Quran.com); balanced literal/dynamic rendering. |
 | **21** | Pickthall | Islam | Early 20th‑century translation by Marmaduke Pickthall; archaic style. |
 | **22** | Yusuf Ali | Islam | Translation with explanatory notes by Abdullah Yusuf Ali; widely circulated. |
