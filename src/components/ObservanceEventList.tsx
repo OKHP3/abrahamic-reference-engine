@@ -54,7 +54,7 @@ function EventRow({ event, isSelected, onSelect }: EventRowProps) {
     <div
       className={`rounded-lg border transition-colors ${
         isSelected
-          ? 'border-gold/30 bg-bg-elevated'
+          ? 'border-border-mid bg-bg-elevated'
           : 'border-border-subtle bg-bg-elevated/50 hover:border-border-subtle/80 hover:bg-bg-elevated'
       }`}
     >

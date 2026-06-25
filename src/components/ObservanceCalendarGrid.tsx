@@ -110,9 +110,12 @@ function CalendarCell({ date, year, month, events, isToday, selectedId, onEventC
                   key={ev.id}
                   onClick={() => onEventClick(ev.id === selectedId ? '' : ev.id)}
                   className={`w-full text-left text-[10px] leading-tight px-1 py-[2px] rounded truncate transition-all outline-none ${
-                    active ? 'opacity-100 ring-1 ring-inset' : 'opacity-75 hover:opacity-100'
+                    active ? 'opacity-100' : 'opacity-75 hover:opacity-100'
                   }`}
-                  style={{ background: active ? `${color}35` : `${color}20`, color }}
+                  style={{
+                    background: active ? color : `${color}22`,
+                    color: active ? '#ffffff' : color,
+                  }}
                   title={ev.rawName}
                 >
                   {ev.emoji} {chipLabel(ev.rawName)}
