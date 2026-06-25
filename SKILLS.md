@@ -1,18 +1,20 @@
-# ARE00 Agent Skills Package
+# ARE Agent Skills Package
 
 **Abrahamic Reference Engine -- Extractable Logic Layer**
 
-Part of [foundry-are00-abrahamic-reference-engine](https://github.com/OKHP3/foundry-are00-abrahamic-reference-engine)
+Part of [abrahamic-reference-engine](https://github.com/OKHP3/abrahamic-reference-engine)
 
 ---
 
 ## Dual mission
 
-ARE00 has two modes of value:
+ARE has two modes of value:
 
 1. **SPA** -- A single-page web application (Vite + React + TypeScript + Tailwind) for browsing, verse lookup, and cross-tradition comparison. Free to use, hosted on GitHub Pages.
 
 2. **Agent skills** -- A package of three standalone Markdown skill files that give any AI agent the same reference logic: how to fetch scriptures, how to find cross-tradition parallels, and how to navigate the tradition/denomination taxonomy. Usable offline, in any agentic platform, with no API keys required.
+
+Distributed via https://github.com/OKHP3/skillz under the `okhp3-*` namespace.
 
 ---
 
@@ -40,9 +42,9 @@ Exclusion is a methodological boundary, not a judgment of worth.
 
 ## The three skills
 
-### 1. `are00-verse-lookup`
+### 1. `okhp3-verse-lookup`
 
-**Path:** `.agents/skills/are00-verse-lookup/SKILL.md`
+**Path:** `.agents/skills/okhp3-verse-lookup/SKILL.md`
 
 Instructs an agent how to fetch a scripture passage from any of the three in-scope traditions using free, anonymous public APIs.
 
@@ -58,9 +60,9 @@ Instructs an agent how to fetch a scripture passage from any of the three in-sco
 
 ---
 
-### 2. `are00-cross-tradition-compare`
+### 2. `okhp3-cross-tradition-compare`
 
-**Path:** `.agents/skills/are00-cross-tradition-compare/SKILL.md`
+**Path:** `.agents/skills/okhp3-cross-tradition-compare/SKILL.md`
 
 Instructs an agent how to find and display parallel passages across Judaism, Christianity, and Islam on a shared theme.
 
@@ -75,9 +77,9 @@ Instructs an agent how to find and display parallel passages across Judaism, Chr
 
 ---
 
-### 3. `are00-tradition-reference`
+### 3. `okhp3-tradition-reference`
 
-**Path:** `.agents/skills/are00-tradition-reference/SKILL.md`
+**Path:** `.agents/skills/okhp3-tradition-reference/SKILL.md`
 
 Compact structured reference for each of the three in-scope traditions.
 
@@ -102,28 +104,28 @@ Add the skill content inline or reference it:
 
 ```bash
 # Option A: paste content into claude.md
-cat .agents/skills/are00-verse-lookup/SKILL.md >> claude.md
+cat .agents/skills/okhp3-verse-lookup/SKILL.md >> claude.md
 
 # Option B: symlink for version-controlled projects
-ln -s .agents/skills/are00-verse-lookup/SKILL.md .claude/skills/are00-verse-lookup.md
+ln -s .agents/skills/okhp3-verse-lookup/SKILL.md .claude/skills/okhp3-verse-lookup.md
 ```
 
 ### GitHub Copilot (.github/copilot-instructions.md)
 
 ```bash
-cat .agents/skills/are00-tradition-reference/SKILL.md >> .github/copilot-instructions.md
+cat .agents/skills/okhp3-tradition-reference/SKILL.md >> .github/copilot-instructions.md
 ```
 
 ### Cursor (.cursorrules or .cursor/rules/*.mdc)
 
 ```bash
-cp .agents/skills/are00-cross-tradition-compare/SKILL.md .cursor/rules/are00-cross-tradition-compare.mdc
+cp .agents/skills/okhp3-cross-tradition-compare/SKILL.md .cursor/rules/okhp3-cross-tradition-compare.mdc
 ```
 
 ### Windsurf / Cascade (.windsurfrules)
 
 ```bash
-cat .agents/skills/are00-verse-lookup/SKILL.md >> .windsurfrules
+cat .agents/skills/okhp3-verse-lookup/SKILL.md >> .windsurfrules
 ```
 
 ### Any agent with system prompt injection
@@ -146,6 +148,6 @@ The SKILL.md files are self-contained -- paste the full content into any system 
 
 MIT. See `LICENSE` at repo root.
 
-Author: OKHP3 -- OverKill Hill P³
-Repo: https://github.com/OKHP3/foundry-are00-abrahamic-reference-engine
+Author: OKHP3 -- OverKill Hill P3
+Repo: https://github.com/OKHP3/abrahamic-reference-engine
 Pew citation: https://www.pewresearch.org/religion/religious-landscape-study/

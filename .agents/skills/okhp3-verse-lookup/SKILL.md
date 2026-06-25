@@ -1,12 +1,12 @@
 ---
-name: are00-verse-lookup
+name: okhp3-verse-lookup
 description: Fetch a scripture passage from Judaism, Christianity, or Islam using free anonymous public APIs. Provides endpoint patterns, parameter formats, normalization rules, translation ID map, and error/fallback handling for all three in-scope Abrahamic traditions. Use when an agent needs to retrieve live or cached verse text from Sefaria (Judaism), bible-api.com (Christianity), or Quran.com with AlQuran.cloud fallback (Islam).
 version: 1.0.0
 license: MIT
 author: OKHP3
 ---
 
-# ARE00 -- Verse Lookup Skill
+# OKHP3 -- Verse Lookup Skill
 
 ## Scope
 

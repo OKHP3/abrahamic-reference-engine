@@ -1,12 +1,12 @@
 ---
-name: are00-cross-tradition-compare
+name: okhp3-cross-tradition-compare
 description: Find thematically parallel passages across Judaism, Christianity, and Islam. Embeds 20 pre-seeded themes with passage references for all three traditions, a neutral bridging note style guide, and the proportional representation rule for agents generating new comparisons. Use when an agent needs to surface shared wisdom across the three in-scope Abrahamic traditions without ranking or privileging any tradition.
 version: 1.0.0
 license: MIT
 author: OKHP3
 ---
 
-# ARE00 -- Cross-Tradition Compare Skill
+# OKHP3 -- Cross-Tradition Compare Skill
 
 ## Mission
 
@@ -358,7 +358,7 @@ Below the panels, render the `bridgingNote` under a "What Connects These?" headi
 
 ### Fetch live text (optional enhancement)
 
-Use the `are00-verse-lookup` skill with each passage's `lookup` key and `apiProvider`:
+Use the `okhp3-verse-lookup` skill with each passage's `lookup` key and `apiProvider`:
 - Judaism passages: use Sefaria (`tradition: 'judaism'`, `reference: lookup`)
 - Christianity passages: use bible-api.com (`tradition: 'christianity'`, `reference: lookup`)
 - Islam passages: use Quran.com with fallback (`tradition: 'islam'`, `reference: lookup`)

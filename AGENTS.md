@@ -1,9 +1,9 @@
-# foundry-are00-abrahamic-reference-engine
+# abrahamic-reference-engine
 
 ## Project Identity
 - **Suite**: FoundRy
 - **Type**: SPA + Agent Skills Package
-- **GitHub**: https://github.com/OKHP3/foundry-are00-abrahamic-reference-engine
+- **GitHub**: https://github.com/OKHP3/abrahamic-reference-engine
 - **Notion Anchor**: https://app.notion.com/p/895d08a0f20f4f8dbb8dc9dd55dee405
 - **Status**: Active / In Development
 
@@ -50,8 +50,8 @@ Source: https://www.pewresearch.org/religion/religious-landscape-study/
 - **Agent Skills**: OKHP3 skill format, MIT licensed
 
 ## Local Paths
-- **Windows**: `C:\Users\jamie\OKH-Local\Projects\foundry-are00-abrahamic-reference-engine`
-- **Mac**: `/Volumes/OKH-Local/04_GitHub_Mirrors/foundry-are00-abrahamic-reference-engine`
+- **Windows**: `C:\Users\jamie\OKH-Local\Projects\abrahamic-reference-engine`
+- **Mac**: `/Volumes/OKH-Local/04_GitHub_Mirrors/abrahamic-reference-engine`
 
 ## Key Conventions
 - Neutral, non-ranking language in all UI copy and skill content
@@ -61,7 +61,8 @@ Source: https://www.pewresearch.org/religion/religious-landscape-study/
 - AutoCAD version is R10 (locked, not negotiable)
 - Cross-tradition compare is the signature feature -- it embodies the mission
 - The "Why these three?" / Pew citation explainer is not optional -- always present in the UI
-- `src/` holds all React/TypeScript source; knowledge base Markdown/JSON files stay at repo root
+- `src/` holds all React/TypeScript source; reference docs live in `docs/`
+- Agent skills distributed via https://github.com/OKHP3/skillz under `okhp3-*` namespace
 
 ## Related Repos
 - [foundry-unt00-un-nocked-truth](https://github.com/OKHP3/foundry-unt00-un-nocked-truth)

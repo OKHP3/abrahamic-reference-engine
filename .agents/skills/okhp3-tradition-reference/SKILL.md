@@ -1,12 +1,12 @@
 ---
-name: are00-tradition-reference
+name: okhp3-tradition-reference
 description: Compact structured reference for each of the three in-scope Abrahamic traditions -- Judaism, Christianity (5 denominations), and Islam. Covers canon scope, key texts, US population share with Pew citation, available translations, API provider, and a clear out-of-scope section. Use when an agent needs authoritative metadata about any of the three traditions before generating content, making API calls, or answering scope questions.
 version: 1.0.0
 license: MIT
 author: OKHP3
 ---
 
-# ARE00 -- Tradition Reference Skill
+# OKHP3 -- Tradition Reference Skill
 
 ## Scope criteria
 
