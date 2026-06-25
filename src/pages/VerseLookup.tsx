@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { fetchPassage } from '../api'
+import { fetchPassage, fetchNephiPassage, isLdsBibleRef, LdsApiUnavailableError } from '../api'
 import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
 import { getContextualThemes, isContextualMatch } from '../data/themeMapping'
@@ -11,6 +11,8 @@ import ErrorMessage from '../components/ErrorMessage'
 import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
 import type { Passage, Hadith, TraditionFamily, ApiStatus } from '../types'
+
+type ChristianDenomination = 'lds' | null
 
 const TRADITION_EXAMPLES: Record<TraditionFamily, Array<{ label: string; ref: string }>> = {
   judaism: [
@@ -33,11 +35,20 @@ const TRADITION_EXAMPLES: Record<TraditionFamily, Array<{ label: string; ref: st
   ],
 }
 
+const LDS_EXAMPLES = [
+  { label: '2 Nephi 2:25', ref: '2 Ne. 2:25' },
+  { label: 'Moroni 10:4-5', ref: 'Moro. 10:4-5' },
+  { label: 'D&C 76:22', ref: 'D&C 76:22' },
+  { label: 'Moses 1:39', ref: 'Moses 1:39' },
+]
+
 const TRADITION_PLACEHOLDER: Record<TraditionFamily, string> = {
   judaism: 'e.g. Genesis 1:1 or Psalms 23',
   christianity: 'e.g. john 3:16 or romans 8:28-39',
   islam: 'e.g. 2:255 (surah:ayah)',
 }
+
+const LDS_PLACEHOLDER = 'e.g. 2 Ne. 2:25 or D&C 76:22 or james 1:5'
 
 const TRADITION_LABELS: Record<TraditionFamily, string> = {
   judaism: 'Judaism',
@@ -68,15 +79,26 @@ export default function VerseLookup() {
 
   const initialTradition = (searchParams.get('tradition') as TraditionFamily | null) ?? 'judaism'
   const initialRef = searchParams.get('ref') ?? ''
+  const initialDenom = searchParams.get('denomination') === 'lds' ? 'lds' : null
+
+  const VALID_FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
+  const validatedInitialTradition: TraditionFamily | null =
+    VALID_FAMILIES.includes(initialTradition as TraditionFamily)
+      ? (initialTradition as TraditionFamily)
+      : null
 
   const [tradition, setTradition] = useState<TraditionFamily>(
-    ['judaism', 'christianity', 'islam'].includes(initialTradition) ? initialTradition : 'judaism'
+    validatedInitialTradition ?? 'judaism'
+  )
+  const [denomination, setDenomination] = useState<ChristianDenomination>(
+    validatedInitialTradition === 'christianity' ? initialDenom : null
   )
   const [reference, setReference] = useState(initialRef)
   const [translationId, setTranslationId] = useState('')
   const [status, setStatus] = useState<ApiStatus>('idle')
   const [passage, setPassage] = useState<Passage | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isLdsFallback, setIsLdsFallback] = useState(false)
   const [hadiths, setHadiths] = useState<Hadith[]>([])
   const [hadithStatus, setHadithStatus] = useState<ApiStatus>('idle')
   const [hadithIndex, setHadithIndex] = useState(0)
@@ -93,38 +115,42 @@ export default function VerseLookup() {
     setTranslationId(defaultTranslation)
   }, [tradition])
 
-  const VALID_FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
-  const validatedInitialTradition: TraditionFamily | null =
-    VALID_FAMILIES.includes(initialTradition as TraditionFamily)
-      ? (initialTradition as TraditionFamily)
-      : null
-
   useEffect(() => {
     if (validatedInitialTradition && isLikelyValidRef(validatedInitialTradition, initialRef)) {
-      doFetch(validatedInitialTradition, initialRef.trim(), freeTranslations[0]?.id ?? '')
+      doFetch(validatedInitialTradition, initialRef.trim(), freeTranslations[0]?.id ?? '', initialDenom)
     }
   }, [])
 
   useEffect(() => {
-    if (reference) {
-      setSearchParams({ tradition, ref: reference }, { replace: true })
-    } else {
-      setSearchParams({ tradition }, { replace: true })
-    }
-  }, [tradition, reference])
+    const params: Record<string, string> = { tradition }
+    if (reference) params.ref = reference
+    if (denomination) params.denomination = denomination
+    setSearchParams(params, { replace: true })
+  }, [tradition, reference, denomination])
 
   const doFetch = useCallback(
-    async (trad: TraditionFamily, ref: string, xlation: string) => {
+    async (
+      trad: TraditionFamily,
+      ref: string,
+      xlation: string,
+      denom: ChristianDenomination = null,
+    ) => {
       if (!ref.trim()) return
       setStatus('loading')
       setPassage(null)
       setError(null)
+      setIsLdsFallback(false)
       setHadiths([])
       setHadithStatus('idle')
       setHadithIndex(0)
       setHadithError(null)
       try {
-        const result = await fetchPassage({ tradition: trad, reference: ref.trim(), translationId: xlation })
+        let result: Passage
+        if (trad === 'christianity' && denom === 'lds' && !isLdsBibleRef(ref)) {
+          result = await fetchNephiPassage(ref.trim())
+        } else {
+          result = await fetchPassage({ tradition: trad, reference: ref.trim(), translationId: xlation })
+        }
         setPassage(result)
         setStatus('success')
         setFetchedRef(ref.trim())
@@ -155,7 +181,12 @@ export default function VerseLookup() {
             })
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error fetching passage.')
+        if (err instanceof LdsApiUnavailableError) {
+          setIsLdsFallback(true)
+          setError(err.message)
+        } else {
+          setError(err instanceof Error ? err.message : 'Unknown error fetching passage.')
+        }
         setStatus('error')
       }
     },
@@ -164,14 +195,18 @@ export default function VerseLookup() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSearchParams({ tradition, ref: reference })
-    doFetch(tradition, reference, translationId)
+    const params: Record<string, string> = { tradition, ref: reference }
+    if (denomination) params.denomination = denomination
+    setSearchParams(params)
+    doFetch(tradition, reference, translationId, denomination)
   }
 
   function handleTraditionChange(next: TraditionFamily) {
     setTradition(next)
+    setDenomination(null)
     setPassage(null)
     setError(null)
+    setIsLdsFallback(false)
     setStatus('idle')
     setReference('')
     setHadiths([])
@@ -181,11 +216,26 @@ export default function VerseLookup() {
     setSearchParams({ tradition: next })
   }
 
+  function handleDenominationChange(next: ChristianDenomination) {
+    setDenomination(next)
+    setPassage(null)
+    setError(null)
+    setIsLdsFallback(false)
+    setStatus('idle')
+    setReference('')
+  }
+
   function handleExample(ref: string) {
     setReference(ref)
-    setSearchParams({ tradition, ref })
-    doFetch(tradition, ref, translationId)
+    const params: Record<string, string> = { tradition, ref }
+    if (denomination) params.denomination = denomination
+    setSearchParams(params)
+    doFetch(tradition, ref, translationId, denomination)
   }
+
+  const isLds = tradition === 'christianity' && denomination === 'lds'
+  const currentExamples = isLds ? LDS_EXAMPLES : TRADITION_EXAMPLES[tradition]
+  const currentPlaceholder = isLds ? LDS_PLACEHOLDER : TRADITION_PLACEHOLDER[tradition]
 
   return (
     <div>
@@ -231,6 +281,50 @@ export default function VerseLookup() {
             </fieldset>
           </div>
 
+          {tradition === 'christianity' && (
+            <div className="mb-4 pl-1 border-l-2 border-violet-900">
+              <fieldset>
+                <legend className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
+                  Denomination
+                </legend>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => handleDenominationChange(null)}
+                    className={[
+                      'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
+                      denomination === null
+                        ? 'text-violet-300 border-violet-700 bg-violet-950'
+                        : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
+                    ].join(' ')}
+                    aria-pressed={denomination === null}
+                  >
+                    Standard
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDenominationChange('lds')}
+                    className={[
+                      'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
+                      denomination === 'lds'
+                        ? 'text-violet-300 border-violet-700 bg-violet-950'
+                        : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
+                    ].join(' ')}
+                    aria-pressed={denomination === 'lds'}
+                  >
+                    LDS
+                  </button>
+                </div>
+                {denomination === 'lds' && (
+                  <p className="text-2xs text-muted mt-2">
+                    Latter-day Saint -- includes Bible (KJV) via bible-api.com and Standard
+                    Works (Book of Mormon, D&C, Pearl of Great Price) via scriptures.nephi.org.
+                  </p>
+                )}
+              </fieldset>
+            </div>
+          )}
+
           <div className="flex gap-3 mb-4 flex-col sm:flex-row">
             <div className="flex-1 min-w-0">
               <label htmlFor="verse-reference" className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
@@ -241,36 +335,51 @@ export default function VerseLookup() {
                 type="text"
                 value={reference}
                 onChange={e => setReference(e.target.value)}
-                placeholder={TRADITION_PLACEHOLDER[tradition]}
+                placeholder={currentPlaceholder}
                 className="w-full bg-bg-base border border-border-mid rounded px-3 py-2 text-sm font-sans text-parchment placeholder-muted focus:outline-none focus:border-gold-muted transition-colors"
                 aria-describedby="reference-hint"
                 autoComplete="off"
                 spellCheck={false}
               />
               <p id="reference-hint" className="text-2xs text-muted mt-1">
-                {tradition === 'islam' ? 'Format: surah:ayah (e.g. 2:255)' :
-                 tradition === 'judaism' ? 'Format: Book Chapter:Verse (e.g. Genesis 1:1)' :
-                 'Format: book chapter:verse (e.g. john 3:16)'}
+                {isLds
+                  ? 'Bible: book chapter:verse (e.g. james 1:5) -- Standard Works: e.g. 2 Ne. 2:25, D&C 76:22, Moses 1:39'
+                  : tradition === 'islam'
+                  ? 'Format: surah:ayah (e.g. 2:255)'
+                  : tradition === 'judaism'
+                  ? 'Format: Book Chapter:Verse (e.g. Genesis 1:1)'
+                  : 'Format: book chapter:verse (e.g. john 3:16)'}
               </p>
             </div>
 
-            <div className="sm:w-48 flex-shrink-0">
-              <label htmlFor="translation-select" className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
-                Translation
-              </label>
-              <select
-                id="translation-select"
-                value={translationId}
-                onChange={e => setTranslationId(e.target.value)}
-                className="w-full bg-bg-base border border-border-mid rounded px-3 py-2 text-sm font-sans text-parchment focus:outline-none focus:border-gold-muted transition-colors"
-              >
-                {freeTranslations.map(t => (
-                  <option key={t.id} value={t.id}>
-                    {t.shortName}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {!isLds && (
+              <div className="sm:w-48 flex-shrink-0">
+                <label htmlFor="translation-select" className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
+                  Translation
+                </label>
+                <select
+                  id="translation-select"
+                  value={translationId}
+                  onChange={e => setTranslationId(e.target.value)}
+                  className="w-full bg-bg-base border border-border-mid rounded px-3 py-2 text-sm font-sans text-parchment focus:outline-none focus:border-gold-muted transition-colors"
+                >
+                  {freeTranslations.map(t => (
+                    <option key={t.id} value={t.id}>
+                      {t.shortName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {isLds && (
+              <div className="sm:w-48 flex-shrink-0 flex items-end">
+                <p className="text-2xs text-muted leading-relaxed">
+                  Bible refs use KJV.
+                  Standard Works use LDS canonical text.
+                </p>
+              </div>
+            )}
           </div>
 
           <button
@@ -290,12 +399,33 @@ export default function VerseLookup() {
         </div>
       )}
 
-      {status === 'error' && error && (
+      {status === 'error' && error && !isLdsFallback && (
         <ErrorMessage
           message={error}
-          onRetry={() => doFetch(tradition, reference, translationId)}
+          onRetry={() => doFetch(tradition, reference, translationId, denomination)}
           className="mb-6"
         />
+      )}
+
+      {status === 'error' && isLdsFallback && (
+        <div className="mb-6 p-5 border border-violet-800 rounded-lg bg-bg-elevated">
+          <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-violet-400 mb-2">
+            LDS Standard Works
+          </h3>
+          <p className="text-sm text-ink leading-relaxed mb-3">
+            The Book of Mormon, Doctrine &amp; Covenants, and Pearl of Great Price are served
+            via a community-maintained API (scriptures.nephi.org) with no uptime guarantee.
+            It appears to be unreachable right now.
+          </p>
+          <a
+            href="https://www.churchofjesuschrist.org/study/scriptures"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-4 py-2 text-xs font-sans font-semibold text-violet-300 border border-violet-700 rounded hover:bg-violet-950 transition-all duration-150 no-underline"
+          >
+            Look up on ChurchOfJesusChrist.org &rarr;
+          </a>
+        </div>
       )}
 
       {status === 'success' && passage && (
@@ -323,7 +453,7 @@ export default function VerseLookup() {
             Quick Examples
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {TRADITION_EXAMPLES[tradition].map(ex => (
+            {currentExamples.map(ex => (
               <button
                 key={ex.ref}
                 onClick={() => handleExample(ex.ref)}

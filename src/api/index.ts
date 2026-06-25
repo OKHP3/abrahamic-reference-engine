@@ -15,6 +15,13 @@ export {
   COLLECTION_DISPLAY_NAMES,
 } from './hadith'
 
+export {
+  fetchNephiPassage,
+  isLdsBibleRef,
+  LdsApiUnavailableError,
+  LDS_UNAVAILABLE_MSG,
+} from './nephi'
+
 import type { Passage } from '../types'
 import { fetchSefariaText } from './sefaria'
 import { fetchAyah } from './quran'
