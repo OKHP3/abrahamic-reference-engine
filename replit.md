@@ -21,7 +21,7 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 | `npm run dev` | Start dev server at http://localhost:5000 |
 | `npm run build` | Production build -- outputs to `dist/` |
 | `npm run preview` | Preview the production build locally |
-| `bash scripts/post-merge.sh` | Run after task-agent merges (installs deps) |
+| `npm install` | Run after task-agent merges or pulling fresh |
 
 ---
 
@@ -33,8 +33,8 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare
 - GitHub Pages deploy workflow in place (.github/workflows/deploy-pages.yml)
-- Vite base path set to /abrahamic-reference-engine/ for Pages subpath routing
-- React Router basename set to /abrahamic-reference-engine
+- Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on NODE_ENV)
+- React Router basename driven by `import.meta.env.BASE_URL` -- empty in dev, `/abrahamic-reference-engine` in prod
 
 ---
 
@@ -84,12 +84,11 @@ All data fetched from public free APIs or served from static pre-seeded files
 | `src/pages/VerseLookup.tsx` | Live verse fetch by reference |
 | `src/pages/CrossTraditionCompare.tsx` | Side-by-side cross-tradition theme comparison |
 | `src/components/ScopeExplainer.tsx` | "Why these three?" / Pew citation widget |
-| `docs/translation-matrix.md` | Full translation code reference table |
-| `docs/api/*.json` | OpenAPI specs for all five APIs |
-| `vite.config.ts` | Vite config -- base path, host, port |
+| `.agents/skills/okhp3-verse-lookup/translation-matrix.md` | Full translation code reference table |
+| `.agents/skills/okhp3-verse-lookup/api/` | OpenAPI specs for all five APIs |
+| `vite.config.ts` | Vite config -- conditional base path, host, port |
 | `tailwind.config.ts` | Tailwind -- custom ARE color tokens |
 | `.github/workflows/deploy-pages.yml` | GitHub Actions -- build + deploy to Pages |
-| `scripts/post-merge.sh` | Post-merge setup script |
 
 ---
 
@@ -109,9 +108,10 @@ All data fetched from public free APIs or served from static pre-seeded files
 
 ## Known Issues / Work in Progress
 
-- GitHub Pages deploy not yet triggered -- requires pushing to `main` branch on GitHub and enabling Pages in repo settings (Source: GitHub Actions)
-- LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes needed in skill files (tracked as Task #13)
-- GPT origin artifact bundle not yet imported into repo (tracked as Task #12)
+- GitHub Pages: deploy workflow exists but Pages must be enabled in GitHub repo settings (Settings > Pages > Source: GitHub Actions) after pushing to main
+- GitHub push of `.github/workflows/` requires a token with `workflow` scope -- add the file via GitHub web UI if token lacks that scope
+- LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes tracked as a follow-up
+- GPT origin artifact bundle not yet imported into repo -- tracked as a follow-up
 
 ---
 

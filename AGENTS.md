@@ -36,12 +36,11 @@ use **US English** (en-US). This is non-negotiable and applies to every agent.
 
 ## Section 1: Naming Conventions
 
-- **Directories:** kebab-case (`docs/api/`, `src/components/`)
+- **Directories:** kebab-case (`src/components/`, `src/api/`)
 - **React components:** PascalCase (`TraditionBrowser.tsx`, `VerseCard.tsx`)
 - **Utilities / hooks / data:** camelCase (`fetchVerse.ts`, `traditions.ts`)
-- **Documentation:** kebab-case (`translation-matrix.md`, `deploy-pages.yml`)
+- **Skill support files:** live inside the skill directory (e.g. `.agents/skills/okhp3-verse-lookup/api/`)
 - No spaces, no underscores in new file names
-- The legacy `translation_matrix.md` has been renamed to `docs/translation-matrix.md`
 
 ---
 
@@ -50,11 +49,9 @@ use **US English** (en-US). This is non-negotiable and applies to every agent.
 The following are the only items allowed at the repo root:
 
 ```
-.agents/           skills and memory
+.agents/           skills, memory, and skill-scoped support files
 .github/           Actions workflows
-docs/              documentation and API reference specs
 public/            static assets (favicon, etc.)
-scripts/           utility shell scripts
 src/               application source
 
 .gitattributes
@@ -78,15 +75,19 @@ vite.config.ts
 
 Anything not on this list is detritus and must be removed or relocated before committing.
 
+**No `docs/` directory.** Reference documents (OpenAPI specs, translation matrix) live inside the skill package that uses them: `.agents/skills/okhp3-verse-lookup/`.
+**No `scripts/` directory.** Post-merge setup is `npm install`. Document it in `replit.md`, not a shell script.
+
 ---
 
 ## Section 3: Detritus Rule
 
 - No scratch files, transcripts, or one-off scripts at root
 - No loose `.py`, `.json` (except package files), or stray `.md` at root
+- No `docs/` or `scripts/` directories -- these have been intentionally removed
 - Agent-generated screenshots go in `attached_assets/` (gitignored)
 - `dist/` is gitignored -- never commit build output
-- Legacy ChatGPT Custom GPT artifacts (`generate_files.py`, `settings_schema.json`, `ui_copy.md`) have been deleted -- do not recreate them
+- Legacy ChatGPT Custom GPT artifacts have been deleted -- do not recreate them
 
 ---
 
@@ -148,15 +149,6 @@ src/
   index.css     Tailwind directives + custom color tokens
   types/        TypeScript type definitions
 
-docs/
-  api/          OpenAPI spec files for five external APIs:
-                openapi_alquran.json, openapi_bible.json, openapi_hadith.json,
-                openapi_quran.json, openapi_sefaria.json
-  translation-matrix.md    Full translation ID / version reference table
-
-scripts/
-  post-merge.sh   Run after task-agent merges (npm install)
-
 .github/
   workflows/
     deploy-pages.yml    GitHub Actions: build + deploy to GitHub Pages on push to main
@@ -164,6 +156,9 @@ scripts/
 .agents/
   skills/
     okhp3-verse-lookup/
+      SKILL.md
+      translation-matrix.md    Full translation ID / version reference table
+      api/                     OpenAPI specs for Sefaria, bible-api.com, Quran.com, AlQuran, Hadith
     okhp3-tradition-reference/
     okhp3-cross-tradition-compare/
     okhp3-notion-capture-router/

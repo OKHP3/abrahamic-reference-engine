@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  base: '/abrahamic-reference-engine/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/abrahamic-reference-engine/' : '/',
   plugins: [react()],
   server: {
     host: '0.0.0.0',
@@ -14,4 +14,4 @@ export default defineConfig({
     port: 5000,
     allowedHosts: true,
   },
-})
+}))
