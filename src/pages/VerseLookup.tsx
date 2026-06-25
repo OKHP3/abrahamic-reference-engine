@@ -3,7 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom'
 import { fetchPassage } from '../api'
 import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
-import { COMPARE_THEMES, FEATURED_THEME_IDS } from '../data/compareThemes'
+import { getContextualThemes, isContextualMatch } from '../data/themeMapping'
 import VerseCard from '../components/VerseCard'
 import HadithCard from '../components/HadithCard'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -45,11 +45,6 @@ const TRADITION_LABELS: Record<TraditionFamily, string> = {
   islam: 'Islam',
 }
 
-function getSuggestedThemes() {
-  const featured = FEATURED_THEME_IDS.slice(0, 3)
-  return featured.map(id => COMPARE_THEMES.find(t => t.id === id)).filter(Boolean)
-}
-
 function buildHadithNumbers(ref: string): number[] {
   const surah = Math.max(1, parseInt(ref.split(':')[0]) || 1)
   const base = ((surah * 53) % 900) + 100
@@ -77,6 +72,8 @@ export default function VerseLookup() {
   const [hadithStatus, setHadithStatus] = useState<ApiStatus>('idle')
   const [hadithIndex, setHadithIndex] = useState(0)
   const [hadithError, setHadithError] = useState<string | null>(null)
+  const [fetchedRef, setFetchedRef] = useState('')
+  const [fetchedTradition, setFetchedTradition] = useState<TraditionFamily>('judaism')
 
   const freeTranslations = TRANSLATIONS_BY_FAMILY[tradition].filter(
     t => t.license !== 'licensed'
@@ -107,6 +104,8 @@ export default function VerseLookup() {
         const result = await fetchPassage({ tradition: trad, reference: ref.trim(), translationId: xlation })
         setPassage(result)
         setStatus('success')
+        setFetchedRef(ref.trim())
+        setFetchedTradition(trad)
         if (trad === 'islam') {
           setHadithStatus('loading')
           const numbers = buildHadithNumbers(ref.trim())
@@ -163,8 +162,6 @@ export default function VerseLookup() {
     setSearchParams({ tradition, ref })
     doFetch(tradition, ref, translationId)
   }
-
-  const suggestedThemes = getSuggestedThemes()
 
   return (
     <div>
@@ -318,17 +315,28 @@ export default function VerseLookup() {
         </div>
       ) : null}
 
-      {status === 'success' && passage && (
-        <div className="mb-6">
-          <h2 className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-3">
-            Explore Parallels
-          </h2>
-          <p className="text-sm text-ink mb-4 leading-relaxed">
-            See how the other two traditions address similar themes:
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {suggestedThemes.map(theme =>
-              theme ? (
+      {status === 'success' && passage && (() => {
+        const contextual = isContextualMatch(fetchedTradition, fetchedRef)
+        const themes = getContextualThemes(fetchedTradition, fetchedRef)
+        return (
+          <div className="mb-6">
+            <div className="flex items-baseline gap-2 mb-3">
+              <h2 className="text-xs font-sans font-bold tracking-widest uppercase text-muted">
+                Explore Parallels
+              </h2>
+              {contextual && (
+                <span className="text-2xs font-sans text-gold italic">
+                  matched to this passage
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-ink mb-4 leading-relaxed">
+              {contextual
+                ? 'Themes drawn from this part of scripture -- see how the other traditions approach them:'
+                : 'See how the other two traditions address similar themes:'}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {themes.map(theme => (
                 <Link
                   key={theme.id}
                   to={`/compare?theme=${theme.id}`}
@@ -346,11 +354,11 @@ export default function VerseLookup() {
                     {theme.description}
                   </p>
                 </Link>
-              ) : null
-            )}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       <ScopeExplainer compact className="mb-6" />
 
