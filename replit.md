@@ -27,11 +27,12 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 
 ## Current State (as of 2026-06-25)
 
-- SPA complete -- all three modes working
+- SPA complete -- all four modes working
 - TraditionBrowser: browse Judaism, Christianity (5 denominations), Islam with verse cards and Pew explainer
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
-- Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare
+- ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
+- Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar
 - GitHub Pages deploy workflow in place (.github/workflows/deploy-pages.yml)
 - Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on `command`)
 - React Router basename driven by `import.meta.env.BASE_URL` -- empty in dev, `/abrahamic-reference-engine` in prod
@@ -59,6 +60,7 @@ All data fetched from public free APIs or served from static pre-seeded files
 | `/browse/:traditionSlug` | TraditionBrowser (tradition detail) |
 | `/lookup` | VerseLookup |
 | `/compare` | CrossTraditionCompare |
+| `/observances` | ObservancesCalendar |
 | `/*` | Redirects to `/browse` |
 
 ### APIs

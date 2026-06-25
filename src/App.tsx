@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import TraditionBrowser from './pages/TraditionBrowser'
 import VerseLookup from './pages/VerseLookup'
 import CrossTraditionCompare from './pages/CrossTraditionCompare'
+import ObservancesCalendar from './pages/ObservancesCalendar'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="browse/:traditionSlug" element={<TraditionBrowser />} />
           <Route path="lookup" element={<VerseLookup />} />
           <Route path="compare" element={<CrossTraditionCompare />} />
+          <Route path="observances" element={<ObservancesCalendar />} />
           <Route path="*" element={<Navigate to="/browse" replace />} />
         </Route>
       </Routes>
