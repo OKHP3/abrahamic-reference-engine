@@ -12,7 +12,48 @@ import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
 import type { Passage, Hadith, TraditionFamily, ApiStatus } from '../types'
 
-type ChristianDenomination = 'lds' | null
+type ChristianDenomination = 'lds' | 'orthodox' | null
+
+interface OrthodoxGapBook {
+  name: string
+  description: string
+  searchUrl: string
+}
+
+const ORTHODOX_GAP_BOOKS: Record<string, OrthodoxGapBook> = {
+  '3maccabees': {
+    name: '3 Maccabees',
+    description:
+      'Recounts Ptolemy IV\'s attempt to desecrate the Jerusalem Temple and the subsequent persecution of Alexandrian Jews. Included in the Orthodox OT (Septuagint tradition) but absent from Protestant and most Catholic editions.',
+    searchUrl: 'https://www.biblegateway.com/passage/?search=3+Maccabees+1&version=NRSV',
+  },
+  '4maccabees': {
+    name: '4 Maccabees',
+    description:
+      'A philosophical treatise on the supremacy of reason over passion, using the Maccabean martyrs as examples. Included as an appendix in some Orthodox canons (Greek, Georgian, Armenian) but absent from Western canons.',
+    searchUrl: 'https://www.biblegateway.com/passage/?search=4+Maccabees+1&version=NRSV',
+  },
+  psalm151: {
+    name: 'Psalm 151',
+    description:
+      'A short supernumerary psalm attesting David\'s anointing, preserved in the Septuagint. Included in the Orthodox psalter after Psalm 150 but absent from Protestant and Catholic psalters in most editions.',
+    searchUrl: 'https://www.biblegateway.com/passage/?search=Psalm+151&version=NRSVA',
+  },
+}
+
+function detectOrthodoxGap(ref: string): OrthodoxGapBook | null {
+  const lower = ref.toLowerCase().trim()
+  if (lower.startsWith('3 macc') || lower.startsWith('iii macc') || lower.startsWith('3macc')) {
+    return ORTHODOX_GAP_BOOKS['3maccabees']
+  }
+  if (lower.startsWith('4 macc') || lower.startsWith('iv macc') || lower.startsWith('4macc')) {
+    return ORTHODOX_GAP_BOOKS['4maccabees']
+  }
+  if (/^psalms?\s+151\b/.test(lower)) {
+    return ORTHODOX_GAP_BOOKS['psalm151']
+  }
+  return null
+}
 
 const TRADITION_EXAMPLES: Record<TraditionFamily, Array<{ label: string; ref: string }>> = {
   judaism: [
@@ -79,7 +120,9 @@ export default function VerseLookup() {
 
   const initialTradition = (searchParams.get('tradition') as TraditionFamily | null) ?? 'judaism'
   const initialRef = searchParams.get('ref') ?? ''
-  const initialDenom = searchParams.get('denomination') === 'lds' ? 'lds' : null
+  const rawDenom = searchParams.get('denomination')
+  const initialDenom: ChristianDenomination =
+    rawDenom === 'lds' ? 'lds' : rawDenom === 'orthodox' ? 'orthodox' : null
 
   const VALID_FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
   const validatedInitialTradition: TraditionFamily | null =
@@ -99,6 +142,7 @@ export default function VerseLookup() {
   const [passage, setPassage] = useState<Passage | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLdsFallback, setIsLdsFallback] = useState(false)
+  const [canonGapBook, setCanonGapBook] = useState<OrthodoxGapBook | null>(null)
   const [hadiths, setHadiths] = useState<Hadith[]>([])
   const [hadithStatus, setHadithStatus] = useState<ApiStatus>('idle')
   const [hadithIndex, setHadithIndex] = useState(0)
@@ -136,7 +180,23 @@ export default function VerseLookup() {
       denom: ChristianDenomination = null,
     ) => {
       if (!ref.trim()) return
+      if (denom === 'orthodox') {
+        const gap = detectOrthodoxGap(ref)
+        if (gap) {
+          setCanonGapBook(gap)
+          setStatus('error')
+          setPassage(null)
+          setError(null)
+          setIsLdsFallback(false)
+          setHadiths([])
+          setHadithStatus('idle')
+          setHadithIndex(0)
+          setHadithError(null)
+          return
+        }
+      }
       setStatus('loading')
+      setCanonGapBook(null)
       setPassage(null)
       setError(null)
       setIsLdsFallback(false)
@@ -207,6 +267,7 @@ export default function VerseLookup() {
     setPassage(null)
     setError(null)
     setIsLdsFallback(false)
+    setCanonGapBook(null)
     setStatus('idle')
     setReference('')
     setHadiths([])
@@ -221,6 +282,7 @@ export default function VerseLookup() {
     setPassage(null)
     setError(null)
     setIsLdsFallback(false)
+    setCanonGapBook(null)
     setStatus('idle')
     setReference('')
   }
@@ -314,11 +376,31 @@ export default function VerseLookup() {
                   >
                     LDS
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDenominationChange('orthodox')}
+                    className={[
+                      'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150',
+                      denomination === 'orthodox'
+                        ? 'text-violet-300 border-violet-700 bg-violet-950'
+                        : 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid',
+                    ].join(' ')}
+                    aria-pressed={denomination === 'orthodox'}
+                  >
+                    Orthodox
+                  </button>
                 </div>
                 {denomination === 'lds' && (
                   <p className="text-2xs text-muted mt-2">
                     Latter-day Saint -- includes Bible (KJV) via bible-api.com and Standard
                     Works (Book of Mormon, D&C, Pearl of Great Price) via scriptures.nephi.org.
+                  </p>
+                )}
+                {denomination === 'orthodox' && (
+                  <p className="text-2xs text-muted mt-2">
+                    Eastern and Oriental Orthodox -- uses the Septuagint-based canon (76-78 books).
+                    Most books work normally; 3 Maccabees, 4 Maccabees, and Psalm 151 are not yet
+                    covered by the connected API.
                   </p>
                 )}
               </fieldset>
@@ -424,6 +506,30 @@ export default function VerseLookup() {
             className="inline-block px-4 py-2 text-xs font-sans font-semibold text-violet-300 border border-violet-700 rounded hover:bg-violet-950 transition-all duration-150 no-underline"
           >
             Look up on ChurchOfJesusChrist.org &rarr;
+          </a>
+        </div>
+      )}
+
+      {status === 'error' && canonGapBook && (
+        <div className="mb-6 p-5 border border-violet-800 rounded-lg bg-bg-elevated">
+          <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-violet-400 mb-1">
+            Orthodox Canon -- Coverage Gap
+          </h3>
+          <p className="text-base font-serif text-parchment mb-2">{canonGapBook.name}</p>
+          <p className="text-sm text-ink leading-relaxed mb-3">
+            {canonGapBook.description}
+          </p>
+          <p className="text-sm text-ink leading-relaxed mb-4">
+            This text is part of the Orthodox canon but is not yet available through the
+            connected API (bible-api.com WEB). Coverage may be added in a future update.
+          </p>
+          <a
+            href={canonGapBook.searchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-4 py-2 text-xs font-sans font-semibold text-violet-300 border border-violet-700 rounded hover:bg-violet-950 transition-all duration-150 no-underline"
+          >
+            Read {canonGapBook.name} on BibleGateway &rarr;
           </a>
         </div>
       )}
