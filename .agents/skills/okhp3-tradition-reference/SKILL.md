@@ -298,3 +298,27 @@ Use `translationId` values as the integer in the Quran.com `translations` query 
 | Judaism | 2% | Sefaria | `sefaria.org/api/texts` | `Genesis 1:1` | Sefaria English |
 | Christianity | 63% | bible-api.com | `bible-api.com` | `john 3:16` | KJV |
 | Islam | 1% | Quran.com v4 | `api.quran.com/api/v4` | `2:255` | Sahih International (ID 20) |
+
+---
+
+## Knowledge scaffold file inventory
+
+All files live under `knowledge/` in this skill directory.
+
+| File | Description |
+|------|-------------|
+| `judaism-primer.md` | Tradition overview: canon, themes, interpretive schools, key passages |
+| `islam-primer.md` | Tradition overview: Quran and Hadith structure, Five Pillars, tafsir traditions |
+| `christianity-overview.md` | Christianity as a whole: US share, denominational breakdown, canon summary |
+| `christianity-catholic.md` | Catholic denomination: Magisterium, 73-book canon, sacraments, translation notes |
+| `christianity-evangelical-protestant.md` | Evangelical Protestant: sola scriptura, inerrancy, born-again distinctives |
+| `christianity-mainline-protestant.md` | Mainline Protestant: Wesleyan Quadrilateral, ecumenism, social-justice orientation |
+| `christianity-lds-restorationist.md` | LDS / Restorationist: Standard Works four-volume canon, prophetic succession, temple ordinances |
+| `christianity-orthodox.md` | Orthodox Christian: theosis, Divine Liturgy, Septuagint canon, API gap notes |
+| `cross-tradition-compare-method.md` | Methodology for neutral cross-tradition comparison: proportional representation, bridging note style |
+| `neutral-glossary.md` | Shared Abrahamic vocabulary with tradition-neutral definitions |
+| `translation-metadata.md` | Translation ID map, license status, and API availability for all three traditions |
+| `reserve-01-scope-expansion-notes.md` | Phase 2 notes: traditions considered for future scope expansion beyond Abrahamic lineage |
+| `reserve-02-api-gap-register.md` | API gap register: translations and texts with no free anonymous API coverage |
+| `reserve-03-ui-copy.md` | UI copy reference: labels, explainer text, and tone guidelines for the ARE interface |
+| `reserve-04-denominational-distinctives-extended.md` | Extended denominational distinctives beyond what fits in the main SKILL.md |

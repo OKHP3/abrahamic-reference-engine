@@ -160,6 +160,8 @@ src/
       translation-matrix.md    Full translation ID / version reference table
       api/                     OpenAPI specs for Sefaria, bible-api.com, Quran.com, AlQuran, Hadith
     okhp3-tradition-reference/
+      SKILL.md
+      knowledge/                   Tradition primers, glossary, compare method, API gap register, UI copy, translation metadata (15 files)
     okhp3-cross-tradition-compare/
     okhp3-notion-capture-router/
     okhp3-skill-cataloger/
