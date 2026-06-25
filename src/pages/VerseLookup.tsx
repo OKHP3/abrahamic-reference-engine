@@ -84,11 +84,25 @@ export default function VerseLookup() {
     setTranslationId(defaultTranslation)
   }, [tradition])
 
+  const VALID_FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
+  const validatedInitialTradition: TraditionFamily | null =
+    VALID_FAMILIES.includes(initialTradition as TraditionFamily)
+      ? (initialTradition as TraditionFamily)
+      : null
+
   useEffect(() => {
-    if (initialRef) {
-      doFetch(initialTradition as TraditionFamily, initialRef, freeTranslations[0]?.id ?? '')
+    if (validatedInitialTradition && initialRef.trim()) {
+      doFetch(validatedInitialTradition, initialRef.trim(), freeTranslations[0]?.id ?? '')
     }
   }, [])
+
+  useEffect(() => {
+    if (reference) {
+      setSearchParams({ tradition, ref: reference }, { replace: true })
+    } else {
+      setSearchParams({ tradition }, { replace: true })
+    }
+  }, [tradition, reference])
 
   const doFetch = useCallback(
     async (trad: TraditionFamily, ref: string, xlation: string) => {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { COMPARE_THEMES } from '../data/compareThemes'
 import { fetchPassage } from '../api'
