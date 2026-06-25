@@ -1,14 +1,16 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { fetchPassage } from '../api'
+import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
 import { COMPARE_THEMES, FEATURED_THEME_IDS } from '../data/compareThemes'
 import VerseCard from '../components/VerseCard'
+import HadithCard from '../components/HadithCard'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
 import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
-import type { Passage, TraditionFamily, ApiStatus } from '../types'
+import type { Passage, Hadith, TraditionFamily, ApiStatus } from '../types'
 
 const TRADITION_EXAMPLES: Record<TraditionFamily, Array<{ label: string; ref: string }>> = {
   judaism: [
@@ -48,6 +50,15 @@ function getSuggestedThemes() {
   return featured.map(id => COMPARE_THEMES.find(t => t.id === id)).filter(Boolean)
 }
 
+function buildHadithNumbers(ref: string): number[] {
+  const surah = Math.max(1, parseInt(ref.split(':')[0]) || 1)
+  const base = ((surah * 53) % 900) + 100
+  const max = HADITH_COLLECTION_SIZES.bukhari
+  return [0, 100, 200, 300, 400].map(offset =>
+    Math.min(Math.max(1, base + offset), max)
+  )
+}
+
 export default function VerseLookup() {
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -62,6 +73,10 @@ export default function VerseLookup() {
   const [status, setStatus] = useState<ApiStatus>('idle')
   const [passage, setPassage] = useState<Passage | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [hadiths, setHadiths] = useState<Hadith[]>([])
+  const [hadithStatus, setHadithStatus] = useState<ApiStatus>('idle')
+  const [hadithIndex, setHadithIndex] = useState(0)
+  const [hadithError, setHadithError] = useState<string | null>(null)
 
   const freeTranslations = TRANSLATIONS_BY_FAMILY[tradition].filter(
     t => t.license !== 'licensed'
@@ -84,10 +99,32 @@ export default function VerseLookup() {
       setStatus('loading')
       setPassage(null)
       setError(null)
+      setHadiths([])
+      setHadithStatus('idle')
+      setHadithIndex(0)
+      setHadithError(null)
       try {
         const result = await fetchPassage({ tradition: trad, reference: ref.trim(), translationId: xlation })
         setPassage(result)
         setStatus('success')
+        if (trad === 'islam') {
+          setHadithStatus('loading')
+          const numbers = buildHadithNumbers(ref.trim())
+          fetchHadithBatch('bukhari', numbers)
+            .then(results => {
+              if (results.length > 0) {
+                setHadiths(results)
+                setHadithStatus('success')
+              } else {
+                setHadithStatus('error')
+                setHadithError('No hadith returned from collection.')
+              }
+            })
+            .catch(() => {
+              setHadithStatus('error')
+              setHadithError('Hadith could not be loaded.')
+            })
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error fetching passage.')
         setStatus('error')
@@ -108,6 +145,10 @@ export default function VerseLookup() {
     setError(null)
     setStatus('idle')
     setReference('')
+    setHadiths([])
+    setHadithStatus('idle')
+    setHadithIndex(0)
+    setHadithError(null)
   }
 
   function handleExample(ref: string) {
@@ -232,6 +273,19 @@ export default function VerseLookup() {
       {status === 'success' && passage && (
         <div className="mb-6">
           <VerseCard passage={passage} showBadge showAttribution />
+        </div>
+      )}
+
+      {tradition === 'islam' && (hadithStatus === 'loading' || hadithStatus === 'success' || hadithStatus === 'error') && (
+        <div className="mb-6">
+          <HadithCard
+            hadiths={hadiths}
+            loading={hadithStatus === 'loading'}
+            error={hadithError}
+            index={hadithIndex}
+            onNext={() => setHadithIndex(i => Math.min(i + 1, hadiths.length - 1))}
+            onPrev={() => setHadithIndex(i => Math.max(i - 1, 0))}
+          />
         </div>
       )}
 

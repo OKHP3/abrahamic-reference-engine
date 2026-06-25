@@ -89,3 +89,24 @@ export function buildHadithMeta(
     sourceUrl: `https://sunnah.com/${collection}:${number}`,
   }
 }
+
+export async function fetchHadithBatch(
+  collection: HadithCollection,
+  numbers: number[]
+): Promise<Hadith[]> {
+  const editionKey = `eng-${collection}`
+  const results = await Promise.allSettled(
+    numbers.map(async (n) => {
+      const url = `${CDN_BASE}/${editionKey}/${n}.json`
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(`${res.status}`)
+      const json: FawazHadithResponse = await res.json()
+      const entry = json.hadiths?.[0]
+      if (!entry?.text) throw new Error('No text')
+      return buildHadithMeta(collection, n, entry.text.trim())
+    })
+  )
+  return results
+    .filter((r): r is PromiseFulfilledResult<Hadith> => r.status === 'fulfilled')
+    .map(r => r.value)
+}
