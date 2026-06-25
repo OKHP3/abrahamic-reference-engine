@@ -1,5 +1,4 @@
 import type { Tradition } from '../lib/observanceHelpers'
-import { TRADITION_COLORS } from '../lib/observanceHelpers'
 import type { ObservanceEvent } from '../lib/observanceHelpers'
 import { downloadYearICS } from '../lib/icsGenerator'
 
@@ -24,11 +23,31 @@ function DownloadIcon() {
   )
 }
 
-const TRADITION_BUTTONS: { tradition: Tradition; label: string; color: string }[] = [
-  { tradition: 'judaism', label: '✡️ Judaism', color: TRADITION_COLORS.judaism },
-  { tradition: 'christianity', label: '✝️ Christianity', color: TRADITION_COLORS.christianity },
-  { tradition: 'islam', label: '☪️ Islam', color: TRADITION_COLORS.islam },
+// Alphabetical order: Christianity, Islam, Judaism
+const TRADITION_BUTTONS: {
+  tradition: Tradition
+  label: string
+  activeClass: string
+}[] = [
+  {
+    tradition: 'christianity',
+    label: 'Christianity',
+    activeClass: 'text-violet-300 border-violet-700 bg-violet-950',
+  },
+  {
+    tradition: 'islam',
+    label: 'Islam',
+    activeClass: 'text-emerald-300 border-emerald-700 bg-emerald-950',
+  },
+  {
+    tradition: 'judaism',
+    label: 'Judaism',
+    activeClass: 'text-blue-300 border-blue-700 bg-blue-950',
+  },
 ]
+
+const INACTIVE_BTN = 'text-muted border-border-subtle bg-bg-base hover:text-parchment hover:border-border-mid'
+const BTN_BASE = 'px-3 py-1.5 text-xs font-sans font-semibold rounded border transition-all duration-150'
 
 const DENOM_BUTTONS: { value: ChristianDenomFilter; label: string }[] = [
   { value: 'all', label: 'All' },
@@ -81,7 +100,7 @@ export default function ObservanceControls({
           <button
             onClick={() => downloadYearICS(filteredEvents, year)}
             disabled={filteredEvents.length === 0}
-            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border border-border-subtle text-muted hover:text-parchment hover:border-gold/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded border border-border-subtle text-muted hover:text-parchment hover:border-gold/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             title={`Download all ${filteredEvents.length} events as .ics`}
           >
             <DownloadIcon />
@@ -90,20 +109,15 @@ export default function ObservanceControls({
         </div>
       </div>
 
-      {/* Tradition filter chips */}
+      {/* Tradition filter buttons -- alphabetical order, VerseLookup style */}
       <div className="flex flex-wrap gap-2">
-        {TRADITION_BUTTONS.map(({ tradition, label, color }) => {
+        {TRADITION_BUTTONS.map(({ tradition, label, activeClass }) => {
           const active = selectedTraditions.has(tradition)
           return (
             <button
               key={tradition}
               onClick={() => onToggleTradition(tradition)}
-              className="text-xs px-3 py-1.5 rounded-full border font-medium transition-all"
-              style={
-                active
-                  ? { borderColor: color, color, background: `${color}18` }
-                  : { borderColor: 'var(--border-subtle)', color: 'var(--muted)' }
-              }
+              className={[BTN_BASE, active ? activeClass : INACTIVE_BTN].join(' ')}
               aria-pressed={active}
             >
               {label}
@@ -114,17 +128,20 @@ export default function ObservanceControls({
 
       {/* Christianity denomination sub-filter */}
       {selectedTraditions.has('christianity') && (
-        <div className="flex flex-wrap gap-1.5">
-          <span className="text-xs text-muted self-center mr-1">Denomination:</span>
+        <div className="flex flex-wrap gap-2 pl-1 border-l-2 border-gold/30">
+          <span className="text-xs font-sans font-bold tracking-widest uppercase text-muted self-center">
+            Denomination
+          </span>
           {DENOM_BUTTONS.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => onChristianFilterChange(value)}
-              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+              className={[
+                BTN_BASE,
                 christianFilter === value
-                  ? 'border-violet-500/60 text-violet-400 bg-violet-500/10'
-                  : 'border-border-subtle text-muted hover:text-parchment/80'
-              }`}
+                  ? 'text-gold border-gold bg-bg-active'
+                  : INACTIVE_BTN,
+              ].join(' ')}
               aria-pressed={christianFilter === value}
             >
               {label}
