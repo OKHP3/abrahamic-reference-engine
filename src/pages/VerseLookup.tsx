@@ -45,6 +45,15 @@ const TRADITION_LABELS: Record<TraditionFamily, string> = {
   islam: 'Islam',
 }
 
+function isLikelyValidRef(tradition: TraditionFamily, ref: string): boolean {
+  const t = ref.trim()
+  if (!t) return false
+  if (tradition === 'islam') {
+    return /^\d+:\d+$/.test(t)
+  }
+  return /^[1-9]?\s?[a-zA-Z].*\s\d/.test(t)
+}
+
 function buildHadithNumbers(ref: string): number[] {
   const surah = Math.max(1, parseInt(ref.split(':')[0]) || 1)
   const base = ((surah * 53) % 900) + 100
@@ -91,7 +100,7 @@ export default function VerseLookup() {
       : null
 
   useEffect(() => {
-    if (validatedInitialTradition && initialRef.trim()) {
+    if (validatedInitialTradition && isLikelyValidRef(validatedInitialTradition, initialRef)) {
       doFetch(validatedInitialTradition, initialRef.trim(), freeTranslations[0]?.id ?? '')
     }
   }, [])
