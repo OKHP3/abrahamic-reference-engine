@@ -64,6 +64,25 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Decode the path encoded by public/404.html and restore it into
+      // browser history before React Router boots, so the app renders the
+      // correct route on direct navigation or page refresh on GitHub Pages.
+      (function () {
+        var search = window.location.search;
+        if (search.indexOf('?p=') === 0 || search.indexOf('&p=') !== -1) {
+          var params = new URLSearchParams(search.slice(1));
+          var p = params.get('p') || '/';
+          var q = params.get('q');
+          var url =
+            window.location.pathname.replace(/\/$/, '') +
+            decodeURIComponent(p) +
+            (q ? '?' + decodeURIComponent(q) : '') +
+            window.location.hash;
+          window.history.replaceState(null, null, url);
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

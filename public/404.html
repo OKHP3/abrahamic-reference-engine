@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Abrahamic Reference Engine</title>
+    <script>
+      // GitHub Pages SPA routing fallback.
+      // When GH Pages serves a 404 for a client-side route, this page encodes
+      // the original URL as a query parameter and redirects to the root so
+      // React Router can take over.
+      //
+      // Technique: https://github.com/rafgraph/spa-github-pages
+      //
+      // segmentCount = 1 because the repo is served under one path segment:
+      //   https://okhp3.github.io/abrahamic-reference-engine/
+      var l = window.location;
+      var segmentCount = 1;
+      var path = l.pathname
+        .split('/')
+        .slice(0, 1 + segmentCount)
+        .join('/');
+      var rest = l.pathname
+        .split('/')
+        .slice(1 + segmentCount)
+        .join('/')
+        .replace(/^\//, '');
+      l.replace(
+        path + '/' +
+        '?p=/' + (rest ? encodeURIComponent(rest) : '') +
+        (l.search ? '&q=' + encodeURIComponent(l.search.slice(1)) : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
