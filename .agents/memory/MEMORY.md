@@ -1,0 +1,1 @@
+- [Post-merge setup](post-merge-setup.md) -- script at .local/post-merge.sh, configured via setPostMergeConfig
