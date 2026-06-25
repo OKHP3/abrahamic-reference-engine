@@ -22,6 +22,17 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 | `npm run build` | Production build -- outputs to `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm install` | Run after task-agent merges or pulling fresh |
+| `npm run test:api` | Run live API tests against all providers -- exit 0 = healthy |
+
+### Live API tests
+
+`npm run test:api` runs `scripts/test-api-live.js` against the real APIs with no mocking.
+
+- Exit 0 = all primary providers (Sefaria, bible-api.com, Quran.com) are healthy
+- Exit 1 = one or more primary providers failed -- output includes the failing test IDs and error details
+- Non-blocking warnings are printed for AlQuran.cloud, Hadith CDN, `drc` translation, and Pickthall (id=21) -- these represent known API gaps and do not affect exit code
+
+Run this before releasing any change that touches `src/api/`.
 
 ---
 
