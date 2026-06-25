@@ -6,6 +6,7 @@ import { fetchIslamicHolidays } from '../lib/aladhanClient'
 import type { ObservanceEvent } from '../lib/observanceHelpers'
 import ObservanceControls from '../components/ObservanceControls'
 import type { ChristianDenomFilter } from '../components/ObservanceControls'
+import ObservanceCalendarGrid from '../components/ObservanceCalendarGrid'
 import ObservanceEventList from '../components/ObservanceEventList'
 
 // ---------------------------------------------------------------------------
@@ -42,13 +43,23 @@ function LoadingSpinner({ size = 13 }: { size?: number }) {
   )
 }
 
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
 export default function ObservancesCalendar() {
-  const currentYear = new Date().getFullYear()
+  const now = new Date()
+  const currentYear = now.getFullYear()
+  const currentMonth = now.getMonth()
+
+  // year drives the API fetch; viewMonth drives which month the calendar shows
   const [year, setYear] = useState(currentYear)
+  const [viewMonth, setViewMonth] = useState(currentMonth)
   const [allEvents, setAllEvents] = useState<ObservanceEvent[]>([])
   const [loadState, setLoadState] = useState<LoadState>({ judaism: 'idle', islam: 'idle' })
   const [errors, setErrors] = useState<{ judaism?: string; islam?: string }>({})
@@ -96,8 +107,31 @@ export default function ObservancesCalendar() {
     loadYear(year)
   }, [year, loadYear])
 
+  // Year stepper -- fast-skip; keeps current view month
   function handleYearChange(y: number) {
     setYear(y)
+    setSelectedId('')
+  }
+
+  // Month navigation -- can cross year boundaries
+  function handlePrevMonth() {
+    if (viewMonth === 0) {
+      setViewMonth(11)
+      setYear(y => y - 1)
+    } else {
+      setViewMonth(m => m - 1)
+    }
+    setSelectedId('')
+  }
+
+  function handleNextMonth() {
+    if (viewMonth === 11) {
+      setViewMonth(0)
+      setYear(y => y + 1)
+    } else {
+      setViewMonth(m => m + 1)
+    }
+    setSelectedId('')
   }
 
   function handleToggleTradition(t: Tradition) {
@@ -119,8 +153,12 @@ export default function ObservancesCalendar() {
     setSelectedId('')
   }
 
-  // Filter and sort events
-  const filteredEvents = allEvents
+  function handleEventClick(id: string) {
+    setSelectedId(prev => (prev === id ? '' : id))
+  }
+
+  // All filtered events for the year (used by download button)
+  const filteredYearEvents = allEvents
     .filter(event => {
       if (!selectedTraditions.has(event.tradition)) return false
       if (event.tradition === 'christianity') {
@@ -130,8 +168,12 @@ export default function ObservancesCalendar() {
     })
     .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
 
-  const isLoading = loadState.judaism === 'loading' || loadState.islam === 'loading'
+  // Events for the currently visible month (used by calendar grid + list)
+  const filteredMonthEvents = filteredYearEvents.filter(
+    ev => ev.startDate.getMonth() === viewMonth && ev.startDate.getFullYear() === year
+  )
 
+  const isLoading = loadState.judaism === 'loading' || loadState.islam === 'loading'
   const loadingTraditions = [
     loadState.judaism === 'loading' && 'Jewish',
     loadState.islam === 'loading' && 'Islamic',
@@ -139,6 +181,7 @@ export default function ObservancesCalendar() {
 
   return (
     <div className="flex flex-col gap-5 pb-12">
+      {/* Controls: year stepper + tradition filters + year download */}
       <ObservanceControls
         year={year}
         onYearChange={handleYearChange}
@@ -146,10 +189,10 @@ export default function ObservancesCalendar() {
         onToggleTradition={handleToggleTradition}
         christianFilter={christianFilter}
         onChristianFilterChange={handleChristianFilterChange}
-        filteredEvents={filteredEvents}
+        filteredEvents={filteredYearEvents}
       />
 
-      {/* Loading indicators for async sources */}
+      {/* Loading indicator */}
       {isLoading && (
         <div className="flex items-center gap-2 text-xs text-muted">
           <LoadingSpinner />
@@ -173,11 +216,32 @@ export default function ObservancesCalendar() {
         </div>
       )}
 
-      <ObservanceEventList
-        events={filteredEvents}
+      {/* Calendar grid */}
+      <ObservanceCalendarGrid
+        year={year}
+        month={viewMonth}
+        events={filteredMonthEvents}
         selectedId={selectedId}
-        onSelect={setSelectedId}
+        onEventClick={handleEventClick}
+        onPrevMonth={handlePrevMonth}
+        onNextMonth={handleNextMonth}
       />
+
+      {/* Event list for current month */}
+      <section>
+        <h3 className="text-xs font-semibold tracking-widest uppercase text-gold/70 mb-3">
+          {MONTH_NAMES[viewMonth]} {year}
+          <span className="normal-case tracking-normal font-normal text-muted ml-2">
+            -- {filteredMonthEvents.length} event{filteredMonthEvents.length !== 1 ? 's' : ''}
+          </span>
+        </h3>
+        <ObservanceEventList
+          events={filteredMonthEvents}
+          selectedId={selectedId}
+          onSelect={handleEventClick}
+          showMonthHeader={false}
+        />
+      </section>
 
       {/* Attribution footer */}
       <footer className="mt-2 pt-4 border-t border-border-subtle space-y-1">
@@ -200,7 +264,9 @@ export default function ObservancesCalendar() {
             Islamic calendar data via AlAdhan.com
           </a>
           {' '}&middot;{' '}
-          Christian dates computed via Ecclesiastical Computus algorithm
+          Christian dates via Ecclesiastical Computus
+          {' '}&middot;{' '}
+          Moon phases computed locally (Julian date algorithm)
         </p>
         <p className="text-xs text-muted">
           Event descriptions via{' '}

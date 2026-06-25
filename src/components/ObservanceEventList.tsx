@@ -119,15 +119,18 @@ interface MonthGroupProps {
   events: ObservanceEvent[]
   selectedId: string
   onSelect: (id: string) => void
+  showHeader: boolean
 }
 
-function MonthGroup({ monthIndex, events, selectedId, onSelect }: MonthGroupProps) {
+function MonthGroup({ monthIndex, events, selectedId, onSelect, showHeader }: MonthGroupProps) {
   if (events.length === 0) return null
   return (
     <section>
-      <h2 className="text-xs font-semibold tracking-widest uppercase text-gold/70 mb-2 px-1">
-        {MONTHS[monthIndex]}
-      </h2>
+      {showHeader && (
+        <h2 className="text-xs font-semibold tracking-widest uppercase text-gold/70 mb-2 px-1">
+          {MONTHS[monthIndex]}
+        </h2>
+      )}
       <div className="space-y-1.5">
         {events.map(event => (
           <EventRow
@@ -150,12 +153,14 @@ interface ObservanceEventListProps {
   events: ObservanceEvent[]
   selectedId: string
   onSelect: (id: string) => void
+  showMonthHeader?: boolean
 }
 
 export default function ObservanceEventList({
   events,
   selectedId,
   onSelect,
+  showMonthHeader = true,
 }: ObservanceEventListProps) {
   // Group by month
   const byMonth: ObservanceEvent[][] = Array.from({ length: 12 }, () => [])
@@ -184,6 +189,7 @@ export default function ObservanceEventList({
           events={monthEvents}
           selectedId={selectedId}
           onSelect={onSelect}
+          showHeader={showMonthHeader}
         />
       ))}
     </div>
