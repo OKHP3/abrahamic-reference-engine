@@ -140,4 +140,24 @@ Each gap entry describes what is missing, why, and what the current fallback or 
 
 ---
 
+## How to use this register
+
+Before making any claim -- in UI copy, in an agent response, or in code comments -- that a translation or text is available:
+
+1. Search this register by tradition and text name.
+2. If found, check the "Fallback" column and implement the documented fallback behavior exactly.
+3. If the gap has a "Future path," do not implement it without a project task tracking the work.
+4. If a gap is resolved (e.g., a provider fixes their data), update this register: change the gap's status note, update the summary table, and add a "Resolved:" line citing when it was fixed.
+
+## Relationship to project tasks
+
+The following gaps are tracked as separate fix tasks in the project:
+- Gap 8 (Douay-Rheims `drc`): tracked as "Fix the Douay-Rheims Bible translation so Catholic and Orthodox passages load correctly"
+- Gap 9 (Pickthall `quran-21`): tracked as "Restore the Pickthall Quran translation so users can access that classic English rendering"
+- Gap 10 (Hadith by number): tracked as "Fix hadith loading so individual hadith numbers work again in the app"
+
+When those tasks are completed, remove or update the corresponding gap entries here to reflect the new state.
+
+---
+
 *ARE governance: AGENTS.md. Review this register before making any promise about translation or text availability in the free build.*

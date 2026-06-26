@@ -221,4 +221,40 @@ Jewish believers who accept Jesus (Yeshua) as the Messiah while maintaining Jewi
 
 ---
 
+## Black Protestant Christianity
+
+The National Baptist Convention, the African Methodist Episcopal (AME) Church, the Church of God in Christ (COGIC), and other historically Black denominations together constitute one of the largest and most distinct expressions of American Christianity.
+
+**US population context:** the Pew Research Center reports Black Protestants as a significant sub-category within the total Evangelical Protestant figure; no independent 1%+ separate category. Included within Evangelical Protestant in ARE.
+
+**Key characteristics:**
+- The Black Church emerged in the context of American slavery and its aftermath; worship, theology, and community life are inseparable from that history
+- Freedom, justice, and liberation theology are central -- the Exodus narrative and the prophetic tradition (Amos, Isaiah) are foundational texts
+- Call-and-response preaching; expressive worship; music (spirituals, gospel) as theological expression
+- Strong community institution: the church as civic center, mutual aid society, and political organizing base
+- Theological diversity: from conservative evangelical (COGIC) to liberation-theology-influenced (AME, some Baptist bodies)
+
+**Key passages:** Amos 5:24 ("Let justice roll like a river"); Luke 4:18-19 (Jesus's mission: "to proclaim freedom for the prisoners"); Exodus 3:7-10 (God hears the cry of the oppressed); Romans 8:31 ("If God is for us, who can be against us?")
+
+**Translation preference:** KJV (historic; deeply embedded in Black church culture and liturgy), NIV, NRSV. In the free build: `kjv`, `web`, `asv`.
+
+**Key denominations:** National Baptist Convention USA, Inc. (largest historically Black denomination); National Baptist Convention of America; Progressive National Baptist Convention; African Methodist Episcopal (AME) Church; African Methodist Episcopal Zion (AME Zion); Church of God in Christ (COGIC -- Pentecostal)
+
+**ARE behavior:** included within the Evangelical Protestant denomination entry. ARE does not have a separate Black Protestant denomination page. When discussing liberation theology or justice-oriented readings, these communities are the primary referent within the Evangelical Protestant category.
+
+---
+
+## Denominational helper text (from VerseLookup -- verbatim)
+
+These strings are shown in the Verse Lookup denomination sub-selector (src/pages/VerseLookup.tsx). They are the live UI's brief descriptions of each denomination's scope.
+
+| Denomination | Helper text |
+|-------------|-------------|
+| Catholic | Roman Catholic -- includes the deuterocanonical books (Tobit, Judith, 1-2 Maccabees, Wisdom, Sirach, Baruch). Defaults to World English Bible (WEB), which covers most deuterocanonicals via the free API. NABRE is not available in the free build. |
+| Protestant | Protestant -- 66-book canon. Deuterocanonical books are not included. Defaults to King James Version. |
+| LDS | Latter-day Saint -- includes Bible (KJV) via bible-api.com and Standard Works (Book of Mormon, D&C, Pearl of Great Price) via scriptures.nephi.org. |
+| Orthodox | Eastern and Oriental Orthodox -- uses the Septuagint-based canon (76-78 books). Most books work normally; 3 Maccabees, 4 Maccabees, and Psalm 151 are not yet covered by the connected API. |
+
+---
+
 *ARE governance: AGENTS.md. Content in this file may be promoted to primary denomination files as features require.*
