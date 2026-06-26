@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { DENOMINATIONS, TRADITION_GROUPS } from '../data/traditions'
 import { TRADITION_KNOWLEDGE, DENOMINATION_KNOWLEDGE } from '../data/knowledge'
 import type { ScriptureRef } from '../data/knowledge'
@@ -8,9 +9,11 @@ import type { CompareTheme } from '../data/compareThemes'
 import { getThemesForPassage } from '../data/themeMapping'
 import ScopeExplainer from '../components/ScopeExplainer'
 import TraditionBadge from '../components/TraditionBadge'
+import FeaturedHadithCard from '../components/FeaturedHadithCard'
 import { useSettings } from '../context/SettingsContext'
 import { getChristianDenominationSlug } from '../settings'
-import type { TraditionFamily } from '../types'
+import { fetchHadithBatch } from '../api/hadith'
+import type { TraditionFamily, Hadith } from '../types'
 
 const FAMILY_LABEL: Record<TraditionFamily, string> = {
   judaism: 'Judaism',
@@ -192,6 +195,34 @@ function TraditionDetail({ slug }: { slug: string }) {
   const denomination = DENOMINATIONS.find(d => d.slug === slug)
   const { settings } = useSettings()
 
+  const [featuredHadith, setFeaturedHadith] = useState<Hadith | null>(null)
+  const [hadithLoading, setHadithLoading] = useState(false)
+  const [hadithError, setHadithError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!denomination || denomination.family !== 'islam') return
+    let cancelled = false
+    setHadithLoading(true)
+    setHadithError(null)
+    setFeaturedHadith(null)
+    fetchHadithBatch('bukhari', [1])
+      .then(results => {
+        if (cancelled) return
+        if (results.length > 0) {
+          setFeaturedHadith(results[0])
+        } else {
+          setHadithError('No hadith returned')
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setHadithError('Failed to load hadith')
+      })
+      .finally(() => {
+        if (!cancelled) setHadithLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [denomination?.family])
+
   if (!denomination) {
     return (
       <div className="text-muted text-sm mt-8">
@@ -354,6 +385,14 @@ function TraditionDetail({ slug }: { slug: string }) {
           family={denomination.family}
           preferredTranslationId={settings.denomination ? preferredTranslationId : undefined}
         />
+
+        {denomination.family === 'islam' && (
+          <FeaturedHadithCard
+            hadith={featuredHadith}
+            loading={hadithLoading}
+            error={hadithError}
+          />
+        )}
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-border-subtle">
