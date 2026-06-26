@@ -164,9 +164,9 @@ export default function VerseLookup() {
   const [copied, setCopied] = useState(false)
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const freeTranslations = TRANSLATIONS_BY_FAMILY[tradition].filter(
-    t => t.license !== 'licensed'
-  )
+  const allTranslations = TRANSLATIONS_BY_FAMILY[tradition]
+  const freeTranslations = allTranslations.filter(t => t.license !== 'licensed')
+  const hasGappedTranslations = allTranslations.some(t => t.license === 'licensed')
 
   function getDefaultTranslation(trad: TraditionFamily): string {
     const free = TRANSLATIONS_BY_FAMILY[trad].filter(t => t.license !== 'licensed')
@@ -484,12 +484,17 @@ export default function VerseLookup() {
                   onChange={e => setTranslationId(e.target.value)}
                   className="w-full bg-bg-base border border-border-mid rounded px-3 py-2 text-sm font-sans text-parchment focus:outline-none focus:border-gold-muted transition-colors"
                 >
-                  {freeTranslations.map(t => (
-                    <option key={t.id} value={t.id}>
-                      {t.shortName}
+                  {allTranslations.map(t => (
+                    <option key={t.id} value={t.id} disabled={t.license === 'licensed'}>
+                      {t.shortName}{t.license === 'licensed' ? ' (not in free build)' : ''}
                     </option>
                   ))}
                 </select>
+                {hasGappedTranslations && (
+                  <p className="text-2xs text-muted mt-1">
+                    Grayed options require a licensed API key -- not enabled in this build.
+                  </p>
+                )}
               </div>
             )}
 

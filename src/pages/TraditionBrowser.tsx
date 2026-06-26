@@ -16,37 +16,50 @@ const FAMILY_LABEL: Record<TraditionFamily, string> = {
 
 function TranslationList({ family, preferredTranslationId }: { family: TraditionFamily; preferredTranslationId?: string }) {
   const translations = TRANSLATIONS_BY_FAMILY[family]
+  const hasLicensed = translations.some(t => t.license === 'licensed')
   return (
     <div className="p-5 border border-border-subtle rounded-lg bg-bg-elevated">
       <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-gold mb-3">
         Available Translations
       </h3>
-      <ul className="space-y-2">
+      <ul className="space-y-3">
         {translations.map(t => (
-          <li key={t.id} className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0 flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-sans text-parchment">{t.shortName}</span>
-              <span className="text-xs text-muted">{t.name}</span>
-              {preferredTranslationId === t.id && (
-                <span className="text-2xs font-sans text-gold italic">your default</span>
-              )}
+          <li key={t.id}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0 flex items-center gap-2 flex-wrap">
+                <span className={`text-sm font-sans ${t.license === 'licensed' ? 'text-muted' : 'text-parchment'}`}>
+                  {t.shortName}
+                </span>
+                <span className="text-xs text-muted">{t.name}</span>
+                {preferredTranslationId === t.id && (
+                  <span className="text-2xs font-sans text-gold italic">your default</span>
+                )}
+              </div>
+              <span
+                className={`text-2xs font-sans px-1.5 py-0.5 rounded flex-shrink-0 ${
+                  t.license === 'public-domain'
+                    ? 'text-emerald-400 bg-emerald-950 border border-emerald-900'
+                    : t.license === 'open-source'
+                    ? 'text-blue-400 bg-blue-950 border border-blue-900'
+                    : 'text-muted bg-bg-base border border-border-subtle'
+                }`}
+              >
+                {t.license === 'public-domain' ? 'PD' : t.license === 'open-source' ? 'OSS' : 'key req.'}
+              </span>
             </div>
-            <span
-              className={`text-2xs font-sans px-1.5 py-0.5 rounded flex-shrink-0 ${
-                t.license === 'public-domain'
-                  ? 'text-emerald-400 bg-emerald-950 border border-emerald-900'
-                  : t.license === 'open-source'
-                  ? 'text-blue-400 bg-blue-950 border border-blue-900'
-                  : 'text-muted bg-bg-base border border-border-subtle'
-              }`}
-            >
-              {t.license === 'public-domain' ? 'PD' : t.license === 'open-source' ? 'OSS' : 'key req.'}
-            </span>
+            {t.license === 'licensed' && t.gapReason && (
+              <p className="text-2xs text-muted mt-1 leading-relaxed">
+                Not in free build -- {t.gapReason}
+              </p>
+            )}
           </li>
         ))}
       </ul>
       <p className="text-2xs text-muted mt-3">
-        PD = public domain &nbsp;&middot;&nbsp; OSS = open source &nbsp;&middot;&nbsp; key req. = API key required (not enabled in free build)
+        PD = public domain &nbsp;&middot;&nbsp; OSS = open source &nbsp;&middot;&nbsp; key req. = API key required -- not enabled in free build
+        {hasLicensed && (
+          <span> &nbsp;&middot;&nbsp; Grayed names are unavailable in this build.</span>
+        )}
       </p>
     </div>
   )

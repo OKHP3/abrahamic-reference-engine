@@ -69,6 +69,7 @@ export interface Translation {
   apiProvider: string
   apiTranslationId?: string
   notes?: string
+  gapReason?: string
 }
 
 export interface Verse {

@@ -77,6 +77,22 @@ export const TRANSLATIONS: Translation[] = [
     apiTranslationId: 'darby',
   },
   {
+    id: 'niv',
+    name: 'New International Version',
+    shortName: 'NIV',
+    family: 'christianity',
+    denominationIds: [
+      'christianity-evangelical',
+      'christianity-mainline',
+    ],
+    license: 'licensed',
+    attribution: 'NIV (c) 1973, 2011 Biblica. Requires API.Bible key; not available in free tier.',
+    apiProvider: 'api.scripture.api.bible',
+    apiTranslationId: 'niv',
+    notes: 'Widely used dynamic-equivalence translation (1978/2011). API key required -- not enabled in this free build.',
+    gapReason: 'NIV is licensed by Biblica. Requires an API.Bible key (api.scripture.api.bible).',
+  },
+  {
     id: 'esv',
     name: 'English Standard Version',
     shortName: 'ESV',
@@ -90,6 +106,7 @@ export const TRANSLATIONS: Translation[] = [
     apiProvider: 'api.esv.org',
     apiTranslationId: 'esv',
     notes: 'Modern essentially literal translation popular in evangelical circles. API key required -- not enabled in this free build.',
+    gapReason: 'ESV is licensed by Crossway. Requires a dedicated ESV API key (api.esv.org).',
   },
   {
     id: 'nrsv',
@@ -106,6 +123,7 @@ export const TRANSLATIONS: Translation[] = [
     apiProvider: 'api.scripture.api.bible',
     apiTranslationId: 'nrsv',
     notes: 'Inclusive-language update to RSV; standard in academic and ecumenical settings. API key required -- not enabled in this free build.',
+    gapReason: 'NRSV is licensed by the National Council of Churches. Requires an API.Bible key (api.scripture.api.bible).',
   },
   {
     id: 'nabre',
@@ -120,6 +138,7 @@ export const TRANSLATIONS: Translation[] = [
     apiProvider: 'api.scripture.api.bible',
     apiTranslationId: 'nabre',
     notes: 'Official English translation for US Catholic liturgy; includes Deuterocanonical books. API key required -- not enabled in this free build.',
+    gapReason: 'NABRE is licensed by the USCCB. Requires an API.Bible key (api.scripture.api.bible).',
   },
   {
     id: 'douay',
