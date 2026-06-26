@@ -210,6 +210,26 @@ Source: https://www.pewresearch.org/religion/religious-landscape-study/
 
 ---
 
+## Section 8b: API Gap Register Maintenance
+
+The API gap register lives at `.agents/skills/okhp3-tradition-reference/knowledge/reserve-02-api-gap-register.md`.
+
+**Every agent must update reserve-02 whenever:**
+- A new provider issue is discovered (translation returns empty, API endpoint changes, coverage disappears)
+- A gap is resolved by a code fix or provider change -- change `**Status:** open` to `**Status:** resolved -- <date> -- <one-line summary>`
+- A gap is partially mitigated -- change status to `**Status:** mitigated -- <date> -- <one-line summary>`
+- A tracked fix task is completed -- update the gap entry and remove it from "Relationship to project tasks"
+
+**After updating any gap entry, sync the summary table at the bottom of the file.** The table must reflect the current status of every entry above it. A summary table that is out of sync with the entries is a governance violation.
+
+**Do not add a gap without:**
+- A tradition/denomination
+- A clear reason (licensed, API structural limit, provider gap, etc.)
+- A documented fallback or UI behavior
+- A `**Status:** open` line
+
+---
+
 ## Section 9: App-Level Governance
 
 - **Dev server:** port 5000, host 0.0.0.0
