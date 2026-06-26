@@ -290,7 +290,12 @@ export default function ObservancesCalendar() {
         >
           &larr; Compare
         </Link>
-        <span />
+        <Link
+          to="/browse"
+          className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
+        >
+          Browse Traditions &rarr;
+        </Link>
       </div>
     </div>
   )
