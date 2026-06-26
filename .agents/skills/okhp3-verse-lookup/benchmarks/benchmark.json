@@ -111,6 +111,6 @@
     "Eval 2 with_skill 0.75: whitespace normalization missing from code example -- should be added to skill as explicit .replace pattern",
     "Eval 2 without_skill CRITICAL ERROR: said WEB 'lacks deuterocanon' -- WRONG, WEB includes deuterocanon on bible-api.com. Would cause Catholic user to get wrong translation.",
     "Eval 3 without_skill: correctly identified D&C=LDS but no isLdsBibleRef, no scriptures.nephi.org, no error handling",
-    "workspace: .agents/skills/okhp3-verse-lookup-workspace/iteration-1/"
+    "workspace: .agents/skills/okhp3-verse-lookup/workspace/iteration-1/"
   ]
 }

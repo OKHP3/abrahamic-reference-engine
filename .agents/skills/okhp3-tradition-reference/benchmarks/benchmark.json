@@ -111,6 +111,6 @@
     "Eval 1 without_skill: correctly knew translation ID 20 from training data -- translation matrix most valuable for less-common IDs",
     "Eval 2 without_skill: suggested Church Gospel Library API (requires auth, not public) -- dangerous dead-end for developers",
     "Eval 3 without_skill: gave '76 books' not '76-78' range; missed 4 Maccabees as API gap; no bible-api.com recommendation",
-    "workspace: .agents/skills/okhp3-tradition-reference-workspace/iteration-1/"
+    "workspace: .agents/skills/okhp3-tradition-reference/workspace/iteration-1/"
   ]
 }
