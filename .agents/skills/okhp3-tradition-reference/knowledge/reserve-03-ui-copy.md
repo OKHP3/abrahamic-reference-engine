@@ -6,7 +6,9 @@ status: active-reference
 
 # Reserve 03 -- UI Copy Reference
 
-Reference copy for recurring text patterns in the Abrahamic Reference Engine UI. Static strings are taken verbatim from the live SPA source (verified 2026-06-26). Dynamic strings are marked with [dynamic] and the template is given. Section headers cite the source component for future verification.
+Reference copy for recurring text patterns in the Abrahamic Reference Engine UI. Each section cites its source component. Static strings are quoted verbatim. Dynamic strings are marked `[dynamic]` with a template.
+
+Verified 2026-06-26 against: `src/components/ModeNav.tsx`, `src/components/ScopeExplainer.tsx`, `src/data/traditions.ts`, `src/pages/VerseLookup.tsx`, `src/pages/CrossTraditionCompare.tsx`, `src/pages/TraditionBrowser.tsx`, `src/components/ObservanceControls.tsx`, `src/api/sefaria.ts`, `src/api/bible.ts`, `src/api/quran.ts`, `src/api/hadith.ts`.
 
 ---
 
@@ -19,59 +21,58 @@ Reference copy for recurring text patterns in the Abrahamic Reference Engine UI.
 
 ---
 
-## Scope explainer (ScopeExplainer component)
+## Scope explainer
 
-Source: `src/components/ScopeExplainer.tsx` + `src/data/traditions.ts` (`PEW_SCOPE_NOTE`)
+Source: `src/components/ScopeExplainer.tsx` + `src/data/traditions.ts` (PEW_SCOPE_NOTE, PEW_2023)
 
-### Heading (live -- h2, uppercase tracking-widest)
+### Heading (verbatim -- h2, uppercase tracking-widest)
 
 Why These Three Traditions?
 
-### Body intro (live)
+### Body intro (verbatim)
 
 This application includes only traditions that meet **both** of the following criteria:
 
-### Qualifying criteria list (live -- from PEW_SCOPE_NOTE.qualifyingCriteria)
+### Qualifying criteria (verbatim from PEW_SCOPE_NOTE.qualifyingCriteria)
 
 1. Traceable Abrahamic lineage (descended from the faith of Abraham)
 2. 1% or more of the US population (Pew Research Center Religious Landscape Study)
 
-### Out-of-scope note heading (live)
+### Out-of-scope intro (verbatim)
 
 Traditions reviewed but excluded from scope:
 
-### Excluded traditions (live -- from PEW_SCOPE_NOTE.excluded)
+### Excluded list (verbatim from PEW_SCOPE_NOTE.excluded)
 
-| Name | Reason |
-|------|--------|
-| Hinduism | Not Abrahamic |
-| Buddhism | Not Abrahamic |
-| Baha'i | Abrahamic, but below 1% US threshold |
-| Sikhism | Not Abrahamic |
-| Druze | Abrahamic, but below 1% US threshold |
+- Hinduism -- Not Abrahamic
+- Buddhism -- Not Abrahamic
+- Baha'i -- Abrahamic, but below 1% US threshold
+- Sikhism -- Not Abrahamic
+- Druze -- Abrahamic, but below 1% US threshold
 
-### Note (live -- italic, from PEW_SCOPE_NOTE.note)
+### Note (verbatim from PEW_SCOPE_NOTE.note -- italic)
 
 Exclusions are methodological, not judgments of worth. Every tradition listed here is presented with equal respect.
 
-### Citation link (live -- from PEW_2023 in traditions.ts)
+### Citation link (verbatim from PEW_2023)
 
-Source: Pew Research Center, Religious Landscape Study, 2023 (rendered as link: https://www.pewresearch.org/religion/religious-landscape-study/)
+Source: Pew Research Center, Religious Landscape Study, 2023
+URL: https://www.pewresearch.org/religion/religious-landscape-study/
 
 ---
 
-## Navigation labels (ModeNav component)
+## Navigation labels
 
 Source: `src/components/ModeNav.tsx` -- MODES array
 
-| Label | Route | Description (aria-label) |
-|-------|-------|--------------------------|
+| Label | Route | aria-label |
+|-------|-------|------------|
 | Browse | /browse | Explore traditions |
 | Lookup | /lookup | Find a passage |
 | Compare | /compare | Side-by-side themes |
 | Observances | /observances | Religious holiday calendar |
 
-These are single-word tab labels. Do not use verbose forms in the tab bar; those appear only in page h1 headings.
+Single-word tab labels. Verbose forms (e.g., "Browse Traditions") appear only in page h1 headings, not the tab bar.
 
 ---
 
@@ -79,17 +80,19 @@ These are single-word tab labels. Do not use verbose forms in the tab bar; those
 
 Source: `src/pages/TraditionBrowser.tsx`
 
-### Page heading (live -- h1)
+### Page heading (verbatim -- h1, lines 422-423)
 
 Browse Traditions
 
-### Page description (live)
+### Page description (verbatim -- lines 425-429)
 
 Three Abrahamic traditions with meaningful presence in the United States. Each is presented with equal respect -- the proportions below reflect Pew Research data, not a ranking of worth.
 
-### Denomination detail back-link (live -- Link to="/browse")
+### Tradition not found state (verbatim -- lines 228-232)
 
-Return to Browse
+Tradition not found. [Return to Browse] (link to /browse)
+
+Note: "Return to Browse" is a `<Link to="/browse">` that appears only in the error state when a denomination slug is invalid. There is no back-link in the normal denomination detail view.
 
 ---
 
@@ -97,58 +100,95 @@ Return to Browse
 
 Source: `src/pages/VerseLookup.tsx`
 
-### Page heading (live -- h1)
+### Page heading (verbatim -- h1, lines 367-369)
 
 Verse Lookup
 
-### Page description (live)
+### Page description (verbatim -- lines 370-373)
 
-Retrieve a specific passage from any of the three in-scope Abrahamic traditions.
+Retrieve a specific passage from any of the three in-scope Abrahamic traditions. Text is fetched live from free public APIs -- no account required.
 
-### Submit button (live -- conditional on loading state)
+### Tradition field legend (verbatim -- line 381)
 
-- Default: `Look up passage`
-- Loading: `Fetching...`
+Tradition
 
-### Loading spinner label (live)
+### Tradition radio options (verbatim -- line 384, order in UI)
+
+christianity / islam / judaism (rendered in that order in the DOM)
+
+### Denomination field legend (verbatim -- line 412)
+
+Denomination
+
+### Denomination options (verbatim -- label values from lines 418-424)
+
+- Catholic (value: 'catholic')
+- Protestant (value: 'protestant')
+- LDS (value: 'lds')
+- Orthodox (value: 'orthodox')
+
+### Denomination helper text -- Catholic (verbatim -- lines 444-448)
+
+Roman Catholic -- includes the deuterocanonical books (Tobit, Judith, 1-2 Maccabees, Wisdom, Sirach, Baruch). Defaults to World English Bible (WEB), which covers most deuterocanonicals via the free API. NABRE is not available in the free build.
+
+### Denomination helper text -- Protestant (verbatim -- lines 451-453)
+
+Protestant -- 66-book canon. Deuterocanonical books are not included. Defaults to King James Version.
+
+### Denomination helper text -- LDS (verbatim -- lines 457-460)
+
+Latter-day Saint -- includes Bible (KJV) via bible-api.com and Standard Works (Book of Mormon, D&C, Pearl of Great Price) via scriptures.nephi.org.
+
+### Denomination helper text -- Orthodox (verbatim -- lines 462-467)
+
+Eastern and Oriental Orthodox -- uses the Septuagint-based canon (76-78 books). Most books work normally; 3 Maccabees, 4 Maccabees, and Psalm 151 are not yet covered by the connected API.
+
+### Reference field label (verbatim -- line 476)
+
+Reference
+
+### Reference field placeholder -- LDS (verbatim -- LDS_PLACEHOLDER constant)
+
+e.g. 2 Ne. 2:25 or D&C 76:22 or james 1:5
+
+### LDS reference format hint (verbatim -- line 491)
+
+Bible: book chapter:verse (e.g. james 1:5) -- Standard Works: e.g. 2 Ne. 2:25, D&C 76:22, Moses 1:39
+
+### Submit button (verbatim -- line 541, conditional)
+
+- Default: Look up passage
+- Loading: Fetching...
+
+### Loading spinner label (verbatim -- line 548)
 
 Fetching passage from API...
 
-### LDS fallback error section heading (live -- h3, uppercase tracking-widest)
+### LDS fallback error heading (verbatim -- lines 562-563)
 
 LDS Standard Works
 
-### LDS fallback error body (live -- verbatim)
+### LDS fallback error body (verbatim -- lines 565-568)
 
 The Book of Mormon, Doctrine & Covenants, and Pearl of Great Price are served via a community-maintained API (scriptures.nephi.org) with no uptime guarantee. It appears to be unreachable right now.
 
-### LDS fallback link (live)
+### LDS fallback link (verbatim -- line 576)
 
 Look up on ChurchOfJesusChrist.org →
-(href: https://www.churchofjesuschrist.org/study/scriptures)
 
-### Orthodox canon gap section heading (live -- h3, uppercase tracking-widest)
+### Orthodox canon gap heading (verbatim -- lines 583-584)
 
 Orthodox Canon -- Coverage Gap
 
-### Orthodox canon gap body (live -- partially dynamic)
+### Orthodox canon gap body (verbatim -- lines 586-592)
 
-[dynamic: canonGapBook.name] -- rendered as a serif heading
-[dynamic: canonGapBook.description] -- the book-specific explanation (see ORTHODOX_GAP_BOOKS in VerseLookup.tsx)
+[dynamic: canonGapBook.name] (serif heading)
+[dynamic: canonGapBook.description] (book-specific text; see ORTHODOX_GAP_BOOKS constant)
 This text is part of the Orthodox canon but is not yet available through the connected API (bible-api.com WEB). Coverage may be added in a future update.
 
-### Orthodox canon gap link (live -- dynamic)
+### Orthodox canon gap link (verbatim template -- line 600)
 
 Read [canonGapBook.name] on BibleGateway →
-(href: canonGapBook.searchUrl -- links to BibleGateway NRSV/NRSVA)
-
-### LDS Standard Works denomination helper text (live -- displayed in LDS denomination selection)
-
-LDS Standard Works (Book of Mormon, D&C, Pearl of Great Price) via scriptures.nephi.org.
-
-### LDS reference format hint (live -- below reference input when LDS selected)
-
-Bible: book chapter:verse (e.g. james 1:5) -- Standard Works: e.g. 2 Ne. 2:25, D&C 76:22, Moses 1:39
 
 ---
 
@@ -156,47 +196,47 @@ Bible: book chapter:verse (e.g. james 1:5) -- Standard Works: e.g. 2 Ne. 2:25, D
 
 Source: `src/pages/CrossTraditionCompare.tsx`
 
-### Page heading (live -- h1)
+### Page heading (verbatim -- h1, lines 247-248)
 
 Cross-Tradition Compare
 
-### Page description (live)
+### Page description (verbatim -- lines 250-254)
 
 The signature feature. Select a theme and see parallel passages from Judaism, Christianity, and Islam side by side -- with neutral bridging notes that invite discovery rather than declare a winner.
 
-### Theme list section heading (live -- h2, uppercase tracking-widest, dynamic count)
+### Theme list heading (verbatim template -- lines 259-261)
 
 Themes ({N})
 
-Where N = COMPARE_THEMES.length (currently 20). Rendered as e.g. "Themes (20)".
+Where N = COMPARE_THEMES.length (currently 20). Renders as e.g. "Themes (20)".
 
-### Theme count note (live -- right-aligned span)
+### Theme count note (verbatim template -- lines 262-264)
 
 All {N} themes have entries for all three traditions
 
-### Pre-seeded fallback note (live -- shown when live fetch fails)
+### Pre-seeded fallback label (verbatim -- line 78)
 
 Showing pre-seeded text (live fetch failed):
 
-### Bridging note section heading (live -- h3, uppercase tracking-widest)
+### Bridging note heading (verbatim -- h3, lines 313-314)
 
 What Connects These?
 
-### Bridging note disclaimer (live -- italic, below the bridging note text)
+### Bridging note disclaimer (verbatim -- lines 317-319)
 
 This note draws out the structural or thematic parallel. It does not rank traditions, endorse any interpretation, or suggest one text is derived from another.
 
-### Footer back-link (live)
+### Footer back-link (verbatim -- lines 329-331)
 
-&larr; Verse Lookup  (links to /lookup)
+← Verse Lookup  (links to /lookup)
 
-### Footer forward-link (live)
+### Footer forward-link (verbatim -- lines 335-337)
 
-Browse traditions &rarr;  (links to /browse)
+Browse traditions →  (links to /browse)
 
-### Note: default selection
+### Default selection note
 
-The current UI always loads the first COMPARE_THEME as the default. There is no user-visible "no theme selected" empty state.
+The component always initializes with the first COMPARE_THEME as the default selection. There is no user-visible empty/no-theme state in the current build.
 
 ---
 
@@ -204,79 +244,95 @@ The current UI always loads the first COMPARE_THEME as the default. There is no 
 
 Source: `src/components/ObservanceControls.tsx`
 
-### Page heading (live -- h1, semibold, text-gold)
+### Page heading (verbatim -- h1, line 74)
 
 Observances
 
-### Page subtitle (live)
+### Page subtitle (verbatim -- line 76)
 
 Religious holidays for Judaism, Christianity, and Islam
 
-### Year stepper (live -- prev/next button pair with centered year display)
+### Year stepper (verbatim -- lines 82-98)
 
-The year control is a prev/next stepper, not a select element.
+The year control is a prev/next stepper group, not a select element.
 - Previous year button: aria-label "Previous year"; renders ‹ (&#8249;)
-- Year display: centered span with the current year as a number
+- Year display: centered numeric span, e.g. 2026
 - Next year button: aria-label "Next year"; renders › (&#8250;)
 
-### Download button label (live -- hidden on small screens)
+### Download button label (verbatim -- line 108)
 
-Download .ics
+Download .ics  (hidden on small screens via `hidden sm:inline`)
 
-### Download button title (live -- tooltip, dynamic)
+### Download button tooltip (verbatim template -- line 105)
 
 Download all {N} events as .ics
 
-### Tradition filter buttons (live -- toggle buttons, alphabetical order)
+### Tradition filter buttons (verbatim -- lines 33-47, alphabetical order)
 
 Christianity / Islam / Judaism
 
-### Christianity denomination sub-filter label (live -- uppercase tracking-widest)
+(Button labels exactly as listed; rendered in alphabetical order: Christianity first, then Islam, then Judaism)
+
+### Christianity denomination sub-filter label (verbatim -- lines 133-134)
 
 Denomination
 
-### Christianity denomination sub-filter options (live)
+### Christianity denomination sub-filter options (verbatim -- DENOM_BUTTONS, lines 52-58)
 
 All / Catholic / Protestant / LDS / Orthodox
 
 ---
 
-## Attribution patterns
+## Attribution strings (verbatim from API layer)
 
-### Sefaria (live)
+These strings appear in the `attribution` field of the Passage object and are rendered by `src/components/VerseCard.tsx` (line 42: `{passage.attribution}`).
 
-[passage text]
--- [Book] [Chapter]:[Verse] -- Sefaria English, sefaria.org (CC BY-SA 2.0)
+### Sefaria (verbatim from src/api/sefaria.ts line 66 and 102)
 
-### Bible (public domain, live)
+```
+Sefaria.org -- CC BY-SA 2.0
+```
 
-[passage text]
--- [Book] [Chapter]:[Verse] -- [Translation Name]. Public domain.
+### Bible via bible-api.com (verbatim template from src/api/bible.ts line 78)
 
-### Bible (licensed, not displayed, live)
+```
+{translationName} -- served via bible-api.com. {json.translation_note || ''}
+```
+(trailing whitespace trimmed; translation_note is often empty)
 
-[licensed translation name] is not available in this free build.
+### Quran.com primary (verbatim template from src/api/quran.ts line 81)
 
-### Quran.com (live)
+```
+{translation.resource_name} -- served via Quran.com
+```
 
-[passage text]
--- Al-[Surah name] [Surah]:[Ayah] -- [Translation name], served via Quran.com
+### AlQuran.cloud fallback (verbatim template from src/api/quran.ts line 113)
 
-### Hadith (fawazahmed0, live)
+```
+{data.edition.englishName || 'Arberry'} -- served via AlQuran.cloud
+```
 
-[hadith text]
--- [Collection name], Book [N], Hadith [N] -- fawazahmed0/hadith-api (CC BY-4.0)
+### Hadith (verbatim template from src/api/hadith.ts lines 66 and 94)
 
-### Pre-seeded text (compare panels, live)
+```
+{displayName} #{number} -- via github.com/fawazahmed0/hadith-api (CC BY-4.0)
+```
+or (batch variant):
+```
+{COLLECTION_DISPLAY_NAMES[collection]} #{number} -- via github.com/fawazahmed0/hadith-api (CC BY-4.0)
+```
 
-Shown with label: "Showing pre-seeded text (live fetch failed):"
-Attribution appended to passage: "[Translation name] -- pre-seeded"
+### Pre-seeded compare panel (verbatim template from CrossTraditionCompare.tsx line 54)
+
+```
+{translationName} -- pre-seeded
+```
 
 ---
 
 ## Tradition labels
 
-Use these consistently in UI; do not abbreviate or shorten:
+Use these consistently in UI; do not abbreviate:
 - Judaism
 - Christianity -- Evangelical Protestant
 - Christianity -- Catholic
@@ -285,9 +341,13 @@ Use these consistently in UI; do not abbreviate or shorten:
 - Christianity -- Orthodox Christian
 - Islam
 
+When context is already within a Christianity section, the "Christianity --" prefix may be dropped in headings.
+
 ---
 
-## TraditionBadge display labels (live)
+## TraditionBadge display labels
+
+Source: `src/data/traditions.ts` or `src/components/TraditionBadge.tsx`
 
 | Family key | Display label |
 |-----------|---------------|
@@ -299,18 +359,16 @@ Use these consistently in UI; do not abbreviate or shorten:
 
 ## Tone guidelines
 
-These rules apply to all copy written for or about the ARE interface:
-
-1. **Neutral register:** describe, do not advocate. Never use language that implies one tradition is superior, earlier, more complete, or a fulfillment of another.
-2. **Scholarly-librarian voice:** warm curiosity, not charismatic enthusiasm. Not dry either -- engaged, respectful, accessible.
-3. **No em dashes:** use -- (double hyphen) in all copy. This matches the project-wide convention.
+1. **Neutral register:** describe, do not advocate. No language implying one tradition is superior, earlier, or a fulfillment of another.
+2. **Scholarly-librarian voice:** warm, curious, accessible. Not devotional, not dry.
+3. **No em dashes:** use -- (double hyphen) throughout. Project-wide convention.
 4. **No emojis:** in any ARE copy, UI, or documentation.
-5. **US English throughout:** not British spelling.
-6. **Active voice preferred:** "Select a theme" not "A theme should be selected."
-7. **Brevity (ROY principle):** every word must earn its space. Error messages should be short and actionable.
+5. **US English:** not British spelling.
+6. **Active voice:** "Select a theme" not "A theme should be selected."
+7. **Brevity (ROY principle):** every word must earn its space.
 8. **Attribution always:** any scripture passage displayed must carry a translation name and provider.
-9. **Pew citation is non-negotiable:** any demographic claim about US religious population must cite Pew Research Center Religious Landscape Study.
+9. **Pew citation required:** any US religious population claim must cite Pew Research Center Religious Landscape Study.
 
 ---
 
-*ARE governance: AGENTS.md. Cross-reference: `src/components/ModeNav.tsx`, `src/components/ScopeExplainer.tsx`, `src/data/traditions.ts` (PEW_SCOPE_NOTE), `src/pages/VerseLookup.tsx`, `src/pages/CrossTraditionCompare.tsx`, `src/pages/TraditionBrowser.tsx`, `src/components/ObservanceControls.tsx`.*
+*ARE governance: AGENTS.md. Source component citations embedded per section above.*
