@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 const KNOWLEDGE_FILES = [
   { file: 'judaism_tanakh_primer.md', label: 'Judaism -- Tanakh Primer', tradition: 'Judaism' },
   { file: 'christianity_catholic_canon.md', label: 'Christianity -- Catholic Canon', tradition: 'Christianity' },
@@ -243,15 +241,6 @@ export default function OriginArchive() {
         </div>
       </aside>
 
-      <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
-        <Link
-          to="/browse"
-          className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
-        >
-          &larr; Browse Traditions
-        </Link>
-        <span />
-      </div>
     </div>
   )
 }
