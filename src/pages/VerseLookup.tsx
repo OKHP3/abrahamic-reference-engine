@@ -166,7 +166,6 @@ export default function VerseLookup() {
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const allTranslations = TRANSLATIONS_BY_FAMILY[tradition]
-  const freeTranslations = allTranslations.filter(t => t.license !== 'licensed')
   const hasGappedTranslations = allTranslations.some(t => t.license === 'licensed')
 
   function getDefaultTranslation(trad: TraditionFamily): string {

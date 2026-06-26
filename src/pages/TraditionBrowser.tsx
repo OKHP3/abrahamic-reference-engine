@@ -1,7 +1,11 @@
 import { useParams, Link } from 'react-router-dom'
 import { DENOMINATIONS, TRADITION_GROUPS } from '../data/traditions'
 import { TRADITION_KNOWLEDGE, DENOMINATION_KNOWLEDGE } from '../data/knowledge'
+import type { ScriptureRef } from '../data/knowledge'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
+import { COMPARE_THEMES, FEATURED_THEME_IDS } from '../data/compareThemes'
+import type { CompareTheme } from '../data/compareThemes'
+import { getThemesForPassage } from '../data/themeMapping'
 import ScopeExplainer from '../components/ScopeExplainer'
 import TraditionBadge from '../components/TraditionBadge'
 import { useSettings } from '../context/SettingsContext'
@@ -12,6 +16,85 @@ const FAMILY_LABEL: Record<TraditionFamily, string> = {
   judaism: 'Judaism',
   christianity: 'Christianity',
   islam: 'Islam',
+}
+
+function getThemesForRefs(
+  family: TraditionFamily,
+  refs: ScriptureRef[],
+  max = 3
+): CompareTheme[] {
+  const seen = new Set<string>()
+  const results: CompareTheme[] = []
+  for (const ref of refs) {
+    for (const id of getThemesForPassage(family, ref.lookup)) {
+      if (!seen.has(id)) {
+        seen.add(id)
+        const theme = COMPARE_THEMES.find(t => t.id === id)
+        if (theme) results.push(theme)
+      }
+      if (results.length >= max) return results
+    }
+  }
+  for (const id of FEATURED_THEME_IDS) {
+    if (!seen.has(id)) {
+      seen.add(id)
+      const theme = COMPARE_THEMES.find(t => t.id === id)
+      if (theme) results.push(theme)
+    }
+    if (results.length >= max) break
+  }
+  return results
+}
+
+function CrossTraditionThemes({
+  family,
+  refs,
+  contextual,
+}: {
+  family: TraditionFamily
+  refs: ScriptureRef[]
+  contextual: boolean
+}) {
+  const themes = getThemesForRefs(family, refs)
+  if (themes.length === 0) return null
+  return (
+    <div className="p-5 border border-border-subtle rounded-lg bg-bg-elevated">
+      <div className="flex items-baseline gap-2 mb-3">
+        <h2 className="text-xs font-sans font-bold tracking-widest uppercase text-gold">
+          Cross-Tradition Themes
+        </h2>
+        {contextual && (
+          <span className="text-2xs font-sans text-muted italic">
+            drawn from this tradition's core texts
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-muted mb-4 leading-relaxed">
+        See how the other traditions approach themes from this tradition's scripture:
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {themes.map(theme => (
+          <Link
+            key={theme.id}
+            to={`/compare?theme=${theme.id}`}
+            className="p-4 border border-border-subtle rounded-lg bg-bg-base hover:border-gold hover:bg-bg-active transition-all duration-200 no-underline group"
+          >
+            <div className="flex gap-1 mb-2">
+              {(['christianity', 'islam', 'judaism'] as TraditionFamily[]).map(f => (
+                <TraditionBadge key={f} family={f} size="sm" />
+              ))}
+            </div>
+            <h3 className="text-sm font-sans font-semibold text-parchment group-hover:text-gold transition-colors mb-1">
+              {theme.title}
+            </h3>
+            <p className="text-xs text-muted leading-relaxed line-clamp-2">
+              {theme.description}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 function TranslationList({ family, preferredTranslationId }: { family: TraditionFamily; preferredTranslationId?: string }) {
@@ -249,6 +332,23 @@ function TraditionDetail({ slug }: { slug: string }) {
           }
           denominationSlug={settingsDenomSlug ?? undefined}
         />
+
+        {(() => {
+          const refs =
+            denomKnowledge?.representativeVerses ??
+            familyKnowledge?.primaryScriptures ??
+            []
+          const hasContextual = refs.some(
+            r => getThemesForPassage(denomination.family, r.lookup).length > 0
+          )
+          return (
+            <CrossTraditionThemes
+              family={denomination.family}
+              refs={refs}
+              contextual={hasContextual}
+            />
+          )
+        })()}
 
         <TranslationList
           family={denomination.family}
