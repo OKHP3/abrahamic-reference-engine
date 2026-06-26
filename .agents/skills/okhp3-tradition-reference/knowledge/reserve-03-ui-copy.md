@@ -8,6 +8,8 @@ status: active-reference
 
 Reference copy for recurring text patterns in the Abrahamic Reference Engine UI. Use these verbatim or adapt minimally. All copy must conform to the ARE tone (solemn, scholarly, neutral -- librarian/archivist register, not charismatic or devotional) and to the language standard (US English, no em dashes, no emojis).
 
+**Verification source:** strings in this file are taken verbatim from the live SPA source as of 2026-06-26. Before shipping any copy change, verify against the components cited in each section.
+
 ---
 
 ## App identity
@@ -21,46 +23,159 @@ Reference copy for recurring text patterns in the Abrahamic Reference Engine UI.
 
 ## Scope explainer (ScopeExplainer component)
 
-The ScopeExplainer component reads from the `PEW_SCOPE_NOTE` object in `src/data/traditions.ts`. The source-of-truth copy is in that data file. The UI renders the heading and criteria from it dynamically.
+Source: `src/components/ScopeExplainer.tsx`, driven by `PEW_SCOPE_NOTE` in `src/data/traditions.ts`.
 
-### Heading
+### Heading (live)
 
 Why These Three Traditions?
 
-### Criteria list (from PEW_SCOPE_NOTE.qualifyingCriteria)
+### Body note (live)
+
+This application includes only traditions that meet **both** of the following criteria:
 
 1. Abrahamic lineage -- traceable descent from the Abrahamic scriptural family
 2. 1% or greater US population per the Pew Research Center Religious Landscape Study
 
-### Out-of-scope note
+### Out-of-scope note (live)
 
-Traditions reviewed but excluded from scope: [rendered as a list from PEW_SCOPE_NOTE.excluded with name and reason]
+Traditions reviewed but excluded from scope: [list rendered from PEW_SCOPE_NOTE.excluded]
 
-Exclusion is a methodological boundary, not a judgment of worth.
+### Pew citation (live)
 
-### Pew citation text
-
-Source: Pew Research Center Religious Landscape Study, 2023
+Source: Pew Research Center Religious Landscape Study, [year]
 URL: https://www.pewresearch.org/religion/religious-landscape-study/
 
 ---
 
 ## Navigation labels (ModeNav component)
 
-These are the exact labels used in the live application (src/components/ModeNav.tsx):
+Source: `src/components/ModeNav.tsx` -- MODES array.
 
-| Label | Route | aria-label (description) |
+| Label | Route | Description (aria-label) |
 |-------|-------|--------------------------|
 | Browse | /browse | Explore traditions |
 | Lookup | /lookup | Find a passage |
 | Compare | /compare | Side-by-side themes |
 | Observances | /observances | Religious holiday calendar |
 
-Note: the nav uses single-word labels in the tab bar. Longer descriptive forms ("Browse Traditions", "Look Up a Verse", etc.) appear only in in-page headings and back-navigation links, not in the tab bar itself.
+These are single-word tab bar labels. Do not use verbose forms ("Browse Traditions", "Look Up a Verse") in the tab bar -- those are page headings only.
 
-### Back-navigation link text
+---
 
--- Browse Traditions (appears in TraditionBrowser denomination detail view)
+## TraditionBrowser page copy
+
+Source: `src/pages/TraditionBrowser.tsx`
+
+### Page heading (live)
+
+Browse Traditions
+
+### Page description (live)
+
+Three Abrahamic traditions with meaningful presence in the United States. Each is presented with equal respect -- the proportions below reflect Pew Research data, not a ranking of worth.
+
+### Denomination detail back-link (live)
+
+Return to Browse
+
+(Rendered as a `<Link to="/browse">` inside the denomination detail view.)
+
+---
+
+## VerseLookup page copy
+
+Source: `src/pages/VerseLookup.tsx`
+
+### Page heading (live)
+
+Verse Lookup
+
+### Page description (live)
+
+Retrieve a specific passage from any of the three in-scope Abrahamic traditions.
+
+### Submit button (live)
+
+Look up passage
+
+### Loading state (live)
+
+Fetching...
+
+### Loading spinner label (live)
+
+Fetching passage from API...
+
+### LDS non-Bible fallback (live)
+
+LDS Standard Works (Book of Mormon, D&C, Pearl of Great Price) are available via a community-maintained API (scriptures.nephi.org) with no uptime guarantee.
+[Link] Look up on ChurchOfJesusChrist.org
+
+### Orthodox OT gap (live -- displayed for 3 Maccabees, Psalm 151, 4 Maccabees)
+
+[Book name] -- [Book description]. [Link to BibleGateway]
+
+---
+
+## CrossTraditionCompare page copy
+
+Source: `src/pages/CrossTraditionCompare.tsx`
+
+### Page heading (live)
+
+Cross-Tradition Compare
+
+### Page description (live)
+
+The signature feature. Select a theme and see parallel passages from Judaism, Christianity, and Islam side by side -- with neutral bridging notes that invite discovery rather than declare a winner.
+
+### Theme list label (live)
+
+Themes ({N})
+
+Where N = the current count of COMPARE_THEMES (currently 20). Format: "Themes (20)".
+
+### Theme count note (live)
+
+All {N} themes have entries for all three traditions
+
+### Bridging note section heading (live)
+
+What Connects These?
+
+### Bridging note disclaimer (live, beneath the bridging note text)
+
+This note draws out the structural or thematic parallel. It does not rank traditions, endorse any interpretation, or suggest one text is derived from another.
+
+### Footer back-link (live)
+
+&larr; Verse Lookup  (links to /lookup)
+
+### Footer forward-link (live)
+
+Browse traditions &rarr;  (links to /browse)
+
+### Note: no-theme-selected state
+
+The current UI always shows the first theme by default. There is no empty/no-selection state rendered to the user in the current implementation.
+
+---
+
+## ObservancesCalendar page copy
+
+Source: `src/pages/ObservancesCalendar.tsx`, `src/components/ObservanceControls.tsx`
+
+### Page heading (live -- in ObservanceControls)
+
+Observances
+
+### Year selector label (live)
+
+Year: [YYYY]  (rendered as a `<select>` in the controls bar)
+
+### Loading state (live)
+
+Loading {tradition} holidays...
 
 ---
 
@@ -73,10 +188,6 @@ Unable to retrieve this passage. The external API may be temporarily unavailable
 ### Reference not found
 
 No passage found for this reference. Check that the reference format is correct and try again.
-
-### LDS non-Bible fallback
-
-The LDS Standard Works (Book of Mormon, Doctrine and Covenants, Pearl of Great Price) are not available via a guaranteed free API at this time. Visit the official LDS scriptures website to look up this passage: https://www.churchofjesuschrist.org/study/scriptures
 
 ### Licensed translation note
 
@@ -93,10 +204,6 @@ The Douay-Rheims translation is not reliably available via the free API. Showing
 ### Pickthall gap note
 
 The Pickthall translation is not available from the primary provider for this verse. Attempting fallback provider.
-
-### Tradition not found
-
-Tradition not found. [link: Browse Traditions]
 
 ---
 
@@ -126,6 +233,10 @@ Tradition not found. [link: Browse Traditions]
 [hadith text]
 -- [Collection name], Book [N], Hadith [N] -- fawazahmed0/hadith-api (CC BY-4.0)
 
+### Pre-seeded text fallback (compare panels)
+
+Showing pre-seeded text (live fetch failed):
+
 ---
 
 ## Tradition labels
@@ -143,155 +254,25 @@ In page headings and denomination cards, the tradition prefix "Christianity --" 
 
 ---
 
-## VerseLookup page copy
+## TraditionBadge display labels (live)
 
-### Page heading
+Source: `src/components/TraditionBadge.tsx` or `src/data/traditions.ts`
 
-Look Up a Passage
-
-### Tradition selector label
-
-Tradition
-
-### Tradition options
-
-- Christianity
-- Islam
-- Judaism
-
-(Order in the live UI: Christianity, Islam, Judaism -- alphabetical but with Christianity first due to denomination sub-selection complexity)
-
-### Reference field label
-
-Reference
-
-### Reference field placeholder (by tradition)
-
-- Judaism: e.g. Genesis 1:1
-- Christianity: e.g. john 3:16
-- Islam (Quran): e.g. 2:255
-
-### Submit button
-
-Look up passage
-
-### Loading state
-
-Fetching...
+| Family key | Display label |
+|-----------|---------------|
+| judaism | Judaism |
+| christianity | Christianity |
+| islam | Islam |
 
 ---
 
-## CrossTraditionCompare page copy
+## Loading spinner label patterns
 
-### Page heading
+Source: across components
 
-Cross-Tradition Compare
-
-### Sub-heading / theme list label
-
-Cross-Tradition Themes
-
-### Panel heading
-
-[Tradition name] (e.g., Judaism / Christianity / Islam)
-
-### Bridging note label
-
-Connection
-
-### No theme selected
-
-Select a theme above to compare parallel passages from Judaism, Christianity, and Islam.
-
-### Theme count
-
-[N] themes available
-
----
-
-## ObservancesCalendar page copy
-
-### Page heading
-
-Observances Calendar
-
-### Year selector label
-
-Year: [YYYY]
-
-### Tradition filter label
-
-Traditions
-
-### Tradition filter options
-
-- Judaism
-- Christianity
-- Islam
-
-(All three selected by default)
-
-### Download button label
-
-Download .ics
-
-### Full-year download label
-
-Download all [YYYY] observances (.ics)
-
-### Loading state
-
-Loading [tradition] holidays...
-
-### No events for selection
-
-No observances found for the selected traditions and year.
-
-### Event card: ICS download link
-
-Add to calendar
-
-### Event detail: tradition badge
-
-[Judaism / Christianity / Islam] color-coded badge
-
----
-
-## TraditionBrowser page copy
-
-### Main heading
-
-Browse Traditions
-
-### Denomination section heading (within Christianity)
-
-Denominations
-
-### Pew data section heading
-
-US Population (Pew 2023)
-
-### Interpretive traditions section heading
-
-Interpretive Traditions
-
-### Key passages section heading (within denomination view)
-
-Key Passages
-
-### Scope explainer heading (inline)
-
-Why These Three Traditions?
-
----
-
-## Loading states
-
-- Loading passage...
-- Fetching from [Provider]...
-- Comparing traditions...
-- Loading [tradition] holidays...
-- Fetching [Tradition] passage...
+- `Fetching {tradition} passage...` (compare panels, per tradition)
+- `Fetching passage from API...` (VerseLookup main spinner)
+- `Loading {tradition} holidays...` (ObservancesCalendar)
 
 ---
 
@@ -311,4 +292,4 @@ These rules apply to all copy written for or about the ARE interface:
 
 ---
 
-*ARE governance: AGENTS.md. Cross-reference: src/components/ModeNav.tsx, src/components/ScopeExplainer.tsx, src/data/traditions.ts.*
+*ARE governance: AGENTS.md. Cross-reference: src/components/ModeNav.tsx, src/components/ScopeExplainer.tsx, src/pages/VerseLookup.tsx, src/pages/CrossTraditionCompare.tsx, src/pages/TraditionBrowser.tsx, src/components/ObservanceControls.tsx.*
