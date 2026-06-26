@@ -497,7 +497,7 @@ function TraditionGrid() {
         </section>
       ))}
 
-      <ScopeExplainer className="mt-4" />
+      <ScopeExplainer className="mt-4 mb-6" />
 
       <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
         <Link
