@@ -43,7 +43,12 @@ export async function fetchPassage(opts: FetchPassageOptions): Promise<Passage> 
     }
 
     case 'christianity': {
-      const xlation = (translationId as BibleApiTranslation) ?? 'kjv'
+      // Map internal ARE translation IDs to bible-api.com API codes.
+      // The internal id ('douay') may differ from the API param ('dra').
+      const CHRISTIAN_API_CODES: Partial<Record<string, BibleApiTranslation>> = {
+        douay: 'dra',
+      }
+      const xlation = (CHRISTIAN_API_CODES[translationId ?? ''] ?? translationId ?? 'kjv') as BibleApiTranslation
       return fetchBiblePassage(reference, xlation)
     }
 
