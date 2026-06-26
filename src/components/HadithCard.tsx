@@ -1,6 +1,8 @@
-import type { Hadith } from '../types'
+import type { Hadith, HadithCollection } from '../types'
 import { COLLECTION_DISPLAY_NAMES } from '../api/hadith'
 import LoadingSpinner from './LoadingSpinner'
+
+const COLLECTION_KEYS = Object.keys(COLLECTION_DISPLAY_NAMES) as HadithCollection[]
 
 interface HadithCardProps {
   hadiths: Hadith[]
@@ -9,6 +11,8 @@ interface HadithCardProps {
   index: number
   onNext: () => void
   onPrev: () => void
+  collection: HadithCollection
+  onCollectionChange: (c: HadithCollection) => void
 }
 
 export default function HadithCard({
@@ -18,12 +22,14 @@ export default function HadithCard({
   index,
   onNext,
   onPrev,
+  collection,
+  onCollectionChange,
 }: HadithCardProps) {
   const hadith = hadiths[index] ?? null
   const total = hadiths.length
   const displayCollection = hadith
     ? COLLECTION_DISPLAY_NAMES[hadith.collection]
-    : 'Sahih al-Bukhari'
+    : COLLECTION_DISPLAY_NAMES[collection]
 
   return (
     <section
@@ -31,11 +37,27 @@ export default function HadithCard({
       className="p-5 border border-emerald-900 rounded-lg bg-bg-elevated"
     >
       <div className="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <span className="text-2xs font-sans font-bold tracking-widest uppercase text-emerald-500 block">
+        <div className="min-w-0 flex-1">
+          <span className="text-2xs font-sans font-bold tracking-widest uppercase text-emerald-500 block mb-1">
             Related Hadith
           </span>
-          <span className="text-xs font-sans text-muted mt-0.5 block">{displayCollection}</span>
+          {!loading && !error && (
+            <select
+              value={collection}
+              onChange={e => onCollectionChange(e.target.value as HadithCollection)}
+              className="bg-bg-base border border-emerald-900 rounded px-2 py-1 text-xs font-sans text-parchment focus:outline-none focus:border-emerald-700 transition-colors max-w-[200px]"
+              aria-label="Hadith collection"
+            >
+              {COLLECTION_KEYS.map(key => (
+                <option key={key} value={key}>
+                  {COLLECTION_DISPLAY_NAMES[key]}
+                </option>
+              ))}
+            </select>
+          )}
+          {(loading || error) && (
+            <span className="text-xs font-sans text-muted mt-0.5 block">{displayCollection}</span>
+          )}
         </div>
 
         {!loading && !error && total > 1 && (

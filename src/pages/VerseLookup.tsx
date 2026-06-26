@@ -12,7 +12,7 @@ import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
 import { useSettings } from '../context/SettingsContext'
 import { getChristianDenominationSlug } from '../settings'
-import type { Passage, Hadith, TraditionFamily, ApiStatus } from '../types'
+import type { Passage, Hadith, TraditionFamily, ApiStatus, HadithCollection } from '../types'
 
 type ChristianDenomination = 'catholic' | 'protestant' | 'lds' | 'orthodox' | null
 
@@ -108,10 +108,10 @@ function isLikelyValidRef(tradition: TraditionFamily, ref: string): boolean {
   return /^[1-9]?\s?[a-zA-Z].*\s\d/.test(t)
 }
 
-function buildHadithNumbers(ref: string): number[] {
+function buildHadithNumbers(ref: string, collection: HadithCollection = 'bukhari'): number[] {
   const surah = Math.max(1, parseInt(ref.split(':')[0]) || 1)
   const base = ((surah * 53) % 900) + 100
-  const max = HADITH_COLLECTION_SIZES.bukhari
+  const max = HADITH_COLLECTION_SIZES[collection]
   return [0, 100, 200, 300, 400].map(offset =>
     Math.min(Math.max(1, base + offset), max)
   )
@@ -159,6 +159,7 @@ export default function VerseLookup() {
   const [hadithStatus, setHadithStatus] = useState<ApiStatus>('idle')
   const [hadithIndex, setHadithIndex] = useState(0)
   const [hadithError, setHadithError] = useState<string | null>(null)
+  const [hadithCollection, setHadithCollection] = useState<HadithCollection>('bukhari')
   const [fetchedRef, setFetchedRef] = useState('')
   const [fetchedTradition, setFetchedTradition] = useState<TraditionFamily>('judaism')
   const [copied, setCopied] = useState(false)
@@ -226,6 +227,7 @@ export default function VerseLookup() {
       setHadithStatus('idle')
       setHadithIndex(0)
       setHadithError(null)
+      setHadithCollection('bukhari')
       try {
         let result: Passage
         if (trad === 'christianity' && denom === 'lds' && !isLdsBibleRef(ref)) {
@@ -239,7 +241,7 @@ export default function VerseLookup() {
         setFetchedTradition(trad)
         if (trad === 'islam') {
           setHadithStatus('loading')
-          const numbers = buildHadithNumbers(ref.trim())
+          const numbers = buildHadithNumbers(ref.trim(), 'bukhari')
           fetchHadithBatch('bukhari', numbers)
             .then(results => {
               if (results.length > 0) {
@@ -331,6 +333,29 @@ export default function VerseLookup() {
     if (denomination) params.denomination = denomination
     setSearchParams(params)
     doFetch(tradition, ref, translationId, denomination)
+  }
+
+  async function handleHadithCollectionChange(collection: HadithCollection) {
+    setHadithCollection(collection)
+    if (!fetchedRef || fetchedTradition !== 'islam') return
+    setHadithStatus('loading')
+    setHadiths([])
+    setHadithIndex(0)
+    setHadithError(null)
+    const numbers = buildHadithNumbers(fetchedRef, collection)
+    try {
+      const results = await fetchHadithBatch(collection, numbers)
+      if (results.length > 0) {
+        setHadiths(results)
+        setHadithStatus('success')
+      } else {
+        setHadithStatus('error')
+        setHadithError('No hadith returned from collection.')
+      }
+    } catch {
+      setHadithStatus('error')
+      setHadithError('Hadith could not be loaded.')
+    }
   }
 
   const isLds = tradition === 'christianity' && denomination === 'lds'
@@ -607,6 +632,8 @@ export default function VerseLookup() {
             index={hadithIndex}
             onNext={() => setHadithIndex(i => Math.min(i + 1, hadiths.length - 1))}
             onPrev={() => setHadithIndex(i => Math.max(i - 1, 0))}
+            collection={hadithCollection}
+            onCollectionChange={handleHadithCollectionChange}
           />
         </div>
       )}
