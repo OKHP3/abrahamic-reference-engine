@@ -2,8 +2,10 @@ import { useState, useCallback } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import ModeNav from './ModeNav'
+import { usePageTracking } from '../hooks/usePageTracking'
 
 export default function Layout() {
+  usePageTracking()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const openSidebar = useCallback(() => setSidebarOpen(true), [])
