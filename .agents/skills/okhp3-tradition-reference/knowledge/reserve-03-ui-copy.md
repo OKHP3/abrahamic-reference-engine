@@ -120,8 +120,9 @@ christianity / islam / judaism (rendered in that order in the DOM)
 
 Denomination
 
-### Denomination options (verbatim -- label values from lines 418-424)
+### Denomination options (verbatim -- label values from lines 421-424)
 
+- All (value: null)
 - Catholic (value: 'catholic')
 - Protestant (value: 'protestant')
 - LDS (value: 'lds')
