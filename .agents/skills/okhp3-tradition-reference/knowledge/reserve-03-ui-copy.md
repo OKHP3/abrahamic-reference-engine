@@ -6,9 +6,7 @@ status: active-reference
 
 # Reserve 03 -- UI Copy Reference
 
-Reference copy for recurring text patterns in the Abrahamic Reference Engine UI. Use these verbatim or adapt minimally. All copy must conform to the ARE tone (solemn, scholarly, neutral -- librarian/archivist register, not charismatic or devotional) and to the language standard (US English, no em dashes, no emojis).
-
-**Verification source:** strings in this file are taken verbatim from the live SPA source as of 2026-06-26. Before shipping any copy change, verify against the components cited in each section.
+Reference copy for recurring text patterns in the Abrahamic Reference Engine UI. Static strings are taken verbatim from the live SPA source (verified 2026-06-26). Dynamic strings are marked with [dynamic] and the template is given. Section headers cite the source component for future verification.
 
 ---
 
@@ -23,33 +21,48 @@ Reference copy for recurring text patterns in the Abrahamic Reference Engine UI.
 
 ## Scope explainer (ScopeExplainer component)
 
-Source: `src/components/ScopeExplainer.tsx`, driven by `PEW_SCOPE_NOTE` in `src/data/traditions.ts`.
+Source: `src/components/ScopeExplainer.tsx` + `src/data/traditions.ts` (`PEW_SCOPE_NOTE`)
 
-### Heading (live)
+### Heading (live -- h2, uppercase tracking-widest)
 
 Why These Three Traditions?
 
-### Body note (live)
+### Body intro (live)
 
 This application includes only traditions that meet **both** of the following criteria:
 
-1. Abrahamic lineage -- traceable descent from the Abrahamic scriptural family
-2. 1% or greater US population per the Pew Research Center Religious Landscape Study
+### Qualifying criteria list (live -- from PEW_SCOPE_NOTE.qualifyingCriteria)
 
-### Out-of-scope note (live)
+1. Traceable Abrahamic lineage (descended from the faith of Abraham)
+2. 1% or more of the US population (Pew Research Center Religious Landscape Study)
 
-Traditions reviewed but excluded from scope: [list rendered from PEW_SCOPE_NOTE.excluded]
+### Out-of-scope note heading (live)
 
-### Pew citation (live)
+Traditions reviewed but excluded from scope:
 
-Source: Pew Research Center Religious Landscape Study, [year]
-URL: https://www.pewresearch.org/religion/religious-landscape-study/
+### Excluded traditions (live -- from PEW_SCOPE_NOTE.excluded)
+
+| Name | Reason |
+|------|--------|
+| Hinduism | Not Abrahamic |
+| Buddhism | Not Abrahamic |
+| Baha'i | Abrahamic, but below 1% US threshold |
+| Sikhism | Not Abrahamic |
+| Druze | Abrahamic, but below 1% US threshold |
+
+### Note (live -- italic, from PEW_SCOPE_NOTE.note)
+
+Exclusions are methodological, not judgments of worth. Every tradition listed here is presented with equal respect.
+
+### Citation link (live -- from PEW_2023 in traditions.ts)
+
+Source: Pew Research Center, Religious Landscape Study, 2023 (rendered as link: https://www.pewresearch.org/religion/religious-landscape-study/)
 
 ---
 
 ## Navigation labels (ModeNav component)
 
-Source: `src/components/ModeNav.tsx` -- MODES array.
+Source: `src/components/ModeNav.tsx` -- MODES array
 
 | Label | Route | Description (aria-label) |
 |-------|-------|--------------------------|
@@ -58,7 +71,7 @@ Source: `src/components/ModeNav.tsx` -- MODES array.
 | Compare | /compare | Side-by-side themes |
 | Observances | /observances | Religious holiday calendar |
 
-These are single-word tab bar labels. Do not use verbose forms ("Browse Traditions", "Look Up a Verse") in the tab bar -- those are page headings only.
+These are single-word tab labels. Do not use verbose forms in the tab bar; those appear only in page h1 headings.
 
 ---
 
@@ -66,7 +79,7 @@ These are single-word tab bar labels. Do not use verbose forms ("Browse Traditio
 
 Source: `src/pages/TraditionBrowser.tsx`
 
-### Page heading (live)
+### Page heading (live -- h1)
 
 Browse Traditions
 
@@ -74,11 +87,9 @@ Browse Traditions
 
 Three Abrahamic traditions with meaningful presence in the United States. Each is presented with equal respect -- the proportions below reflect Pew Research data, not a ranking of worth.
 
-### Denomination detail back-link (live)
+### Denomination detail back-link (live -- Link to="/browse")
 
 Return to Browse
-
-(Rendered as a `<Link to="/browse">` inside the denomination detail view.)
 
 ---
 
@@ -86,7 +97,7 @@ Return to Browse
 
 Source: `src/pages/VerseLookup.tsx`
 
-### Page heading (live)
+### Page heading (live -- h1)
 
 Verse Lookup
 
@@ -94,26 +105,50 @@ Verse Lookup
 
 Retrieve a specific passage from any of the three in-scope Abrahamic traditions.
 
-### Submit button (live)
+### Submit button (live -- conditional on loading state)
 
-Look up passage
-
-### Loading state (live)
-
-Fetching...
+- Default: `Look up passage`
+- Loading: `Fetching...`
 
 ### Loading spinner label (live)
 
 Fetching passage from API...
 
-### LDS non-Bible fallback (live)
+### LDS fallback error section heading (live -- h3, uppercase tracking-widest)
 
-LDS Standard Works (Book of Mormon, D&C, Pearl of Great Price) are available via a community-maintained API (scriptures.nephi.org) with no uptime guarantee.
-[Link] Look up on ChurchOfJesusChrist.org
+LDS Standard Works
 
-### Orthodox OT gap (live -- displayed for 3 Maccabees, Psalm 151, 4 Maccabees)
+### LDS fallback error body (live -- verbatim)
 
-[Book name] -- [Book description]. [Link to BibleGateway]
+The Book of Mormon, Doctrine & Covenants, and Pearl of Great Price are served via a community-maintained API (scriptures.nephi.org) with no uptime guarantee. It appears to be unreachable right now.
+
+### LDS fallback link (live)
+
+Look up on ChurchOfJesusChrist.org →
+(href: https://www.churchofjesuschrist.org/study/scriptures)
+
+### Orthodox canon gap section heading (live -- h3, uppercase tracking-widest)
+
+Orthodox Canon -- Coverage Gap
+
+### Orthodox canon gap body (live -- partially dynamic)
+
+[dynamic: canonGapBook.name] -- rendered as a serif heading
+[dynamic: canonGapBook.description] -- the book-specific explanation (see ORTHODOX_GAP_BOOKS in VerseLookup.tsx)
+This text is part of the Orthodox canon but is not yet available through the connected API (bible-api.com WEB). Coverage may be added in a future update.
+
+### Orthodox canon gap link (live -- dynamic)
+
+Read [canonGapBook.name] on BibleGateway →
+(href: canonGapBook.searchUrl -- links to BibleGateway NRSV/NRSVA)
+
+### LDS Standard Works denomination helper text (live -- displayed in LDS denomination selection)
+
+LDS Standard Works (Book of Mormon, D&C, Pearl of Great Price) via scriptures.nephi.org.
+
+### LDS reference format hint (live -- below reference input when LDS selected)
+
+Bible: book chapter:verse (e.g. james 1:5) -- Standard Works: e.g. 2 Ne. 2:25, D&C 76:22, Moses 1:39
 
 ---
 
@@ -121,7 +156,7 @@ LDS Standard Works (Book of Mormon, D&C, Pearl of Great Price) are available via
 
 Source: `src/pages/CrossTraditionCompare.tsx`
 
-### Page heading (live)
+### Page heading (live -- h1)
 
 Cross-Tradition Compare
 
@@ -129,21 +164,25 @@ Cross-Tradition Compare
 
 The signature feature. Select a theme and see parallel passages from Judaism, Christianity, and Islam side by side -- with neutral bridging notes that invite discovery rather than declare a winner.
 
-### Theme list label (live)
+### Theme list section heading (live -- h2, uppercase tracking-widest, dynamic count)
 
 Themes ({N})
 
-Where N = the current count of COMPARE_THEMES (currently 20). Format: "Themes (20)".
+Where N = COMPARE_THEMES.length (currently 20). Rendered as e.g. "Themes (20)".
 
-### Theme count note (live)
+### Theme count note (live -- right-aligned span)
 
 All {N} themes have entries for all three traditions
 
-### Bridging note section heading (live)
+### Pre-seeded fallback note (live -- shown when live fetch fails)
+
+Showing pre-seeded text (live fetch failed):
+
+### Bridging note section heading (live -- h3, uppercase tracking-widest)
 
 What Connects These?
 
-### Bridging note disclaimer (live, beneath the bridging note text)
+### Bridging note disclaimer (live -- italic, below the bridging note text)
 
 This note draws out the structural or thematic parallel. It does not rank traditions, endorse any interpretation, or suggest one text is derived from another.
 
@@ -155,87 +194,83 @@ This note draws out the structural or thematic parallel. It does not rank tradit
 
 Browse traditions &rarr;  (links to /browse)
 
-### Note: no-theme-selected state
+### Note: default selection
 
-The current UI always shows the first theme by default. There is no empty/no-selection state rendered to the user in the current implementation.
+The current UI always loads the first COMPARE_THEME as the default. There is no user-visible "no theme selected" empty state.
 
 ---
 
 ## ObservancesCalendar page copy
 
-Source: `src/pages/ObservancesCalendar.tsx`, `src/components/ObservanceControls.tsx`
+Source: `src/components/ObservanceControls.tsx`
 
-### Page heading (live -- in ObservanceControls)
+### Page heading (live -- h1, semibold, text-gold)
 
 Observances
 
-### Year selector label (live)
+### Page subtitle (live)
 
-Year: [YYYY]  (rendered as a `<select>` in the controls bar)
+Religious holidays for Judaism, Christianity, and Islam
 
-### Loading state (live)
+### Year stepper (live -- prev/next button pair with centered year display)
 
-Loading {tradition} holidays...
+The year control is a prev/next stepper, not a select element.
+- Previous year button: aria-label "Previous year"; renders ‹ (&#8249;)
+- Year display: centered span with the current year as a number
+- Next year button: aria-label "Next year"; renders › (&#8250;)
 
----
+### Download button label (live -- hidden on small screens)
 
-## Error states
+Download .ics
 
-### API unavailable -- generic
+### Download button title (live -- tooltip, dynamic)
 
-Unable to retrieve this passage. The external API may be temporarily unavailable. Please try again in a moment.
+Download all {N} events as .ics
 
-### Reference not found
+### Tradition filter buttons (live -- toggle buttons, alphabetical order)
 
-No passage found for this reference. Check that the reference format is correct and try again.
+Christianity / Islam / Judaism
 
-### Licensed translation note
+### Christianity denomination sub-filter label (live -- uppercase tracking-widest)
 
-This translation requires an API key and is not available in this free build. Passages are shown using [fallback translation name] instead.
+Denomination
 
-### Orthodox OT gap note
+### Christianity denomination sub-filter options (live)
 
-This text is part of the Orthodox OT canon but is not available via a free public API. The World English Bible (WEB) includes the Catholic deuterocanonicals but does not cover all Orthodox additions (3 Maccabees, Psalm 151, 4 Maccabees).
-
-### Douay-Rheims gap note
-
-The Douay-Rheims translation is not reliably available via the free API. Showing the World English Bible instead.
-
-### Pickthall gap note
-
-The Pickthall translation is not available from the primary provider for this verse. Attempting fallback provider.
+All / Catholic / Protestant / LDS / Orthodox
 
 ---
 
 ## Attribution patterns
 
-### Sefaria
+### Sefaria (live)
 
 [passage text]
 -- [Book] [Chapter]:[Verse] -- Sefaria English, sefaria.org (CC BY-SA 2.0)
 
-### Bible (public domain)
+### Bible (public domain, live)
 
 [passage text]
 -- [Book] [Chapter]:[Verse] -- [Translation Name]. Public domain.
 
-### Bible (licensed, not displayed)
+### Bible (licensed, not displayed, live)
 
 [licensed translation name] is not available in this free build.
 
-### Quran.com
+### Quran.com (live)
 
 [passage text]
 -- Al-[Surah name] [Surah]:[Ayah] -- [Translation name], served via Quran.com
 
-### Hadith (fawazahmed0)
+### Hadith (fawazahmed0, live)
 
 [hadith text]
 -- [Collection name], Book [N], Hadith [N] -- fawazahmed0/hadith-api (CC BY-4.0)
 
-### Pre-seeded text fallback (compare panels)
+### Pre-seeded text (compare panels, live)
 
-Showing pre-seeded text (live fetch failed):
+Shown with label: "Showing pre-seeded text (live fetch failed):"
+Attribution appended to passage: "[Translation name] -- pre-seeded"
 
 ---
 
@@ -250,13 +285,9 @@ Use these consistently in UI; do not abbreviate or shorten:
 - Christianity -- Orthodox Christian
 - Islam
 
-In page headings and denomination cards, the tradition prefix "Christianity --" is dropped when the context is already clearly within the Christianity section. In navigation tabs and global cross-tradition views, the full label is used.
-
 ---
 
 ## TraditionBadge display labels (live)
-
-Source: `src/components/TraditionBadge.tsx` or `src/data/traditions.ts`
 
 | Family key | Display label |
 |-----------|---------------|
@@ -266,30 +297,20 @@ Source: `src/components/TraditionBadge.tsx` or `src/data/traditions.ts`
 
 ---
 
-## Loading spinner label patterns
-
-Source: across components
-
-- `Fetching {tradition} passage...` (compare panels, per tradition)
-- `Fetching passage from API...` (VerseLookup main spinner)
-- `Loading {tradition} holidays...` (ObservancesCalendar)
-
----
-
 ## Tone guidelines
 
 These rules apply to all copy written for or about the ARE interface:
 
 1. **Neutral register:** describe, do not advocate. Never use language that implies one tradition is superior, earlier, more complete, or a fulfillment of another.
-2. **Scholarly-librarian voice:** warm curiosity, not charismatic enthusiasm. Not dry either -- the goal is engaged, respectful, accessible.
+2. **Scholarly-librarian voice:** warm curiosity, not charismatic enthusiasm. Not dry either -- engaged, respectful, accessible.
 3. **No em dashes:** use -- (double hyphen) in all copy. This matches the project-wide convention.
 4. **No emojis:** in any ARE copy, UI, or documentation.
-5. **US English throughout:** not British spelling (favour -> favor; colour -> color; programme -> program).
+5. **US English throughout:** not British spelling.
 6. **Active voice preferred:** "Select a theme" not "A theme should be selected."
-7. **Brevity:** every word must earn its space (ROY principle). Error messages should be short and actionable. Explainers should be as brief as possible while remaining accurate.
+7. **Brevity (ROY principle):** every word must earn its space. Error messages should be short and actionable.
 8. **Attribution always:** any scripture passage displayed must carry a translation name and provider.
 9. **Pew citation is non-negotiable:** any demographic claim about US religious population must cite Pew Research Center Religious Landscape Study.
 
 ---
 
-*ARE governance: AGENTS.md. Cross-reference: src/components/ModeNav.tsx, src/components/ScopeExplainer.tsx, src/pages/VerseLookup.tsx, src/pages/CrossTraditionCompare.tsx, src/pages/TraditionBrowser.tsx, src/components/ObservanceControls.tsx.*
+*ARE governance: AGENTS.md. Cross-reference: `src/components/ModeNav.tsx`, `src/components/ScopeExplainer.tsx`, `src/data/traditions.ts` (PEW_SCOPE_NOTE), `src/pages/VerseLookup.tsx`, `src/pages/CrossTraditionCompare.tsx`, `src/pages/TraditionBrowser.tsx`, `src/components/ObservanceControls.tsx`.*
