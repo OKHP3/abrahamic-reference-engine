@@ -290,6 +290,37 @@ function TraditionDetail({ slug }: { slug: string }) {
           <p className="text-sm text-ink leading-relaxed">{denomination.canonScope}</p>
         </div>
 
+        {denomination.id === 'christianity-orthodox' && (
+          <div className="p-5 border border-amber-800 rounded-lg bg-amber-950/30">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-2xs font-sans font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-amber-900 text-amber-300 border border-amber-700">
+                Partial coverage
+              </span>
+              <h2 className="text-xs font-sans font-bold tracking-widest uppercase text-amber-400">
+                Orthodox OT -- API gap
+              </h2>
+            </div>
+            <p className="text-sm text-ink leading-relaxed mb-3">
+              WEB (World English Bible) covers the seven Catholic deuterocanonicals but does not include
+              three Orthodox-specific texts: <span className="text-parchment font-medium">3 Maccabees</span>,{' '}
+              <span className="text-parchment font-medium">4 Maccabees</span>, and{' '}
+              <span className="text-parchment font-medium">Psalm 151</span>.
+            </p>
+            <p className="text-sm text-muted leading-relaxed mb-4">
+              No free public API currently serves these books. Lookups for these texts will return a coverage-gap notice
+              rather than the passage.
+            </p>
+            <a
+              href="https://www.biblegateway.com/versions/Eastern-Orthodox-Bible-EOB/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-sans text-amber-400 hover:text-amber-300 transition-colors no-underline"
+            >
+              Read the full Orthodox canon at BibleGateway &rarr;
+            </a>
+          </div>
+        )}
+
         {denomKnowledge && (
           <>
             <div className="p-5 border border-border-subtle rounded-lg bg-bg-elevated">
