@@ -137,20 +137,19 @@ await run('T-BI-02', 'Matthew 5:3-12 (Beatitudes)', true, async () => {
   assert(Array.isArray(json.verses) && json.verses.length === 10, `Expected 10 verses, got ${json.verses?.length}`)
 })
 
-// Non-blocking: bible-api.com does not support the drc (Douay-Rheims) translation -- returns HTTP 404
+// Non-blocking: Tobit is in WEB (deuterocanonical) but not in KJV/dra -- tested here as a deuterocanonical smoke test
 await run('T-BI-03', 'Tobit 1:1 (WEB deuterocanonical)', false, async () => {
   const json = await getJson('https://bible-api.com/tobit%201:1?translation=web')
   assert(!json.error, `Error: ${json.error}`)
   assert(json.text && json.text.length > 0, 'Empty text')
 })
 
-await run('T-BI-04', 'John 1:1 (Douay-Rheims, drc)', false, async () => {
-  // drc translation returns HTTP 404 on bible-api.com -- non-blocking gap documentation
-  const { ok, json } = await fetchRaw('https://bible-api.com/john%201:1?translation=drc')
-  if (!ok) throw new Error(`HTTP 404 -- drc translation not available on bible-api.com`)
-  assert(!json?.error, `Error: ${json?.error}`)
-  const lc = normalize(json?.text || '')
-  assert(lc.includes('word') && lc.includes('god') && lc.includes('beginning'), `Missing expected words: "${json?.text?.slice(0, 120)}"`)
+await run('T-BI-04', 'John 1:1 (Douay-Rheims, dra)', true, async () => {
+  const json = await getJson('https://bible-api.com/john%201:1?translation=dra')
+  assert(!json.error, `Error: ${json.error}`)
+  assert(json.translation_id === 'dra', `Expected translation_id "dra", got "${json.translation_id}"`)
+  const lc = normalize(json.text || '')
+  assert(lc.includes('word') && lc.includes('god') && lc.includes('beginning'), `Missing expected words: "${json.text?.slice(0, 120)}"`)
 })
 
 await run('T-BI-05', 'James 1:5 (KJV, LDS reference)', true, async () => {
@@ -294,7 +293,7 @@ if (failed > 0) {
 }
 
 if (warned > 0) {
-  console.log('\nNon-blocking warnings (AlQuran.cloud, Hadith, drc, Pickthall):')
+  console.log('\nNon-blocking warnings (AlQuran.cloud, Hadith CDN, Pickthall):')
   results.filter(r => r.status === 'warn').forEach(r => {
     console.log(`  ${r.id}  ${r.label}`)
     console.log(`    ${r.msg}`)
@@ -307,7 +306,7 @@ if (primaryFailures > 0) {
 } else {
   console.log('\n\x1b[32mPASSED -- all primary providers are healthy.\x1b[0m')
   if (nonBlockingFailures > 0) {
-    console.log('\x1b[33mNon-blocking warnings recorded -- check AlQuran.cloud / Hadith CDN / drc / Pickthall.\x1b[0m')
+    console.log('\x1b[33mNon-blocking warnings recorded -- check AlQuran.cloud / Hadith CDN / Pickthall.\x1b[0m')
   }
   process.exit(0)
 }

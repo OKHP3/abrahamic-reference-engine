@@ -10,6 +10,7 @@ export type BibleApiTranslation =
   | 'darby'
   | 'akjv'
   | 'ylt'
+  | 'dra'
 
 export interface BibleApiVerse {
   book_id: string
@@ -37,6 +38,7 @@ const TRANSLATION_NAMES: Record<BibleApiTranslation, string> = {
   darby: 'Darby Translation',
   akjv: 'American King James Version',
   ylt: "Young's Literal Translation",
+  dra: 'Douay-Rheims 1899 American Edition',
 }
 
 export async function fetchBiblePassage(

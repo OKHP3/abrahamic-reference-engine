@@ -15,7 +15,7 @@ This document maps commonly used Bible editions and Qur'an translation IDs to fr
 | `darby` | `darby` | Darby Translation | 1890 | Public domain | Evangelical | Literal; 19th-century dispensationalist tradition. |
 | `akjv` | `akjv` | American King James Version | 1999 | Public domain | Evangelical | Modernized KJV spelling. |
 | `ylt` | `ylt` | Young's Literal Translation | 1862 | Public domain | Academic | Highly literal; preserves Hebrew/Greek tense distinctions. |
-| `douay` | `drc` | Douay-Rheims Bible | 1582/1610 | Public domain | Catholic, Orthodox | Translated from the Latin Vulgate; traditional Catholic usage. API param is `drc`. |
+| `douay` | `dra` | Douay-Rheims 1899 American Edition | 1582/1610 | Public domain | Catholic, Orthodox | Translated from the Latin Vulgate; traditional Catholic usage. API param is `dra` -- `drc` returns HTTP 404 on bible-api.com. |
 
 ### Licensed (API key required -- NOT enabled in ARE free build)
 

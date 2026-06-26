@@ -150,10 +150,10 @@ export const TRANSLATIONS: Translation[] = [
       'christianity-orthodox',
     ],
     license: 'public-domain',
-    attribution: 'Douay-Rheims Bible (1582/1610). Public domain.',
+    attribution: 'Douay-Rheims 1899 American Edition. Public domain.',
     apiProvider: 'bible-api.com',
-    apiTranslationId: 'drc',
-    notes: '16th-century translation from the Latin Vulgate; traditional Catholic usage.',
+    apiTranslationId: 'dra',
+    notes: 'Translation from the Latin Vulgate; traditional Catholic usage. API param is dra (Douay-Rheims 1899 American Edition).',
   },
   {
     id: 'quran-20',
