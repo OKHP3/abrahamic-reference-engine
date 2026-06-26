@@ -65,7 +65,7 @@ export const DENOMINATIONS: Denomination[] = [
     description:
       'The Latter-day Saint movement, founded by Joseph Smith in the 19th century as a restoration of original Christianity. Uses the Bible alongside additional scriptures revealed through Joseph Smith.',
     keyTexts: ['Holy Bible (KJV)', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price'],
-    canonScope: 'Standard Works (4 volumes): Bible (KJV, 66 books), Book of Mormon (15 books), Doctrine and Covenants (138 sections), Pearl of Great Price -- LDS-specific volumes not available via bible-api.com',
+    canonScope: 'Standard Works (4 volumes): Bible (KJV, 66 books), Book of Mormon (15 books), Doctrine and Covenants (138 sections), Pearl of Great Price -- Bible via bible-api.com; Standard Works via scriptures.nephi.org (community API)',
     slug: 'lds-restorationist',
     availableTranslations: ['kjv'],
     defaultTranslationId: 'kjv',

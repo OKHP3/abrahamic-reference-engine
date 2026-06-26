@@ -122,6 +122,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           >
             🧰 ARE skills on GitHub &rarr;
           </a>
+          <NavLink
+            to="/origin"
+            onClick={onClose}
+            className={({ isActive }) =>
+              `text-2xs font-sans transition-colors duration-150 no-underline block leading-relaxed mt-1 ${isActive ? 'text-gold' : 'text-muted hover:text-gold'}`
+            }
+          >
+            🏛️ Origin archive &rarr;
+          </NavLink>
         </div>
 
         <div className="border-t border-border-subtle pt-4">
