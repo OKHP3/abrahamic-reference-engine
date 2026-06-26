@@ -4,21 +4,44 @@ description: >
   Find thematically parallel passages across Judaism, Christianity, and Islam.
   Embeds 20 pre-seeded themes with passage references for all three traditions,
   a neutral bridging note style guide, and the proportional representation rule
-  for agents generating new comparisons. Use when an agent needs to surface
-  shared wisdom, common ground, or parallel teachings across the three in-scope
-  Abrahamic traditions -- including when users ask what religions have in common,
-  want side-by-side scripture comparisons, are exploring interfaith dialogue,
-  need religiously neutral bridging language, or want to see how Judaism,
-  Christianity, and Islam approach the same moral or theological theme. Also
-  activate when building a cross-tradition comparison UI, selecting themes for
-  educational or devotional content, generating multi-tradition displays, or
-  adding a compare feature to any religious reference or interfaith app.
-version: 1.0.0
+  for agents generating new comparisons. All 20 themes include static passage
+  text -- no API call required to display a comparison immediately. Use when an
+  agent needs to surface shared wisdom, common ground, or parallel teachings
+  across the three in-scope Abrahamic traditions -- including when users ask what
+  religions have in common, want side-by-side scripture comparisons, are
+  exploring interfaith dialogue, need religiously neutral bridging language, or
+  want to see how Judaism, Christianity, and Islam approach the same moral or
+  theological theme. Also activate when building a cross-tradition comparison UI,
+  selecting themes for educational or devotional content, generating multi-
+  tradition displays, or adding a compare feature to any religious reference or
+  interfaith app. Activate for any "what do these faiths share" or "compare
+  religions on X" request -- even when the user does not use the word "compare".
 license: MIT
-author: OKHP3
+metadata:
+  author: Jamie Hill (OverKill Hill P³)
+  version: "1.1.0"
+  category: interfaith-reference
+  origin: okhp3/abrahamic-reference-engine
+  homepage: https://overkillhill.com
+  author-github: https://github.com/OKHP3
 ---
 
 # OKHP3 -- Cross-Tradition Compare Skill
+
+**OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3) · [OKHP3/skillz](https://github.com/OKHP3/skillz)
+
+## Quick start -- no API required
+
+The 20 pre-seeded themes are embedded in this skill with static passage text. Use them immediately:
+
+1. Pick a theme ID from the index at the bottom of this file (e.g. `forgiveness`)
+2. Read the theme's three tradition objects from `compareThemes.ts` in the host project
+3. Render each tradition's `staticText` and `attribution` in a three-panel layout
+4. Display `bridgingNote` below the panels under "What Connects These?"
+
+No network call is required. The data is ready. For live verse fetching on top of static text, use `okhp3-verse-lookup` with the `liveRef` field.
+
+---
 
 ## Mission
 
@@ -412,3 +435,12 @@ When adding a new theme beyond the 20 seeded here:
 | `love-of-god` | Love of God |
 | `attributes-of-god` | The Nature of God |
 | `humility` | Humility |
+
+---
+
+## About
+
+Built by [Jamie Hill](https://overkillhill.com) · [OverKill Hill P³](https://overkillhill.com)
+Published at [github.com/OKHP3](https://github.com/OKHP3)
+Part of the [OKHP3/skillz](https://github.com/OKHP3/skillz) Agent Skill library.
+MIT License -- free to use, fork, and adapt. A nod to the source is appreciated.

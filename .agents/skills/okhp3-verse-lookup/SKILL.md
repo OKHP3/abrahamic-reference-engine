@@ -11,13 +11,53 @@ description: >
   available translations for each tradition. Also activate when an agent asks
   about API endpoints, reference formats, or translation IDs for Jewish,
   Christian, or Islamic texts, or when an agent needs to know how to route a
-  request by denomination (including LDS Standard Works).
-version: 1.0.0
+  request by denomination (including LDS Standard Works). Activate for any
+  "look up this verse", "fetch this passage", "how do I call the Sefaria API",
+  "what translation should I use for Catholic users", or "does this API need
+  authentication" request -- even when the user does not name a specific API.
+  This skill covers routing, normalization, error handling, and fallback for
+  all three traditions in one place.
 license: MIT
-author: OKHP3
+metadata:
+  author: Jamie Hill (OverKill Hill P³)
+  version: "1.1.0"
+  category: interfaith-reference
+  origin: okhp3/abrahamic-reference-engine
+  homepage: https://overkillhill.com
+  author-github: https://github.com/OKHP3
 ---
 
 # OKHP3 -- Verse Lookup Skill
+
+**OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3) · [OKHP3/skillz](https://github.com/OKHP3/skillz)
+
+## Routing decision tree
+
+Use this tree to determine which API and which function to call before writing any fetch code.
+
+```
+User requests a verse
+│
+├─ Tradition = Judaism?
+│   └─ fetchSefariaPassage(ref, lang?)  →  Sefaria API
+│
+├─ Tradition = Christianity?
+│   ├─ denomination = LDS?
+│   │   ├─ isLdsBibleRef(ref) = true?
+│   │   │   └─ fetchBibleApiPassage(ref, "kjv")  →  bible-api.com
+│   │   └─ isLdsBibleRef(ref) = false?
+│   │       └─ fetchNephiPassage(ref)  →  scriptures.nephi.org
+│   │           (if unavailable: throw LdsApiUnavailableError)
+│   └─ denomination = Catholic / Orthodox / Protestant / Evangelical?
+│       └─ fetchBibleApiPassage(ref, translationId)  →  bible-api.com
+│           (choose translation from matrix -- see ## Translation ID map below)
+│
+└─ Tradition = Islam?
+    └─ fetchQuranPassage(surah, ayah, translationId)  →  Quran.com v4
+        (if 429 / 5xx: fetchQuranFallback(ref, edition)  →  AlQuran.cloud)
+```
+
+---
 
 ## Scope
 
@@ -471,3 +511,12 @@ Route by `tradition`:
 | Islam | `1:1` | `20` | Al-Fatiha opening |
 | Islam | `2:255` | `20` | Ayat al-Kursi |
 | Islam | `112:1` | `20` | Al-Ikhlas -- God is one |
+
+---
+
+## About
+
+Built by [Jamie Hill](https://overkillhill.com) · [OverKill Hill P³](https://overkillhill.com)
+Published at [github.com/OKHP3](https://github.com/OKHP3)
+Part of the [OKHP3/skillz](https://github.com/OKHP3/skillz) Agent Skill library.
+MIT License -- free to use, fork, and adapt. A nod to the source is appreciated.

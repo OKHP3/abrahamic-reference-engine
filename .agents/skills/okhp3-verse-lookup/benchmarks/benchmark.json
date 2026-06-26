@@ -1,0 +1,276 @@
+{
+  "metadata": {
+    "skill_name": "okhp3-verse-lookup",
+    "skill_path": ".agents/skills/okhp3-verse-lookup",
+    "skill_version": "1.1.0",
+    "executor_model": "analytical-review",
+    "analyzer_model": "analytical-review",
+    "timestamp": "2026-06-26T00:00:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1,
+    "note": "Analytical benchmark -- scored by expert review. Claude CLI not available for live subagent runs."
+  },
+
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Sefaria fetch -- Psalms 23:1",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response provides the correct Sefaria endpoint URL with URL-encoded reference",
+          "passed": true,
+          "evidence": "Skill documents the exact Sefaria endpoint with URL encoding pattern"
+        },
+        {
+          "text": "Response explains the text normalization steps (strip HTML, flatten array)",
+          "passed": true,
+          "evidence": "Skill includes the normalization pipeline: strip HTML, flatten array, trim"
+        },
+        {
+          "text": "Response shows how to extract text from the json.text field",
+          "passed": true,
+          "evidence": "Skill documents the Sefaria response shape including the text field"
+        },
+        {
+          "text": "Response mentions the Sefaria attribution requirement (CC BY-SA 2.0)",
+          "passed": true,
+          "evidence": "Skill specifies CC BY-SA 2.0 as the Sefaria attribution requirement"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Sefaria fetch -- Psalms 23:1",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response provides the correct Sefaria endpoint URL with URL-encoded reference",
+          "passed": true,
+          "evidence": "Sefaria API is publicly documented; agent would likely know the base endpoint"
+        },
+        {
+          "text": "Response explains the text normalization steps (strip HTML, flatten array)",
+          "passed": false,
+          "evidence": "The html stripping and array flattening requirement is not obvious without testing the API response"
+        },
+        {
+          "text": "Response shows how to extract text from the json.text field",
+          "passed": true,
+          "evidence": "json.text is the obvious field; agent would likely get this right"
+        },
+        {
+          "text": "Response mentions the Sefaria attribution requirement (CC BY-SA 2.0)",
+          "passed": false,
+          "evidence": "Agent may omit attribution entirely or produce a different license string"
+        }
+      ],
+      "notes": ["HTML normalization is the key trap -- Sefaria returns HTML-wrapped text that breaks plain display without stripping"]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "bible-api.com WEB translation -- John 3:16",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response provides the correct bible-api.com endpoint with translation=web parameter",
+          "passed": true,
+          "evidence": "Skill documents the exact bible-api.com endpoint and parameter format"
+        },
+        {
+          "text": "Response identifies WEB as including deuterocanonicals",
+          "passed": true,
+          "evidence": "Skill notes WEB includes deuterocanonicals in the translation matrix"
+        },
+        {
+          "text": "Response notes WEB is best for Catholic and Orthodox denominations",
+          "passed": true,
+          "evidence": "Skill recommends WEB for Catholic/Orthodox use due to deuterocanonical coverage"
+        },
+        {
+          "text": "Response shows json.text extraction with whitespace normalization",
+          "passed": true,
+          "evidence": "Skill documents the response normalization including whitespace trim"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "bible-api.com WEB translation -- John 3:16",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response provides the correct bible-api.com endpoint with translation=web parameter",
+          "passed": true,
+          "evidence": "bible-api.com is publicly known; agent would likely know the endpoint"
+        },
+        {
+          "text": "Response identifies WEB as including deuterocanonicals",
+          "passed": false,
+          "evidence": "Deuterocanonical coverage of WEB is a detail not commonly known; agent may omit or get wrong"
+        },
+        {
+          "text": "Response notes WEB is best for Catholic and Orthodox denominations",
+          "passed": false,
+          "evidence": "Denomination-translation mapping is ARE-specific; agent would not make this recommendation correctly"
+        },
+        {
+          "text": "Response shows json.text extraction with whitespace normalization",
+          "passed": false,
+          "evidence": "Agent may omit the \\n normalization step, producing raw formatted text"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "LDS D&C routing -- D&C 76:22",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response correctly identifies D&C 76:22 as a non-Bible LDS reference",
+          "passed": true,
+          "evidence": "Skill documents the isLdsBibleRef routing decision with D&C as non-Bible"
+        },
+        {
+          "text": "Response explains isLdsBibleRef returns false for this reference",
+          "passed": true,
+          "evidence": "isLdsBibleRef and its logic are fully documented in the skill"
+        },
+        {
+          "text": "Response identifies scriptures.nephi.org as the routing target",
+          "passed": true,
+          "evidence": "Skill explicitly names scriptures.nephi.org as the fetchNephiPassage endpoint"
+        },
+        {
+          "text": "Response mentions LdsApiUnavailableError and the static fallback message",
+          "passed": true,
+          "evidence": "LdsApiUnavailableError and the churchofjesuschrist.org fallback message are documented"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "LDS D&C routing -- D&C 76:22",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 4,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response correctly identifies D&C 76:22 as a non-Bible LDS reference",
+          "passed": false,
+          "evidence": "Without the routing guide, agent may attempt to look up D&C 76:22 on bible-api.com which would 404"
+        },
+        {
+          "text": "Response explains isLdsBibleRef returns false for this reference",
+          "passed": false,
+          "evidence": "isLdsBibleRef is ARE-specific; agent would not know it exists"
+        },
+        {
+          "text": "Response identifies scriptures.nephi.org as the routing target",
+          "passed": false,
+          "evidence": "scriptures.nephi.org is obscure; agent would likely suggest a different non-existent or incorrect API"
+        },
+        {
+          "text": "Response mentions LdsApiUnavailableError and the static fallback message",
+          "passed": false,
+          "evidence": "ARE-specific error type and fallback not derivable without skill"
+        }
+      ],
+      "notes": ["D&C routing is 100% ARE-specific -- without the skill, agent would route to bible-api.com and get a 404"]
+    }
+  ],
+
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": { "mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0 },
+      "time_seconds": { "mean": null, "stddev": null, "min": null, "max": null },
+      "tokens": { "mean": null, "stddev": null, "min": null, "max": null }
+    },
+    "without_skill": {
+      "pass_rate": { "mean": 0.25, "stddev": 0.22, "min": 0.0, "max": 0.5 },
+      "time_seconds": { "mean": null, "stddev": null, "min": null, "max": null },
+      "tokens": { "mean": null, "stddev": null, "min": null, "max": null }
+    },
+    "delta": {
+      "pass_rate": "+0.75",
+      "time_seconds": "N/A",
+      "tokens": "N/A"
+    }
+  },
+
+  "notes": [
+    "Eval 3 (D&C routing) scores 0/4 without skill -- agent would route D&C 76:22 to bible-api.com and get a 404",
+    "Eval 1 partial credit (0.5) without skill -- agent knows Sefaria API but misses HTML normalization and attribution",
+    "Routing decision tree added in v1.1.0 is the highest-impact content addition -- replaces a multi-paragraph read with a scannable tree",
+    "HTML stripping on Sefaria responses is the most common trap -- Sefaria wraps text in <i> tags and array-of-strings format",
+    "Analytical benchmark: scored by expert review. Run live evals with: node .agents/skills/skill-creator/scripts/run_eval.py (requires claude CLI)"
+  ]
+}

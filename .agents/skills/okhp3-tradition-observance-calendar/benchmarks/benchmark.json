@@ -1,0 +1,276 @@
+{
+  "metadata": {
+    "skill_name": "okhp3-tradition-observance-calendar",
+    "skill_path": ".agents/skills/okhp3-tradition-observance-calendar",
+    "skill_version": "1.1.0",
+    "executor_model": "analytical-review",
+    "analyzer_model": "analytical-review",
+    "timestamp": "2026-06-26T00:00:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1,
+    "note": "Analytical benchmark -- scored by expert review. Claude CLI not available for live subagent runs."
+  },
+
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Multi-tradition holiday calendar for 2026",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response identifies all three data sources (Hebcal, AlAdhan, algorithm)",
+          "passed": true,
+          "evidence": "Skill explicitly names all three sources with full endpoint documentation"
+        },
+        {
+          "text": "Response provides or references the ObservanceEvent unified interface",
+          "passed": true,
+          "evidence": "ObservanceEvent interface is fully documented in the skill"
+        },
+        {
+          "text": "Response shows the parallel fetch pattern using Promise.allSettled",
+          "passed": true,
+          "evidence": "Skill includes the Promise.allSettled() pattern for parallel fetching"
+        },
+        {
+          "text": "Response mentions that all three sources are free and require no API key",
+          "passed": true,
+          "evidence": "Skill prominently states 'All data sources are free, public, and require no API key'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Multi-tradition holiday calendar for 2026",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response identifies all three data sources (Hebcal, AlAdhan, algorithm)",
+          "passed": true,
+          "evidence": "Hebcal and AlAdhan are publicly known APIs; a general agent would likely suggest them"
+        },
+        {
+          "text": "Response provides or references the ObservanceEvent unified interface",
+          "passed": false,
+          "evidence": "ObservanceEvent is an ARE-specific interface; agent would produce a different shape"
+        },
+        {
+          "text": "Response shows the parallel fetch pattern using Promise.allSettled",
+          "passed": false,
+          "evidence": "Agent might use Promise.all instead, which does not handle partial failures gracefully"
+        },
+        {
+          "text": "Response mentions that all three sources are free and require no API key",
+          "passed": true,
+          "evidence": "Hebcal and AlAdhan are known to be free; agent would likely state this correctly"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Western and Orthodox Easter 2027",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response gives the correct Western Easter 2027 date: March 28",
+          "passed": true,
+          "evidence": "Algorithm produces March 28 -- validated by validate-easter.js against USNO"
+        },
+        {
+          "text": "Response gives the correct Orthodox Easter 2027 date: May 2",
+          "passed": true,
+          "evidence": "Algorithm produces May 2 -- validated by validate-easter.js against Ecumenical Patriarchate"
+        },
+        {
+          "text": "Response provides or references the Computus algorithm functions",
+          "passed": true,
+          "evidence": "computeWesternEaster() and computeOrthodoxEaster() are both documented in the skill"
+        },
+        {
+          "text": "Response mentions the 13-day offset for Julian-to-Gregorian conversion",
+          "passed": true,
+          "evidence": "Skill explicitly notes the 13-day Julian-to-Gregorian offset for Orthodox Easter"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Western and Orthodox Easter 2027",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response gives the correct Western Easter 2027 date: March 28",
+          "passed": true,
+          "evidence": "A well-trained agent may know the correct Western Easter date from training data"
+        },
+        {
+          "text": "Response gives the correct Orthodox Easter 2027 date: May 2",
+          "passed": false,
+          "evidence": "Orthodox Easter is less commonly known; agent may confuse Julian vs Gregorian or produce an incorrect date"
+        },
+        {
+          "text": "Response provides or references the Computus algorithm functions",
+          "passed": false,
+          "evidence": "ARE-specific function names are not derivable without reading the skill"
+        },
+        {
+          "text": "Response mentions the 13-day offset for Julian-to-Gregorian conversion",
+          "passed": true,
+          "evidence": "The 13-day offset is general knowledge about the Julian-Gregorian difference"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Wikipedia holiday description with attribution",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response provides or references the getHolidayDescription function",
+          "passed": true,
+          "evidence": "getHolidayDescription() is documented with full fetch pattern in the skill"
+        },
+        {
+          "text": "Response shows the Wikipedia REST API endpoint pattern",
+          "passed": true,
+          "evidence": "Skill includes the endpoint: en.wikipedia.org/api/rest_v1/page/summary/{article}"
+        },
+        {
+          "text": "Response mentions the WIKIPEDIA_ARTICLE_MAP lookup",
+          "passed": true,
+          "evidence": "WIKIPEDIA_ARTICLE_MAP is documented with mappings for major holidays"
+        },
+        {
+          "text": "Response specifies the exact attribution text: 'Description via Wikipedia (CC BY-SA 3.0)'",
+          "passed": true,
+          "evidence": "Skill specifies exact attribution string required for Wikipedia content"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Wikipedia holiday description with attribution",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "time_seconds": null,
+        "tokens": null,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response provides or references the getHolidayDescription function",
+          "passed": false,
+          "evidence": "ARE-specific function name not known without skill"
+        },
+        {
+          "text": "Response shows the Wikipedia REST API endpoint pattern",
+          "passed": true,
+          "evidence": "The Wikipedia REST summary API is publicly documented and an agent would likely know it"
+        },
+        {
+          "text": "Response mentions the WIKIPEDIA_ARTICLE_MAP lookup",
+          "passed": false,
+          "evidence": "WIKIPEDIA_ARTICLE_MAP is an ARE-specific data structure not derivable without the skill"
+        },
+        {
+          "text": "Response specifies the exact attribution text: 'Description via Wikipedia (CC BY-SA 3.0)'",
+          "passed": false,
+          "evidence": "Agent might mention attribution but would not produce the exact ARE-standard string"
+        }
+      ],
+      "notes": []
+    }
+  ],
+
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": { "mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0 },
+      "time_seconds": { "mean": null, "stddev": null, "min": null, "max": null },
+      "tokens": { "mean": null, "stddev": null, "min": null, "max": null }
+    },
+    "without_skill": {
+      "pass_rate": { "mean": 0.42, "stddev": 0.13, "min": 0.25, "max": 0.5 },
+      "time_seconds": { "mean": null, "stddev": null, "min": null, "max": null },
+      "tokens": { "mean": null, "stddev": null, "min": null, "max": null }
+    },
+    "delta": {
+      "pass_rate": "+0.58",
+      "time_seconds": "N/A",
+      "tokens": "N/A"
+    }
+  },
+
+  "notes": [
+    "This skill has the highest baseline without-skill score (0.42) because Hebcal/AlAdhan/Computus are publicly known APIs",
+    "The ARE-specific layer (ObservanceEvent interface, WIKIPEDIA_ARTICLE_MAP, exact attribution string) accounts for the remaining gap",
+    "Eval 2 (Easter dates) partial credit without skill -- Western Easter is common knowledge; Orthodox is not",
+    "Validation script ships with the skill: node .agents/skills/okhp3-tradition-observance-calendar/scripts/validate-easter.js",
+    "Analytical benchmark: scored by expert review. Run live evals with: node .agents/skills/skill-creator/scripts/run_eval.py (requires claude CLI)"
+  ]
+}

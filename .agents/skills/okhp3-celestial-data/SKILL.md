@@ -9,21 +9,44 @@ description: >
   moon dates. Use for apps with moon phase calendars, astrology features, nature
   journals, wellness trackers, lunar awareness widgets, or any UI referencing
   the night sky or seasonal cycles. Returns structured data ready for immediate
-  display -- no parsing required.
+  display -- no parsing required. Also activate when anyone asks "is Mercury
+  retrograde?", "what moon phase is it?", "what zodiac season are we in?",
+  "when is the next full moon?", or wants lunar or celestial data without a
+  backend -- even if they don't mention this skill by name.
 license: MIT
 metadata:
-  author: okhp3
-  version: "1.0.0"
-  origin: kierans-lifetrkr
-  published-to: okhp3/skillz
+  author: Jamie Hill (OverKill Hill P³)
+  version: "1.1.0"
+  category: wellness-astrology
+  origin: okhp3/abrahamic-reference-engine
+  homepage: https://overkillhill.com
+  author-github: https://github.com/OKHP3
 compatibility: Any JavaScript or TypeScript environment. No network access required.
 ---
 
 # Celestial Engine Skill
 
+**OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3) · [OKHP3/skillz](https://github.com/OKHP3/skillz)
+
 A self-contained celestial calculation library. All computations run locally using
 the Julian Day Number system. Accurate to within hours for moon phases -- sufficient
 for display and UX purposes.
+
+## Validation scripts
+
+Two scripts ship with this skill for maintaining data integrity:
+
+- `scripts/validate-mercury-dates.cjs` -- validates the `MERCURY_RETROGRADE` array for ordering, overlaps, and large gaps. Run after any date update.
+- `scripts/validate-easter.js` -- in the `okhp3-tradition-observance-calendar` skill -- validates the Computus algorithm against known good Easter dates.
+
+Run:
+```bash
+node .agents/skills/okhp3-celestial-data/scripts/validate-mercury-dates.cjs
+```
+
+Exit 0 = clean. Exit 1 = errors (see stdout for details).
+
+---
 
 ## Core functions
 
@@ -233,3 +256,12 @@ The Julian date algorithm is universal. Port by:
 1. Implementing `toJulianDate(date)` using the formula above
 2. Computing `phase = ((jd - 2451550.1) % 29.53058867) / 29.53058867`
 3. Looking up the phase in the MOON_PHASES table
+
+---
+
+## About
+
+Built by [Jamie Hill](https://overkillhill.com) · [OverKill Hill P³](https://overkillhill.com)
+Published at [github.com/OKHP3](https://github.com/OKHP3)
+Part of the [OKHP3/skillz](https://github.com/OKHP3/skillz) Agent Skill library.
+MIT License -- free to use, fork, and adapt. A nod to the source is appreciated.

@@ -10,14 +10,19 @@ description: >
   Computus algorithm (Christian -- Western and Orthodox), Wikipedia summary
   fetching for event descriptions, .ics file generation, emoji assignments,
   holiday filter lists, and session caching strategy. All data sources are
-  free, public, and require no API key. Zero cost. MIT license.
+  free, public, and require no API key. Zero cost. MIT license. Also activate
+  when a user asks to "add holidays to my calendar app", "download religious
+  observances as .ics", "show Jewish/Islamic/Christian holidays for a year",
+  or compute Easter dates -- including when they ask for "all three faiths"
+  or any single tradition's observance list.
 license: MIT
 metadata:
-  author: okhp3
-  version: "1.0.0"
-  origin: abrahamic-reference-engine
-  published-to: okhp3/skillz
-  companion-prd: ARE-observances-PRD.md
+  author: Jamie Hill (OverKill Hill P³)
+  version: "1.1.0"
+  category: interfaith-reference
+  origin: okhp3/abrahamic-reference-engine
+  homepage: https://overkillhill.com
+  author-github: https://github.com/OKHP3
   app-url: https://okhp3.github.io/abrahamic-reference-engine
 compatibility: >
   TypeScript (browser or Node). Fetch API required. No API keys or accounts.
@@ -26,6 +31,8 @@ compatibility: >
 ---
 
 # okhp3-tradition-observance-calendar
+
+**OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3) · [OKHP3/skillz](https://github.com/OKHP3/skillz)
 
 Fetch, compute, and format religious observance calendars for the Abrahamic Reference Engine.
 
@@ -672,5 +679,21 @@ const orthodoxOnly = allEvents.filter(e => e.denomination === 'orthodox');
 
 ---
 
-*okhp3-tradition-observance-calendar v1.0 | MIT License*
-*OverKill Hill P³ | OKHP3/skillz | https://overkillhill.com*
+## Validation script
+
+A date-accuracy validation script ships with this skill:
+
+```bash
+node .agents/skills/okhp3-tradition-observance-calendar/scripts/validate-easter.js
+```
+
+Validates Western and Orthodox Easter computation against 11 known-correct dates each (US Naval Observatory / Ecumenical Patriarchate). Exit 0 = clean. Run after any change to the Computus algorithm.
+
+---
+
+## About
+
+Built by [Jamie Hill](https://overkillhill.com) · [OverKill Hill P³](https://overkillhill.com)
+Published at [github.com/OKHP3](https://github.com/OKHP3)
+Part of the [OKHP3/skillz](https://github.com/OKHP3/skillz) Agent Skill library.
+MIT License -- free to use, fork, and adapt. A nod to the source is appreciated.

@@ -13,13 +13,25 @@ description: >
   tradition, or how to represent a tradition accurately and neutrally. This is
   the primary authoritative reference for tradition-level facts in the ARE
   ecosystem -- use it before assuming anything about a tradition's canon,
-  denominational structure, or API availability.
-version: 1.0.0
+  denominational structure, or API availability. Always read this skill before
+  writing fetch code or answering canon/denomination questions -- it is the
+  single source of truth for which APIs, translations, and scope boundaries
+  the ARE ecosystem uses. Activate when a user asks about LDS scriptures,
+  Orthodox canon, Catholic deuterocanonicals, which Quran translation to use,
+  or whether a given tradition is in scope.
 license: MIT
-author: OKHP3
+metadata:
+  author: Jamie Hill (OverKill Hill P³)
+  version: "1.1.0"
+  category: interfaith-reference
+  origin: okhp3/abrahamic-reference-engine
+  homepage: https://overkillhill.com
+  author-github: https://github.com/OKHP3
 ---
 
 # OKHP3 -- Tradition Reference Skill
+
+**OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3) · [OKHP3/skillz](https://github.com/OKHP3/skillz)
 
 ## Scope criteria
 
@@ -338,3 +350,12 @@ All files live under `knowledge/` in this skill directory. Load only the file(s)
 | `reserve-02-api-gap-register.md` | API gap register: translations and texts with no free anonymous API coverage |
 | `reserve-03-ui-copy.md` | UI copy reference: labels, explainer text, and tone guidelines for the ARE interface |
 | `reserve-04-denominational-distinctives-extended.md` | Extended denominational distinctives beyond what fits in the main SKILL.md |
+
+---
+
+## About
+
+Built by [Jamie Hill](https://overkillhill.com) · [OverKill Hill P³](https://overkillhill.com)
+Published at [github.com/OKHP3](https://github.com/OKHP3)
+Part of the [OKHP3/skillz](https://github.com/OKHP3/skillz) Agent Skill library.
+MIT License -- free to use, fork, and adapt. A nod to the source is appreciated.
