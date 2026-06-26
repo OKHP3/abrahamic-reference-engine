@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import type { Tradition } from '../lib/observanceHelpers'
 import { generateChristianHolidays } from '../lib/christianCalendar'
 import { fetchJewishHolidays } from '../lib/hebcalClient'
@@ -281,6 +282,16 @@ export default function ObservancesCalendar() {
           , loaded on demand when you click an event.
         </p>
       </footer>
+
+      <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
+        <Link
+          to="/compare"
+          className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
+        >
+          &larr; Compare
+        </Link>
+        <span />
+      </div>
     </div>
   )
 }

@@ -498,6 +498,16 @@ function TraditionGrid() {
       ))}
 
       <ScopeExplainer className="mt-4" />
+
+      <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
+        <span />
+        <Link
+          to="/lookup"
+          className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
+        >
+          Verse Lookup &rarr;
+        </Link>
+      </div>
     </>
   )
 }

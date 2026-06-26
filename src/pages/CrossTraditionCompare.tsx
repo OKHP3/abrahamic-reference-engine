@@ -330,10 +330,10 @@ export default function CrossTraditionCompare() {
           &larr; Verse Lookup
         </Link>
         <Link
-          to="/browse"
+          to="/observances"
           className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
         >
-          Browse traditions &rarr;
+          Observances &rarr;
         </Link>
       </div>
     </div>
