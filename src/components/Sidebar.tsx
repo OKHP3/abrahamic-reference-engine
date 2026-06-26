@@ -85,25 +85,82 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </button>
       </div>
 
-      <nav className="flex-1 pt-4 px-3" aria-label="Traditions">
-        {TRADITION_GROUPS.map(group => (
-          <TraditionGroupSection key={group.family} group={group} onClose={onClose} />
-        ))}
+      <nav className="flex-1 pt-4 px-3 flex flex-col" aria-label="Traditions">
+        <div className="flex-1">
+          {TRADITION_GROUPS.map(group => (
+            <TraditionGroupSection key={group.family} group={group} onClose={onClose} />
+          ))}
+        </div>
+
+        <div className="px-1 pt-3 pb-4 border-t border-border-subtle mt-2">
+          <p className="text-2xs font-sans text-muted leading-relaxed">
+            Scope: Abrahamic traditions with 1%+ US presence.
+          </p>
+          <a
+            href={PEW_SCOPE_NOTE.citation.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-2xs font-sans text-gold-muted hover:text-gold transition-colors duration-150 no-underline mt-0.5 block"
+            aria-label="Pew Research Center Religious Landscape Study (opens in new tab)"
+          >
+            Pew Research Center, {PEW_SCOPE_NOTE.citation.year} &rarr;
+          </a>
+        </div>
       </nav>
 
-      <footer className="px-4 py-4 border-t border-border-subtle flex-shrink-0">
-        <p className="text-2xs font-sans text-muted leading-relaxed">
-          Scope: Abrahamic traditions with 1%+ US presence.
-        </p>
-        <a
-          href={PEW_SCOPE_NOTE.citation.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-2xs font-sans text-gold-muted hover:text-gold transition-colors duration-150 no-underline mt-0.5 block"
-          aria-label="Pew Research Center Religious Landscape Study (opens in new tab)"
-        >
-          Pew Research Center, {PEW_SCOPE_NOTE.citation.year} &rarr;
-        </a>
+      <footer className="px-4 py-4 border-t border-border-subtle flex-shrink-0 space-y-4">
+        <div>
+          <div className="text-2xs font-sans font-bold tracking-widest uppercase text-gold mb-2">
+            Agent Skills
+          </div>
+          <a
+            href="https://github.com/OKHP3/skillz/tree/main/abrahamic"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-2xs font-sans text-muted hover:text-gold transition-colors duration-150 no-underline block leading-relaxed"
+            aria-label="ARE Agent Skills on GitHub (opens in new tab)"
+          >
+            🧰 ARE skills on GitHub &rarr;
+          </a>
+        </div>
+
+        <div className="border-t border-border-subtle pt-4">
+          <div className="text-2xs font-sans font-bold tracking-widest uppercase text-muted mb-2">
+            OverKill Hill P3
+          </div>
+          <div className="space-y-1.5">
+            <a
+              href="https://overkillhill.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-2xs font-sans text-muted hover:text-gold transition-colors duration-150 no-underline block"
+            >
+              🌐 overkillhill.com
+            </a>
+            <a
+              href="https://github.com/OKHP3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-2xs font-sans text-muted hover:text-gold transition-colors duration-150 no-underline block"
+            >
+              ⌨️ github.com/OKHP3
+            </a>
+            <a
+              href="mailto:contact@overkillhill.com"
+              className="text-2xs font-sans text-muted hover:text-gold transition-colors duration-150 no-underline block"
+            >
+              ✉️ contact@overkillhill.com
+            </a>
+            <a
+              href="https://ko-fi.com/overkillhillp3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-2xs font-sans text-muted hover:text-gold transition-colors duration-150 no-underline block"
+            >
+              ☕ ko-fi.com/overkillhillp3
+            </a>
+          </div>
+        </div>
       </footer>
     </aside>
   )
