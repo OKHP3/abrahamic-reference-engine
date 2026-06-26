@@ -204,6 +204,12 @@ GET https://api.aladhan.com/v1/gToHCalendar/{month}/{year}
 
 ### 5.3 Fetch pattern
 
+> **WARNING -- use Promise.allSettled, NOT Promise.all.**
+> AlAdhan occasionally drops individual month requests.
+> Promise.all fails fast and discards all 11 other successful months.
+> Promise.allSettled continues and collects partial results gracefully.
+> This is a hard requirement, not a suggestion.
+
 ```typescript
 async function fetchIslamicHolidays(year: number): Promise<ObservanceEvent[]> {
   const cacheKey = `are_aladhan_${year}`;

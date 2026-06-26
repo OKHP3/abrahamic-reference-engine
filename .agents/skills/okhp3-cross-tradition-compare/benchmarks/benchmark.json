@@ -3,12 +3,12 @@
     "skill_name": "okhp3-cross-tradition-compare",
     "skill_path": ".agents/skills/okhp3-cross-tradition-compare",
     "skill_version": "1.1.0",
-    "executor_model": "analytical-review",
-    "analyzer_model": "analytical-review",
+    "executor_model": "delegation-subagent",
+    "analyzer_model": "main-agent-grader",
     "timestamp": "2026-06-26T00:00:00Z",
     "evals_run": [1, 2, 3],
     "runs_per_configuration": 1,
-    "note": "Analytical benchmark -- scored by expert review. Claude CLI not available for live subagent runs."
+    "note": "Eval 1 run via live delegation subagent (executor + grader). Evals 2-3 remain analytical pending Claude CLI availability."
   },
 
   "runs": [
@@ -31,22 +31,22 @@
         {
           "text": "Response provides all three traditions (Judaism, Christianity, Islam)",
           "passed": true,
-          "evidence": "Forgiveness theme is pre-seeded with three tradition objects"
+          "evidence": "Table shows all three: Psalm 103:12 (Judaism), Matthew 6:14-15 (Christianity), Az-Zumar 39:53 (Islam)"
         },
         {
           "text": "Response includes a neutral bridging note that does not assert one tradition supersedes another",
           "passed": true,
-          "evidence": "Skill includes explicit bridging note style guide with prohibited language list"
+          "evidence": "Bridging note: 'all locate forgiveness at the center of what God is' -- structural observation, no hierarchy"
         },
         {
           "text": "Response references or uses the pre-seeded forgiveness theme data",
           "passed": true,
-          "evidence": "forgiveness is one of the 20 pre-seeded themes with Psalm 103:12, Matt 6:14-15, Az-Zumar 39:53"
+          "evidence": "Explicitly references 'theme (ID: forgiveness) is one of the 20 pre-seeded comparisons' with exact passages"
         },
         {
           "text": "Response does not use words like 'original', 'fulfills', or 'supersedes'",
           "passed": true,
-          "evidence": "Skill explicitly prohibits these words in the bridging note style guide"
+          "evidence": "None of the prohibited words appear in the response"
         }
       ],
       "notes": []
@@ -57,9 +57,9 @@
       "configuration": "without_skill",
       "run_number": 1,
       "result": {
-        "pass_rate": 0.5,
-        "passed": 2,
-        "failed": 2,
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
         "total": 4,
         "time_seconds": null,
         "tokens": null,
@@ -70,25 +70,25 @@
         {
           "text": "Response provides all three traditions (Judaism, Christianity, Islam)",
           "passed": true,
-          "evidence": "A general agent knows scripture and can produce passages from all three traditions"
+          "evidence": "All three covered: Micah 7:18 (Judaism), Matthew 6:14 (Christianity), Surah An-Nur 24:22 (Islam)"
         },
         {
           "text": "Response includes a neutral bridging note that does not assert one tradition supersedes another",
-          "passed": false,
-          "evidence": "Without the style guide, agent may use 'fulfillment' language or imply Christian completion of Jewish themes"
+          "passed": true,
+          "evidence": "'they differ in ritual application, they shared a common ethical imperative' -- neutral, acknowledges difference without hierarchy"
         },
         {
           "text": "Response references or uses the pre-seeded forgiveness theme data",
           "passed": false,
-          "evidence": "Agent would not know the specific ARE theme data structure or staticText field"
+          "evidence": "Different passages used (Micah 7:18, not Psalm 103:12; Surah An-Nur 24:22, not Az-Zumar 39:53). Pre-seeded theme data not accessed."
         },
         {
           "text": "Response does not use words like 'original', 'fulfills', or 'supersedes'",
           "passed": true,
-          "evidence": "A careful agent may avoid this language, though it is not guaranteed"
+          "evidence": "None of the prohibited words appear in the response"
         }
       ],
-      "notes": ["General agent knowledge of interfaith comparison is moderate; ARE-specific neutrality rules are the main gap"]
+      "notes": ["Without-skill 0.75 was higher than analytical estimate (0.17) -- LLM has good general interfaith sensitivity but cannot know the pre-seeded passage IDs"]
     },
     {
       "eval_id": 2,
@@ -106,28 +106,12 @@
         "errors": 0
       },
       "expectations": [
-        {
-          "text": "Response explains the proportional representation rule correctly",
-          "passed": true,
-          "evidence": "Skill devotes a full section to the proportional representation rule with the exact percentages"
-        },
-        {
-          "text": "Response cites US population shares from Pew Research Center",
-          "passed": true,
-          "evidence": "Pew citation URL is embedded in the skill"
-        },
-        {
-          "text": "Response clarifies that visual dignity is equal regardless of population share",
-          "passed": true,
-          "evidence": "Skill explicitly states 'identical visual and structural dignity regardless of population share'"
-        },
-        {
-          "text": "Response explains that all three traditions must always appear in every comparison",
-          "passed": true,
-          "evidence": "Rule states 'no tradition is optional'"
-        }
+        {"text": "Response explains the proportional representation rule correctly", "passed": true, "evidence": "[ANALYTICAL] Full section in skill"},
+        {"text": "Response cites US population shares from Pew Research Center", "passed": true, "evidence": "[ANALYTICAL] Pew URL embedded in skill"},
+        {"text": "Response clarifies that visual dignity is equal regardless of population share", "passed": true, "evidence": "[ANALYTICAL] Skill states 'identical visual and structural dignity'"},
+        {"text": "Response explains that all three traditions must always appear in every comparison", "passed": true, "evidence": "[ANALYTICAL] 'no tradition is optional'"}
       ],
-      "notes": []
+      "notes": ["[ANALYTICAL] -- live subagent run pending Claude CLI availability"]
     },
     {
       "eval_id": 2,
@@ -145,28 +129,12 @@
         "errors": 0
       },
       "expectations": [
-        {
-          "text": "Response explains the proportional representation rule correctly",
-          "passed": false,
-          "evidence": "This is an ARE-internal rule; a general agent has no access to it"
-        },
-        {
-          "text": "Response cites US population shares from Pew Research Center",
-          "passed": false,
-          "evidence": "Agent might know Pew broadly but would not apply it in the ARE proportional context"
-        },
-        {
-          "text": "Response clarifies that visual dignity is equal regardless of population share",
-          "passed": false,
-          "evidence": "This specific design constraint is ARE-internal and not derivable from general knowledge"
-        },
-        {
-          "text": "Response explains that all three traditions must always appear in every comparison",
-          "passed": false,
-          "evidence": "Agent might omit a tradition rather than enforce presence of all three"
-        }
+        {"text": "Response explains the proportional representation rule correctly", "passed": false, "evidence": "[ANALYTICAL] ARE-internal rule, not derivable"},
+        {"text": "Response cites US population shares from Pew Research Center", "passed": false, "evidence": "[ANALYTICAL] Agent wouldn't apply it in ARE context"},
+        {"text": "Response clarifies that visual dignity is equal regardless of population share", "passed": false, "evidence": "[ANALYTICAL] ARE-specific design constraint"},
+        {"text": "Response explains that all three traditions must always appear in every comparison", "passed": false, "evidence": "[ANALYTICAL] Agent might omit traditions"}
       ],
-      "notes": ["Proportional representation rule is entirely ARE-internal; 0% without skill is expected"]
+      "notes": ["[ANALYTICAL] -- live subagent run pending Claude CLI availability"]
     },
     {
       "eval_id": 3,
@@ -184,28 +152,12 @@
         "errors": 0
       },
       "expectations": [
-        {
-          "text": "Response provides color tokens for all three traditions",
-          "passed": true,
-          "evidence": "Skill specifies blue (Judaism), violet (Christianity), emerald (Islam) from the ARE Tailwind config"
-        },
-        {
-          "text": "Response describes the three-panel layout structure",
-          "passed": true,
-          "evidence": "Skill includes full three-panel layout description"
-        },
-        {
-          "text": "Response mentions displaying the bridging note below the panels",
-          "passed": true,
-          "evidence": "Skill describes the bridgingNote display position explicitly"
-        },
-        {
-          "text": "Response mentions using staticText for instant rendering with optional live API fetch",
-          "passed": true,
-          "evidence": "Skill describes staticText as the primary display field with liveRef as optional enhancement"
-        }
+        {"text": "Response provides color tokens for all three traditions", "passed": true, "evidence": "[ANALYTICAL] blue/violet/emerald from ARE Tailwind config"},
+        {"text": "Response describes the three-panel layout structure", "passed": true, "evidence": "[ANALYTICAL] Full layout in skill"},
+        {"text": "Response mentions displaying the bridging note below the panels", "passed": true, "evidence": "[ANALYTICAL] Skill documents bridgingNote display"},
+        {"text": "Response mentions using staticText for instant rendering with optional live API fetch", "passed": true, "evidence": "[ANALYTICAL] staticText/liveRef pattern documented"}
       ],
-      "notes": []
+      "notes": ["[ANALYTICAL] -- live subagent run pending Claude CLI availability"]
     },
     {
       "eval_id": 3,
@@ -223,28 +175,12 @@
         "errors": 0
       },
       "expectations": [
-        {
-          "text": "Response provides color tokens for all three traditions",
-          "passed": false,
-          "evidence": "ARE-specific Tailwind color assignments are not derivable without reading the ARE codebase or skill"
-        },
-        {
-          "text": "Response describes the three-panel layout structure",
-          "passed": false,
-          "evidence": "Agent would invent a layout, not replicate the ARE-specific structure"
-        },
-        {
-          "text": "Response mentions displaying the bridging note below the panels",
-          "passed": false,
-          "evidence": "bridgingNote is an ARE-specific field; agent would not know to display it"
-        },
-        {
-          "text": "Response mentions using staticText for instant rendering with optional live API fetch",
-          "passed": false,
-          "evidence": "staticText / liveRef pattern is ARE-specific; agent would likely always fetch live"
-        }
+        {"text": "Response provides color tokens for all three traditions", "passed": false, "evidence": "[ANALYTICAL] ARE-specific Tailwind tokens"},
+        {"text": "Response describes the three-panel layout structure", "passed": false, "evidence": "[ANALYTICAL] Agent would invent a different layout"},
+        {"text": "Response mentions displaying the bridging note below the panels", "passed": false, "evidence": "[ANALYTICAL] bridgingNote is ARE-specific"},
+        {"text": "Response mentions using staticText for instant rendering with optional live API fetch", "passed": false, "evidence": "[ANALYTICAL] staticText/liveRef is ARE-specific"}
       ],
-      "notes": ["UI-specific expectations are all ARE-internal; general agent produces a valid but incompatible layout"]
+      "notes": ["[ANALYTICAL] -- live subagent run pending Claude CLI availability"]
     }
   ],
 
@@ -255,22 +191,21 @@
       "tokens": { "mean": null, "stddev": null, "min": null, "max": null }
     },
     "without_skill": {
-      "pass_rate": { "mean": 0.17, "stddev": 0.23, "min": 0.0, "max": 0.5 },
+      "pass_rate": { "mean": 0.25, "stddev": 0.38, "min": 0.0, "max": 0.75 },
       "time_seconds": { "mean": null, "stddev": null, "min": null, "max": null },
       "tokens": { "mean": null, "stddev": null, "min": null, "max": null }
     },
     "delta": {
-      "pass_rate": "+0.83",
+      "pass_rate": "+0.75",
       "time_seconds": "N/A",
       "tokens": "N/A"
     }
   },
 
   "notes": [
-    "Eval 2 (proportional representation) scores 0/4 without skill -- this rule is entirely ARE-internal",
-    "Eval 3 (UI colors/layout) scores 0/4 without skill -- all ARE-specific Tailwind tokens and field names",
-    "Eval 1 partial credit (0.5) without skill -- general agent knows scripture but not the ARE neutrality rules",
-    "Quick Start section added in v1.1.0 is the highest-impact change -- reduces time-to-first-display to zero network calls",
-    "Analytical benchmark: scored by expert review. Run live evals with: node .agents/skills/skill-creator/scripts/run_eval.py (requires claude CLI)"
+    "Eval 1 is a LIVE run -- without_skill scored 0.75, higher than analytical estimate (0.17)",
+    "Key finding: LLMs have good general interfaith sensitivity -- the real differentiator is the pre-seeded passage IDs, not neutral tone",
+    "Eval 1 suggests the 'neutral bridging note' expectation may not discriminate well -- tighten to require ARE-format bridging note in future evals",
+    "workspace: .agents/skills/okhp3-cross-tradition-compare-workspace/iteration-1/eval-1/"
   ]
 }
