@@ -8,7 +8,7 @@ status: active-reference
 
 Reference copy for recurring text patterns in the Abrahamic Reference Engine UI. Each section cites its source component. Static strings are quoted verbatim. Dynamic strings are marked `[dynamic]` with a template.
 
-Verified 2026-06-26 against: `src/components/ModeNav.tsx`, `src/components/ScopeExplainer.tsx`, `src/data/traditions.ts`, `src/pages/VerseLookup.tsx`, `src/pages/CrossTraditionCompare.tsx`, `src/pages/TraditionBrowser.tsx`, `src/components/ObservanceControls.tsx`, `src/api/sefaria.ts`, `src/api/bible.ts`, `src/api/quran.ts`, `src/api/hadith.ts`.
+Verified 2026-06-26 against: `src/components/ModeNav.tsx`, `src/components/ScopeExplainer.tsx`, `src/data/traditions.ts`, `src/pages/VerseLookup.tsx`, `src/pages/CrossTraditionCompare.tsx`, `src/pages/TraditionBrowser.tsx`, `src/components/ObservanceControls.tsx`, `src/components/ObservanceEventList.tsx`, `src/components/ObservanceEventDetail.tsx`, `src/lib/icsGenerator.ts`, `src/api/sefaria.ts`, `src/api/bible.ts`, `src/api/quran.ts`, `src/api/hadith.ts`.
 
 ---
 
@@ -281,6 +281,135 @@ Denomination
 ### Christianity denomination sub-filter options (verbatim -- DENOM_BUTTONS, lines 52-58)
 
 All / Catholic / Protestant / LDS / Orthodox
+
+### Loading state (verbatim -- src/pages/ObservancesCalendar.tsx line 199)
+
+Loading [dynamic: loadingTraditions] holidays...
+
+Where `loadingTraditions` is one of: `Jewish`, `Islamic`, or `Jewish and Islamic` -- computed from which API calls are still in flight.
+
+### API error states (verbatim -- src/pages/ObservancesCalendar.tsx lines 93 and 97)
+
+```
+Could not load Jewish holidays. Check your connection.
+Could not load Islamic holidays. Check your connection.
+```
+
+Each renders inline below the controls with a warning glyph (Unicode &#9888;). Both can appear simultaneously.
+
+### No-events state (verbatim -- src/components/ObservanceEventList.tsx line 177)
+
+```
+No events found for the selected filters.
+```
+
+Rendered as centered `<p>` with 8-unit vertical padding when `visibleMonths.length === 0` (after month grouping). Appears in the event list below the calendar grid -- not inside the grid itself.
+
+### Event detail -- Islamic moon sighting notice (verbatim -- src/components/ObservanceEventDetail.tsx lines 121-123)
+
+Islamic dates are calculated using the Umm al-Qura method. Actual observance may vary by one day based on local moon sighting.
+
+Rendered as italic `<p>` only for `event.tradition === 'islam'`.
+
+### Event detail -- description loading state (verbatim -- src/components/ObservanceEventDetail.tsx line 130)
+
+Loading description...
+
+### Event detail -- description unavailable state (verbatim -- src/components/ObservanceEventDetail.tsx line 146)
+
+No description available.
+
+### Event detail -- Wikipedia attribution link (verbatim -- src/components/ObservanceEventDetail.tsx line 143)
+
+Description via Wikipedia (CC BY-SA 3.0)
+
+### Event detail -- "Add to Calendar" button (verbatim -- src/components/ObservanceEventDetail.tsx line 157)
+
+Add to Calendar (.ics)
+
+---
+
+## .ics export field reference
+
+Source: `src/lib/icsGenerator.ts`
+
+### PRODID (verbatim -- line 24)
+
+```
+-//OKHP3//Abrahamic Reference Engine//EN
+```
+
+This is the value that calendar applications display as the generating product. Some apps (e.g., Apple Calendar) surface it in import dialogs.
+
+### ORGANIZER
+
+No ORGANIZER field is emitted. The export uses `METHOD:PUBLISH`, which is a broadcast calendar (not a meeting invite). ORGANIZER is not required and not present. Calendar apps will show the PRODID or X-WR-CALNAME as the source identity, not an ORGANIZER email.
+
+### X-WR-CALNAME patterns
+
+Year download (verbatim template -- `downloadYearICS`, line 165):
+
+```
+ARE Observances {year}
+```
+
+Single-event download (verbatim template -- `generateSingleEventICS`, line 144):
+
+```
+{event.rawName} -- ARE Observances
+```
+
+### X-WR-CALDESC patterns
+
+Year download (verbatim -- `generateICS`, lines 134-137):
+
+```
+Religious observances for Judaism, Christianity, and Islam. Source: Abrahamic Reference Engine by OverKill Hill P3. https://okhp3.github.io/abrahamic-reference-engine
+```
+
+Single-event download (verbatim template -- `generateSingleEventICS`, line 145):
+
+```
+{event.rawName} -- Abrahamic Reference Engine. https://okhp3.github.io/abrahamic-reference-engine
+```
+
+### VEVENT DESCRIPTION template (verbatim -- `buildDescription`, lines 73-76)
+
+All traditions except Islam:
+
+```
+More information: https://okhp3.github.io/abrahamic-reference-engine
+```
+
+Islam only (prepends moon sighting notice -- `MOON_SIGHTING_NOTICE` constant, line 27):
+
+```
+Actual observance may vary by one day based on local moon sighting. More information: https://okhp3.github.io/abrahamic-reference-engine
+```
+
+### VEVENT UID pattern (verbatim template -- line 83)
+
+```
+{event.id}@abrahamic-reference-engine.okhp3
+```
+
+### VEVENT CATEGORIES
+
+Set to the tradition in uppercase: `JUDAISM`, `CHRISTIANITY`, or `ISLAM`.
+
+### Downloaded filename patterns
+
+Year download (verbatim template -- `downloadYearICS`, line 166):
+
+```
+ARE-Observances-{year}.ics
+```
+
+Single-event download (verbatim template -- `downloadEventICS`, lines 171-176): event name lowercased, non-alphanumeric runs replaced with hyphens, leading/trailing hyphens stripped, year appended:
+
+```
+{slug}-{year}.ics
+```
 
 ---
 
