@@ -176,8 +176,8 @@ export const TRANSLATIONS: Translation[] = [
     license: 'public-domain',
     attribution: "The Meaning of The Glorious Qur'an by Marmaduke Pickthall (1930). Public domain.",
     apiProvider: 'quran.com',
-    apiTranslationId: '21',
-    notes: 'Early 20th-century translation. Archaic English style.',
+    apiTranslationId: '19',
+    notes: 'Early 20th-century translation. Archaic English style. Quran.com resource ID 19 (migrated from former ID 21).',
   },
   {
     id: 'quran-22',

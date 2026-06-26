@@ -192,14 +192,13 @@ await run('T-QU-02', 'Ayat al-Kursi 2:255 (Throne Verse)', true, async () => {
   assert(lc.includes('throne') || lc.includes('kursi'), `Missing "throne"/"kursi": "${text.slice(0, 120)}"`)
 })
 
-// Non-blocking: Quran.com translation id 21 (Pickthall) no longer returns a translations
-// array in the v4 API response -- may have been migrated to a different ID
-await run('T-QU-03', 'Al-Ikhlas 112:1 (Pickthall, id=21)', false, async () => {
-  const json = await getJson('https://api.quran.com/api/v4/verses/by_key/112:1?language=en&translations=21&words=false')
+// Pickthall (Quran.com resource ID 19 -- formerly listed as 21, migrated on Quran.com v4)
+await run('T-QU-03', 'Al-Ikhlas 112:1 (Pickthall, resource_id=19)', true, async () => {
+  const json = await getJson('https://api.quran.com/api/v4/verses/by_key/112:1?language=en&translations=19&words=false')
   assert(json.verse, 'json.verse is missing')
   const translation = json.verse.translations?.[0]
-  assert(translation, 'No translation in response -- translation id 21 may have been deprecated')
-  assert(translation.id === 21, `Expected translation id 21, got ${translation.id}`)
+  assert(translation, 'No translation in response for Pickthall (resource_id=19)')
+  assert(translation.resource_id === 19, `Expected resource_id 19, got ${translation.resource_id}`)
   const lc = normalize(translation.text || '')
   assert(lc.includes('allah') || lc.includes('god'), `Missing "Allah"/"God": "${translation.text?.slice(0, 120)}"`)
 })
@@ -293,7 +292,7 @@ if (failed > 0) {
 }
 
 if (warned > 0) {
-  console.log('\nNon-blocking warnings (AlQuran.cloud, Hadith CDN, Pickthall):')
+  console.log('\nNon-blocking warnings (AlQuran.cloud, Hadith CDN):')
   results.filter(r => r.status === 'warn').forEach(r => {
     console.log(`  ${r.id}  ${r.label}`)
     console.log(`    ${r.msg}`)

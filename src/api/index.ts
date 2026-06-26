@@ -27,6 +27,7 @@ import { fetchSefariaText } from './sefaria'
 import { fetchAyah } from './quran'
 import { fetchBiblePassage } from './bible'
 import type { BibleApiTranslation } from './bible'
+import { TRANSLATION_BY_ID } from '../data/translations'
 
 export interface FetchPassageOptions {
   tradition: 'judaism' | 'christianity' | 'islam'
@@ -53,7 +54,11 @@ export async function fetchPassage(opts: FetchPassageOptions): Promise<Passage> 
     }
 
     case 'islam': {
-      const quranTranslId = translationId?.replace('quran-', '') ?? '20'
+      // Look up apiTranslationId from translation data so internal IDs (e.g. 'quran-21')
+      // map to the correct Quran.com resource ID (e.g. '19' for Pickthall) rather than
+      // blindly stripping 'quran-' from the internal ID.
+      const translationRecord = translationId ? TRANSLATION_BY_ID[translationId] : undefined
+      const quranTranslId = translationRecord?.apiTranslationId ?? translationId?.replace('quran-', '') ?? '20'
       return fetchAyah(reference, quranTranslId)
     }
 

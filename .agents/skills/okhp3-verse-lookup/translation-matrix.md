@@ -33,7 +33,7 @@ Note: Qur'an translation IDs correspond to the `translations` parameter on Quran
 | ARE ID | Quran.com ID | AlQuran.cloud edition | Friendly Name | Style | License | Notes |
 |--------|-------------|----------------------|---------------|-------|---------|-------|
 | `quran-20` | `20` | `en.sahih` | Sahih International | Modern; balanced literal/dynamic | Licensed (via API) | Default for ARE; most widely used modern English translation. |
-| `quran-21` | `21` | `en.pickthall` | Pickthall | Early 20th century; archaic style | Public domain (1930) | By Marmaduke Pickthall; widely circulated. |
+| `quran-21` | `19` | `en.pickthall` | Pickthall | Early 20th century; archaic style | Public domain (1930) | By Marmaduke Pickthall; widely circulated. Quran.com resource ID is 19 (the API formerly listed this as 21). |
 | `quran-22` | `22` | -- | Yusuf Ali | Classic; extensive footnotes | Public domain | By Abdullah Yusuf Ali; widely circulated. |
 | `quran-23` | `23` | `en.arberry` | Arberry | Literary | Public domain (1955) | A.J. Arberry's translation; titled *The Koran Interpreted*. Served via AlQuran.cloud (not Quran.com). |
 | `quran-24` | `24` | -- | Shakir | More literal | Public domain | By M.H. Shakir. |
