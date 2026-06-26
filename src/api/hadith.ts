@@ -13,6 +13,7 @@ export const COLLECTION_DISPLAY_NAMES: Record<HadithCollection, string> = {
 
 interface FawazHadithEntry {
   hadithnumber: number
+  arabicnumber?: number
   text: string
   reference?: {
     book?: number
@@ -20,7 +21,7 @@ interface FawazHadithEntry {
   }
 }
 
-interface FawazHadithResponse {
+interface FawazCollectionResponse {
   metadata?: {
     name: string
     section?: Record<string, string>
@@ -28,26 +29,38 @@ interface FawazHadithResponse {
   hadiths: FawazHadithEntry[]
 }
 
+// In-memory cache: keyed by collection name.
+// The per-hadith jsDelivr URL format (/{number}.json) returns HTTP 404 as of 2026-06-25.
+// The collection-level .min.json is fetched once per collection and cached for the session.
+const collectionCache = new Map<HadithCollection, FawazCollectionResponse>()
+
+async function fetchCollection(collection: HadithCollection): Promise<FawazCollectionResponse> {
+  const cached = collectionCache.get(collection)
+  if (cached) return cached
+
+  const editionKey = `eng-${collection}`
+  const url = `${CDN_BASE}/${editionKey}.min.json`
+  const res = await fetch(url)
+  if (!res.ok) {
+    throw new Error(
+      `Hadith collection fetch error ${res.status} for ${collection} -- ${res.statusText}`
+    )
+  }
+  const json: FawazCollectionResponse = await res.json()
+  collectionCache.set(collection, json)
+  return json
+}
+
 export async function fetchHadith(
   collection: HadithCollection,
   number: number
 ): Promise<Passage> {
-  const editionKey = `eng-${collection}`
-  const url = `${CDN_BASE}/${editionKey}/${number}.json`
-
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(
-      `Hadith API error ${res.status} for ${collection}:${number} -- ${res.statusText}`
-    )
-  }
-
-  const json: FawazHadithResponse = await res.json()
-  const entry = json.hadiths?.[0]
+  const col = await fetchCollection(collection)
+  const entry = col.hadiths.find(h => h.hadithnumber === number)
 
   if (!entry?.text) {
     throw new Error(
-      `No hadith text returned for ${collection} #${number}`
+      `No hadith text found for ${collection} #${number}`
     )
   }
 
@@ -100,24 +113,17 @@ export async function fetchHadithBatch(
   collection: HadithCollection,
   numbers: number[]
 ): Promise<Hadith[]> {
-  const editionKey = `eng-${collection}`
-  const results = await Promise.allSettled(
-    numbers.map(async (n) => {
-      const url = `${CDN_BASE}/${editionKey}/${n}.json`
-      const res = await fetch(url)
-      if (!res.ok) throw new Error(`${res.status}`)
-      const json: FawazHadithResponse = await res.json()
-      const entry = json.hadiths?.[0]
-      if (!entry?.text) throw new Error('No text')
-      const bookNo = entry.reference?.book
-      const bookName =
-        bookNo != null
-          ? json.metadata?.section?.[String(bookNo)] ?? undefined
-          : undefined
-      return buildHadithMeta(collection, n, entry.text.trim(), bookName)
-    })
-  )
-  return results
-    .filter((r): r is PromiseFulfilledResult<Hadith> => r.status === 'fulfilled')
-    .map(r => r.value)
+  const col = await fetchCollection(collection)
+  const byNumber = new Map(col.hadiths.map(h => [h.hadithnumber, h]))
+
+  return numbers.flatMap(n => {
+    const entry = byNumber.get(n)
+    if (!entry?.text) return []
+    const bookNo = entry.reference?.book
+    const bookName =
+      bookNo != null
+        ? col.metadata?.section?.[String(bookNo)] ?? undefined
+        : undefined
+    return [buildHadithMeta(collection, n, entry.text.trim(), bookName)]
+  })
 }
