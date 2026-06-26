@@ -1,6 +1,18 @@
 ---
 name: okhp3-cross-tradition-compare
-description: Find thematically parallel passages across Judaism, Christianity, and Islam. Embeds 20 pre-seeded themes with passage references for all three traditions, a neutral bridging note style guide, and the proportional representation rule for agents generating new comparisons. Use when an agent needs to surface shared wisdom across the three in-scope Abrahamic traditions without ranking or privileging any tradition.
+description: >
+  Find thematically parallel passages across Judaism, Christianity, and Islam.
+  Embeds 20 pre-seeded themes with passage references for all three traditions,
+  a neutral bridging note style guide, and the proportional representation rule
+  for agents generating new comparisons. Use when an agent needs to surface
+  shared wisdom, common ground, or parallel teachings across the three in-scope
+  Abrahamic traditions -- including when users ask what religions have in common,
+  want side-by-side scripture comparisons, are exploring interfaith dialogue,
+  need religiously neutral bridging language, or want to see how Judaism,
+  Christianity, and Islam approach the same moral or theological theme. Also
+  activate when building a cross-tradition comparison UI, selecting themes for
+  educational or devotional content, generating multi-tradition displays, or
+  adding a compare feature to any religious reference or interfaith app.
 version: 1.0.0
 license: MIT
 author: OKHP3

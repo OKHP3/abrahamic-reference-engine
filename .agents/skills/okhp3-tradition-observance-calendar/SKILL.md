@@ -7,7 +7,7 @@ description: >
   religious holiday data, generate iCalendar (.ics) output, look up holiday
   descriptions for cross-tradition audiences, or produce a unified observance
   event list. Covers Hebcal API (Jewish), AlAdhan API (Islamic), TypeScript
-  Computus algorithm (Christian — Western and Orthodox), Wikipedia summary
+  Computus algorithm (Christian -- Western and Orthodox), Wikipedia summary
   fetching for event descriptions, .ics file generation, emoji assignments,
   holiday filter lists, and session caching strategy. All data sources are
   free, public, and require no API key. Zero cost. MIT license.
@@ -29,7 +29,22 @@ compatibility: >
 
 Fetch, compute, and format religious observance calendars for the Abrahamic Reference Engine.
 
-Covers **Judaism** (Hebcal API), **Christianity** (Computus algorithm — Western and Orthodox), and **Islam** (AlAdhan API). All sources are free and anonymous. No API key. No cost. Zero runtime dependencies beyond `fetch`.
+Covers **Judaism** (Hebcal API), **Christianity** (Computus algorithm -- Western and Orthodox), and **Islam** (AlAdhan API). All sources are free and anonymous. No API key. No cost. Zero runtime dependencies beyond `fetch`.
+
+---
+
+## Bundled reference files
+
+Read these on demand -- only the file(s) you actually need for the current task:
+
+| File | When to read |
+|------|-------------|
+| `references/api-reference.md` | Full API schemas and field details for Hebcal and AlAdhan; use when you need the complete response shape or want to understand all available query parameters |
+| `references/computus.md` | Computus algorithm derivation, edge cases, century correction, and multi-century validation dates; use when troubleshooting Easter date accuracy |
+| `references/holiday-data.md` | Extended `WIKIPEDIA_ARTICLE_MAP` entries and supplementary AlAdhan display name notes; use when adding a holiday not covered by the map in this file |
+| `references/ics-spec.md` | ICS format specification, RFC 5545 line-folding rules, calendar client compatibility notes, and VTIMEZONE considerations |
+
+The SKILL.md sections below are sufficient for most implementation tasks. Reach for the reference files when you need depth beyond what is documented here.
 
 ---
 
@@ -37,19 +52,19 @@ Covers **Judaism** (Hebcal API), **Christianity** (Computus algorithm — Wester
 
 A holiday is in scope if and only if it meets **both** criteria:
 
-1. **Abrahamic lineage** — traces its roots to the Abrahamic covenant
-2. **US population threshold** — practiced by a tradition representing ≥1% of the US population per Pew Research Center
+1. **Abrahamic lineage** -- traces its roots to the Abrahamic covenant
+2. **US population threshold** -- practiced by a tradition representing ≥1% of the US population per Pew Research Center
 
 | Tradition | US Share | In Scope |
 |---|---|---|
-| Christianity | ~63% | Yes — five denominational lenses |
+| Christianity | ~63% | Yes -- five denominational lenses |
 | Judaism | ~2% | Yes |
 | Islam | ~1% | Yes |
 | Hinduism | ~1% | **No** (not Abrahamic) |
 | Buddhism | ~1% | **No** (not Abrahamic) |
 | Baha'i | ~0.1% | **No** (Abrahamic but below threshold) |
 
-Source: Pew Research Center — https://www.pewresearch.org/religion/religious-landscape-study/
+Source: Pew Research Center -- https://www.pewresearch.org/religion/religious-landscape-study/
 
 ---
 
@@ -94,7 +109,7 @@ Use `☦️` for Orthodox-specific events and dates.
 
 ---
 
-## 4. Jewish Holidays — Hebcal REST API
+## 4. Jewish Holidays -- Hebcal REST API
 
 **No API key. CC BY 4.0. Free.**
 
@@ -105,11 +120,11 @@ GET https://www.hebcal.com/hebcal?v=1&cfg=json&year={year}&maj=on&min=off&nx=off
 ```
 
 Parameters that matter:
-- `maj=on` — major holidays (required)
-- `ss=on` — special Shabbatot
-- `mod=on` — modern Israeli holidays (Yom HaShoah, Yom HaAtzmaut)
-- `i=off` — Diaspora rules (not Israeli rules — ARE targets US audience)
-- `min=off` — minor holidays off by default (expose as optional filter)
+- `maj=on` -- major holidays (required)
+- `ss=on` -- special Shabbatot
+- `mod=on` -- modern Israeli holidays (Yom HaShoah, Yom HaAtzmaut)
+- `i=off` -- Diaspora rules (not Israeli rules -- ARE targets US audience)
+- `min=off` -- minor holidays off by default (expose as optional filter)
 
 ### 4.2 Fetch pattern
 
@@ -166,7 +181,7 @@ Link: https://www.hebcal.com
 
 ---
 
-## 5. Islamic Holidays — AlAdhan REST API
+## 5. Islamic Holidays -- AlAdhan REST API
 
 **No API key. Free. GPL-3.0.**
 
@@ -278,7 +293,7 @@ Link: https://aladhan.com
 
 ---
 
-## 6. Christian Holidays — TypeScript Algorithm
+## 6. Christian Holidays -- TypeScript Algorithm
 
 No external API. Fully client-side. Zero dependencies.
 
@@ -348,7 +363,7 @@ function generateChristianHolidays(year: number): ObservanceEvent[] {
   reformationSunday.setDate(oct31.getDate() - oct31.getDay());
 
   return [
-    // Fixed feasts — all denominations
+    // Fixed feasts -- all denominations
     { rawName: 'Epiphany',              emoji: '✝️', denomination: 'all',            startDate: fix(1,6),    endDate: fix(1,6),    source: 'algorithm' },
     { rawName: 'Christmas Eve',         emoji: '✝️', denomination: 'all',            startDate: fix(12,24),  endDate: fix(12,24),  source: 'algorithm' },
     { rawName: 'Christmas',             emoji: '✝️', denomination: 'all',            startDate: fix(12,25),  endDate: fix(12,25),  source: 'algorithm' },
@@ -358,7 +373,7 @@ function generateChristianHolidays(year: number): ObservanceEvent[] {
     { rawName: 'Immaculate Conception', emoji: '✝️', denomination: 'catholic',       startDate: fix(12,8),   endDate: fix(12,8),   source: 'algorithm' },
     // Advent
     { rawName: 'Advent (First Sunday)', emoji: '✝️', denomination: 'all',            startDate: advent1,     endDate: advent1,     source: 'algorithm' },
-    // Easter-derived — Western
+    // Easter-derived -- Western
     { rawName: 'Ash Wednesday',         emoji: '✝️', denomination: 'all',            startDate: off(w,-46),  endDate: off(w,-46),  source: 'algorithm' },
     { rawName: 'Palm Sunday',           emoji: '✝️', denomination: 'all',            startDate: off(w,-7),   endDate: off(w,-7),   source: 'algorithm' },
     { rawName: 'Maundy Thursday',       emoji: '✝️', denomination: 'all',            startDate: off(w,-3),   endDate: off(w,-3),   source: 'algorithm' },
@@ -392,7 +407,7 @@ function generateChristianHolidays(year: number): ObservanceEvent[] {
 
 ---
 
-## 7. Event Description — Wikipedia REST API
+## 7. Event Description -- Wikipedia REST API
 
 **No API key. Free. CC BY-SA 3.0. No external cost.**
 

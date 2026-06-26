@@ -1,6 +1,17 @@
 ---
 name: okhp3-verse-lookup
-description: Fetch a scripture passage from Judaism, Christianity, or Islam using free anonymous public APIs. Provides endpoint patterns, parameter formats, normalization rules, translation ID map, and error/fallback handling for all three in-scope Abrahamic traditions. Use when an agent needs to retrieve live or cached verse text from Sefaria (Judaism), bible-api.com (Christianity), or Quran.com with AlQuran.cloud fallback (Islam).
+description: >
+  Fetch a scripture passage from Judaism, Christianity, or Islam using free
+  anonymous public APIs. Provides endpoint patterns, parameter formats,
+  normalization rules, translation ID map, and error/fallback handling for all
+  three in-scope Abrahamic traditions. Use when an agent needs to look up a
+  Bible verse, Quran ayah, Torah passage, psalm, or any Abrahamic scripture by
+  reference -- or when building a verse lookup feature, displaying scripture in
+  a UI, integrating live religious text into a product, or choosing among
+  available translations for each tradition. Also activate when an agent asks
+  about API endpoints, reference formats, or translation IDs for Jewish,
+  Christian, or Islamic texts, or when an agent needs to know how to route a
+  request by denomination (including LDS Standard Works).
 version: 1.0.0
 license: MIT
 author: OKHP3
@@ -137,6 +148,7 @@ Book names are case-insensitive. Numbered books use the numeral prefix: `1 corin
 | `darby` | Darby Translation | Public domain | Literal; 19th century |
 | `akjv` | American King James Version | Public domain | Modernized spelling of KJV |
 | `ylt` | Young's Literal Translation | Public domain | Highly literal; 1862 |
+| `dra` | Douay-Rheims 1899 American Edition | Public domain | Traditional Catholic translation from the Latin Vulgate; note -- the `drc` code returns HTTP 404, use `dra` |
 
 **Licensed translations (require API key -- not available in free build):** ESV, NRSV, NABRE, NIV, CSB
 
@@ -170,7 +182,7 @@ Use `json.text` for the passage text. Normalize by replacing `\n` with ` ` and t
 | Denomination | Canon | Available translations |
 |-------------|-------|----------------------|
 | Evangelical Protestant | 66 books (39 OT + 27 NT) | kjv, web, asv, bbe, darby |
-| Catholic | 73 books (includes deuterocanonicals) | web, kjv, douay |
+| Catholic | 73 books (includes deuterocanonicals) | web, kjv, dra |
 | Mainline Protestant | 66 books | kjv, web, asv, bbe |
 | LDS / Restorationist | Standard Works (Bible KJV + 3 additional volumes) | kjv only via bible-api.com; see LDS section below |
 | Orthodox Christian | Septuagint-based; typically 76-78 books | web (best available), kjv |
@@ -332,7 +344,7 @@ Examples:
 | ID | Name | Style |
 |----|------|-------|
 | `20` | Sahih International | Modern; balanced literal/dynamic |
-| `21` | Pickthall | Early 20th c.; archaic style |
+| `21` | Pickthall | Early 20th c.; archaic style -- WARNING: currently returns no `translations` array from Quran.com v4; use AlQuran.cloud fallback edition `en.pickthall` instead |
 | `22` | Yusuf Ali | With explanatory notes |
 | `23` | Arberry | Literary; "The Koran Interpreted" |
 | `24` | Shakir | More literal |

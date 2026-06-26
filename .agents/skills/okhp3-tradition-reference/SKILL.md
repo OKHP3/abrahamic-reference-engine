@@ -1,6 +1,19 @@
 ---
 name: okhp3-tradition-reference
-description: Compact structured reference for each of the three in-scope Abrahamic traditions -- Judaism, Christianity (5 denominations), and Islam. Covers canon scope, key texts, US population share with Pew citation, available translations, API provider, and a clear out-of-scope section. Use when an agent needs authoritative metadata about any of the three traditions before generating content, making API calls, or answering scope questions.
+description: >
+  Compact structured reference for each of the three in-scope Abrahamic
+  traditions -- Judaism, Christianity (5 denominations), and Islam. Covers
+  canon scope, key texts, US population share with Pew citation, available
+  translations, API provider, and a clear out-of-scope section. Use when an
+  agent needs authoritative metadata about any of the three traditions before
+  generating content, making API calls, or answering scope questions. Also
+  activate when an agent needs to know which scriptures a denomination uses,
+  which translations are available and free, what canon a tradition follows,
+  which denominations meet the 1% threshold, what API endpoint serves a given
+  tradition, or how to represent a tradition accurately and neutrally. This is
+  the primary authoritative reference for tradition-level facts in the ARE
+  ecosystem -- use it before assuming anything about a tradition's canon,
+  denominational structure, or API availability.
 version: 1.0.0
 license: MIT
 author: OKHP3
@@ -207,6 +220,7 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 | `darby` | Darby Translation | Public domain | Evangelical | Literal; 19th century |
 | `akjv` | American King James Version | Public domain | Evangelical | Modernized KJV spelling |
 | `ylt` | Young's Literal Translation | Public domain | Academic | Highly literal; 1862 |
+| `dra` | Douay-Rheims 1899 American Edition | Public domain | Catholic, Orthodox | Traditional Catholic translation from Latin Vulgate; use `dra` -- `drc` returns HTTP 404 |
 | `esv` | English Standard Version | **Licensed** | Evangelical | Requires API key; NOT in free build |
 | `nrsv` | New Revised Standard Version | **Licensed** | Mainline, academic | Requires API key; NOT in free build |
 | `nabre` | New American Bible Revised Edition | **Licensed** | Catholic | US liturgical standard; requires API key |
@@ -266,7 +280,7 @@ Major Hadith collections: Sahih al-Bukhari, Sahih Muslim, Sunan Abu Dawud, Jami'
 | ID (Quran.com) | Name | Style |
 |----------------|------|-------|
 | `20` | Sahih International | Modern; balanced; default |
-| `21` | Pickthall | Early 20th c.; archaic style |
+| `21` | Pickthall | Early 20th c.; archaic style -- WARNING: currently returns no translations array from Quran.com v4; use AlQuran.cloud fallback edition `en.pickthall` instead |
 | `22` | Yusuf Ali | With explanatory notes |
 | `23` | Arberry | Literary; "The Koran Interpreted" |
 | `24` | Shakir | More literal |
@@ -286,6 +300,8 @@ Use `translationId` values as the integer in the Quran.com `translations` query 
 
 **Hadith: fawazahmed0/hadith-api** -- free via jsDelivr CDN (CC BY-4.0)
 - CDN: `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/`
+- **Working endpoint (collection-level):** `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-{collection}.min.json` -- fetch the full collection JSON and extract the hadith by `hadithnumber` from the in-memory result
+- **Broken endpoint (per-hadith):** `/{number}.json` URL pattern -- returns HTTP 404 as of 2026-06-25; do not use
 - Collections: `bukhari`, `muslim`, `abudawud`, `tirmidhi`, `nasai`, `ibnmajah`
 - No authentication required
 
@@ -303,7 +319,7 @@ Use `translationId` values as the integer in the Quran.com `translations` query 
 
 ## Knowledge scaffold file inventory
 
-All files live under `knowledge/` in this skill directory.
+All files live under `knowledge/` in this skill directory. Load only the file(s) relevant to the current task -- do not load the full set upfront. The SKILL.md above is sufficient for most queries; reach for these files when you need deep-dive tradition or denomination detail.
 
 | File | Description |
 |------|-------------|

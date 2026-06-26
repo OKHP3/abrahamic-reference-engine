@@ -2,11 +2,14 @@
 name: okhp3-celestial-data
 description: >
   Calculate moon phase, astrological season, and Mercury retrograde status
-  for any date using pure client-side Julian date math — no API, no network,
-  no dependencies. Use when an app needs lunar phase display, seasonal
-  awareness, astrological season labels, or Mercury retrograde detection.
-  Returns structured data: moon phase name, emoji, illumination percentage,
-  days until next phase, current zodiac season, element, and retrograde status.
+  for any date using pure client-side Julian date math -- no API, no network,
+  no dependencies. Activate whenever a task needs to display the current moon
+  phase, lunar emoji, illumination percentage, days until next phase, current
+  zodiac season, element label, Mercury retrograde status, or upcoming new/full
+  moon dates. Use for apps with moon phase calendars, astrology features, nature
+  journals, wellness trackers, lunar awareness widgets, or any UI referencing
+  the night sky or seasonal cycles. Returns structured data ready for immediate
+  display -- no parsing required.
 license: MIT
 metadata:
   author: okhp3
@@ -19,17 +22,8 @@ compatibility: Any JavaScript or TypeScript environment. No network access requi
 # Celestial Engine Skill
 
 A self-contained celestial calculation library. All computations run locally using
-the Julian Day Number system. Accurate to within hours for moon phases — sufficient
+the Julian Day Number system. Accurate to within hours for moon phases -- sufficient
 for display and UX purposes.
-
-## When to use this skill
-
-Activate when the task involves any of:
-- Displaying the current moon phase or a moon phase emoji
-- Showing the current astrological season or zodiac sign
-- Detecting or displaying Mercury retrograde status
-- Finding upcoming new moon or full moon dates
-- Adding seasonal or lunar awareness to a personal app, journal, or calendar
 
 ## Core functions
 
@@ -81,7 +75,7 @@ getNextLunarEvents(count = 3)
 
 ## Complete Implementation (TypeScript)
 
-Copy this directly into `src/lib/celestial.ts`:
+Copy this directly into `src/lib/celestial.ts`. A fully-typed copy is also available at `references/celestial.ts` in this skill directory -- either source is identical.
 
 ```typescript
 // ── Julian Date conversion ──────────────────────────────────────────────────
@@ -210,7 +204,7 @@ events.forEach(e => console.log(`${e.emoji} ${e.type}: ${e.date.toDateString()}`
 
 - Moon phase accuracy: ±12 hours of exact phase
 - Astrological season boundaries: ±1 day (solar longitude not calculated exactly)
-- Mercury retrograde: sourced from published ephemeris — update the hardcoded array annually
+- Mercury retrograde: sourced from published ephemeris -- update the hardcoded array annually
 - All calculations are local, instant, and work offline
 
 ## Extending to other languages
