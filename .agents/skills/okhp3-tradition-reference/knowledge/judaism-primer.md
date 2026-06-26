@@ -3,7 +3,7 @@ title: Judaism Primer
 tradition: judaism
 us-share: ~2%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Judaism Primer

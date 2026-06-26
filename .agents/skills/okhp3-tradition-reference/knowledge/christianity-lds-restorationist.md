@@ -4,7 +4,7 @@ tradition: christianity
 denomination: lds-restorationist
 us-share: ~2%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Christianity -- LDS / Restorationist

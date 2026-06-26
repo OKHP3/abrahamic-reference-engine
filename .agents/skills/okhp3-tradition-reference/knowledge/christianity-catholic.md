@@ -4,7 +4,7 @@ tradition: christianity
 denomination: catholic
 us-share: ~20%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Christianity -- Catholic

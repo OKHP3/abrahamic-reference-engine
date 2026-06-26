@@ -1,7 +1,7 @@
 ---
 title: Cross-Tradition Compare Method
 type: methodology
-status: scaffold
+status: active-reference
 ---
 
 # Cross-Tradition Compare Method

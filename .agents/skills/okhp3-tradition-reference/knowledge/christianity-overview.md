@@ -3,7 +3,7 @@ title: Christianity -- Tradition Overview
 tradition: christianity
 us-share: ~63%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Christianity -- Tradition Overview

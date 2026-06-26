@@ -1,7 +1,7 @@
 ---
 title: Neutral Glossary -- Abrahamic Terms
 type: reference
-status: scaffold
+status: active-reference
 ---
 
 # Neutral Glossary -- Abrahamic Terms

@@ -3,7 +3,7 @@ title: Islam Primer
 tradition: islam
 us-share: ~1%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Islam Primer

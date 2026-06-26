@@ -4,7 +4,7 @@ tradition: christianity
 denomination: orthodox
 us-share: ~1%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Christianity -- Orthodox Christian

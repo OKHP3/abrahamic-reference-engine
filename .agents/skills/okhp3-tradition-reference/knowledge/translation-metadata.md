@@ -1,7 +1,7 @@
 ---
 title: Translation Metadata
 type: reference
-status: scaffold
+status: active-reference
 ---
 
 # Translation Metadata

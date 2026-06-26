@@ -4,7 +4,7 @@ tradition: christianity
 denomination: mainline-protestant
 us-share: ~16%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Christianity -- Mainline Protestant

@@ -4,7 +4,7 @@ tradition: christianity
 denomination: evangelical-protestant
 us-share: ~25%
 pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
-status: scaffold
+status: active-reference
 ---
 
 # Christianity -- Evangelical Protestant
