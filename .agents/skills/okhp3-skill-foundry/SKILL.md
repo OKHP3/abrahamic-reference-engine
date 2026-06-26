@@ -1,7 +1,7 @@
 ---
 name: okhp3-skill-foundry
 description: >
-  OverKill Hill P³ Skill Foundry -- complete eight-phase methodology for creating,
+  OverKill Hill P³ Skill FoundRy -- complete eight-phase methodology for creating,
   honing, and polishing production-quality Agent Skills. Activate when asked to
   create a new skill from scratch, hone or polish an existing skill, apply OKHP3
   brand attribution, design live evals, run executor subagents for benchmarking,
@@ -9,10 +9,10 @@ description: >
   or iterate based on eval failures. Also activate when someone wants to turn a
   workflow into a distributable skill, needs to benchmark a skill's with-skill vs
   without-skill gap, wants a professional quality bar for a SKILL.md, or asks
-  about the OKHP3 skill authoring process. This is the authoritative Foundry
+  about the OKHP3 skill authoring process. This is the authoritative FoundRy
   methodology for any skill creation or honing work in this repo -- use it even
   when the user just says "make a new skill" or "improve this skill" without
-  mentioning the Foundry by name.
+  mentioning the FoundRy by name.
 license: MIT
 metadata:
   author: Jamie Hill (OverKill Hill P³)
@@ -27,9 +27,9 @@ metadata:
 
 **OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3)
 
-The Foundry is an eight-phase, repeatable methodology for taking a skill from blank page to production-ready: brand-attributed, live-eval-benchmarked, and fix-driven. It was developed across 30 live executor runs against five ARE skills and encodes what that process proved. It is not a fork of any prior skill-creation tool. It is a clean-room methodology derived from practice.
+The FoundRy is an eight-phase, repeatable methodology for taking a skill from blank page to production-ready: brand-attributed, live-eval-benchmarked, and fix-driven. It was developed across 30 live executor runs against five ARE skills and encodes what that process proved. It is not a fork of any prior skill-creation tool. It is a clean-room methodology derived from practice.
 
-**The primary quality signal is the with/without gap.** A skill that scores 1.0 with skill access and 0.3 without is doing real work. A skill that scores 0.9 both ways is a placeholder. Everything the Foundry does points at that gap.
+**The primary quality signal is the with/without gap.** A skill that scores 1.0 with skill access and 0.3 without is doing real work. A skill that scores 0.9 both ways is a placeholder. Everything the FoundRy does points at that gap.
 
 ---
 

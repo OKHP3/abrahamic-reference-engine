@@ -15,6 +15,15 @@ const MODES = [
   { to: '/observances', label: 'Observances', description: 'Religious holiday calendar' },
 ]
 
+function SystemIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="1.8"/>
+      <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 function SunIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
@@ -39,12 +48,19 @@ function MoonIcon() {
   )
 }
 
+const THEME_META = {
+  system: { icon: <SystemIcon />, label: 'System', next: 'Light' },
+  light:  { icon: <SunIcon />,    label: 'Light',  next: 'Dark'  },
+  dark:   { icon: <MoonIcon />,   label: 'Dark',   next: 'System' },
+} as const
+
 export default function ModeNav({ onMenuClick }: ModeNavProps) {
-  const { theme, toggle } = useTheme()
+  const { mode, cycle } = useTheme()
   const { settings } = useSettings()
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   const hasDenomination = settings.denomination !== null
+  const { icon, label, next } = THEME_META[mode]
 
   return (
     <>
@@ -98,11 +114,11 @@ export default function ModeNav({ onMenuClick }: ModeNavProps) {
 
           <button
             className="theme-toggle"
-            onClick={toggle}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            onClick={cycle}
+            aria-label={`${label} mode -- click for ${next} mode`}
+            title={`${label} mode`}
           >
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            {icon}
           </button>
         </div>
       </header>
