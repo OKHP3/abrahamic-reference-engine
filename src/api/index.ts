@@ -54,12 +54,14 @@ export async function fetchPassage(opts: FetchPassageOptions): Promise<Passage> 
     }
 
     case 'islam': {
-      // Look up apiTranslationId from translation data so internal IDs (e.g. 'quran-21')
-      // map to the correct Quran.com resource ID (e.g. '19' for Pickthall) rather than
-      // blindly stripping 'quran-' from the internal ID.
+      // Look up apiTranslationId and apiProvider from translation data.
+      // Some translations (Arberry, Shakir) are served by AlQuran.cloud rather than Quran.com.
+      // Pass provider so fetchAyah routes directly to the correct API without
+      // attempting Quran.com first (which would return wrong or missing text).
       const translationRecord = translationId ? TRANSLATION_BY_ID[translationId] : undefined
       const quranTranslId = translationRecord?.apiTranslationId ?? translationId?.replace('quran-', '') ?? '20'
-      return fetchAyah(reference, quranTranslId)
+      const provider = (translationRecord?.apiProvider === 'alquran.cloud' ? 'alquran.cloud' : 'quran.com') as 'quran.com' | 'alquran.cloud'
+      return fetchAyah(reference, quranTranslId, provider, translationId ?? `quran-${quranTranslId}`)
     }
 
     default: {

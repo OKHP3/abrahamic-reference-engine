@@ -84,7 +84,8 @@ async function fetchFromQuranCom(
 
 async function fetchFromAlQuranCloud(
   key: string,
-  edition = 'en.arberry'
+  edition = 'en.arberry',
+  areTranslationId = 'quran-arberry'
 ): Promise<Passage> {
   const url = `${ALQURAN_BASE}/ayah/${key}/${edition}`
   const res = await fetch(url)
@@ -107,23 +108,28 @@ async function fetchFromAlQuranCloud(
     displayReference: `Quran ${key}`,
     tradition: 'islam',
     primaryText: data.text.trim(),
-    translationId: 'quran-arberry',
-    translationName: data.edition.englishName || 'Arberry',
+    translationId: areTranslationId,
+    translationName: data.edition.englishName || edition,
     sourceUrl,
-    attribution: `${data.edition.englishName || 'Arberry'} -- served via AlQuran.cloud`,
+    attribution: `${data.edition.englishName || edition} -- served via AlQuran.cloud`,
   }
 }
 
 export async function fetchAyah(
   key: string,
-  translationId = '20'
+  translationId = '20',
+  provider: 'quran.com' | 'alquran.cloud' = 'quran.com',
+  areTranslationId = `quran-${translationId}`
 ): Promise<Passage> {
+  if (provider === 'alquran.cloud') {
+    return fetchFromAlQuranCloud(key, translationId, areTranslationId)
+  }
   try {
     return await fetchFromQuranCom(key, translationId)
   } catch (primaryError) {
     console.warn('Quran.com primary failed, trying AlQuran.cloud fallback:', primaryError)
     try {
-      return await fetchFromAlQuranCloud(key, 'en.asad')
+      return await fetchFromAlQuranCloud(key, 'en.asad', areTranslationId)
     } catch (fallbackError) {
       throw new Error(
         `Both Quran APIs failed.\nPrimary: ${(primaryError as Error).message}\nFallback: ${(fallbackError as Error).message}`

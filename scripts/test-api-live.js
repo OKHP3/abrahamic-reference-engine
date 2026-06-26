@@ -211,6 +211,18 @@ await run('T-QU-04', 'Al-Alaq 96:1 (first revelation)', true, async () => {
   assert(lc.includes('read') || lc.includes('recite') || lc.includes('proclaim'), `Missing "Read"/"Recite": "${text.slice(0, 120)}"`)
 })
 
+// Yusuf Ali (Quran.com resource ID 22 -- confirmed active 2026-06-26)
+await run('T-QU-05', 'Al-Fatiha 1:1 (Yusuf Ali, resource_id=22)', true, async () => {
+  const json = await getJson('https://api.quran.com/api/v4/verses/by_key/1:1?language=en&translations=22&words=false')
+  assert(json.verse, 'json.verse is missing')
+  const translation = json.verse.translations?.[0]
+  assert(translation, 'No translation in response for Yusuf Ali (resource_id=22)')
+  assert(translation.resource_id === 22, `Expected resource_id 22, got ${translation.resource_id}`)
+  const lc = normalize(translation.text || '')
+  assert(lc.includes('allah') || lc.includes('god'), `Missing "Allah"/"God": "${translation.text?.slice(0, 120)}"`)
+  assert(lc.includes('merciful') || lc.includes('mercy') || lc.includes('gracious'), `Missing mercy/gracious: "${translation.text?.slice(0, 120)}"`)
+})
+
 // ---------------------------------------------------------------------------
 // Section 4 -- AlQuran.cloud (Islam fallback, non-blocking)
 // ---------------------------------------------------------------------------
@@ -230,6 +242,16 @@ await run('T-AQ-02', '2:255 Arberry (en.arberry)', false, async () => {
   assert(json.code === 200, `Expected code 200, got ${json.code}`)
   const lc = normalize(json.data?.text || '')
   assert(lc.includes('throne') || lc.includes('kursi'), `Missing "throne"/"kursi": "${json.data?.text?.slice(0, 120)}"`)
+})
+
+// Shakir (AlQuran.cloud en.shakir -- migrated from Quran.com ID 24 which was removed)
+await run('T-AQ-03', 'Al-Fatiha 1:1 Shakir (en.shakir, migrated from Quran.com ID 24)', false, async () => {
+  const json = await getJson('https://api.alquran.cloud/v1/ayah/1:1/en.shakir')
+  assert(json.code === 200, `Expected code 200, got ${json.code}`)
+  assert(json.data, 'json.data is missing')
+  const lc = normalize(json.data.text || '')
+  assert(lc.includes('allah') || lc.includes('god'), `Missing "Allah"/"God": "${json.data.text?.slice(0, 120)}"`)
+  assert(lc.includes('merciful') || lc.includes('mercy') || lc.includes('beneficent'), `Missing mercy/beneficent: "${json.data.text?.slice(0, 120)}"`)
 })
 
 // ---------------------------------------------------------------------------
