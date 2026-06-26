@@ -12,7 +12,7 @@
  *   Any RFC 5545-compliant calendar application
  *
  * Zero dependencies. Zero cost. MIT license.
- * OverKill Hill P3 / FoundRy -- okhp3.github.io/abrahamic-reference-engine
+ * OverKill Hill P³™ / FoundRy -- okhp3.github.io/abrahamic-reference-engine
  */
 
 import { type ObservanceEvent } from './observanceHelpers';
@@ -133,7 +133,7 @@ function buildVCALENDAR(calName: string, calDesc: string, vevents: string[]): st
 export function generateICS(events: ObservanceEvent[], calendarTitle: string): string {
   const calDesc =
     'Religious observances for Judaism, Christianity, and Islam. ' +
-    'Source: Abrahamic Reference Engine by OverKill Hill P3. ' +
+    'Source: Abrahamic Reference Engine by OverKill Hill P³™. ' +
     APP_URL;
 
   const vevents = events.map(buildVEVENT);

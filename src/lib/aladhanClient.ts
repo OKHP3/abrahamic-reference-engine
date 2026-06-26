@@ -14,7 +14,7 @@
  *  Actual observance may vary by one day based on local moon sighting."
  *
  * Zero external dependencies. MIT license.
- * OverKill Hill P3 / FoundRy -- okhp3.github.io/abrahamic-reference-engine
+ * OverKill Hill P³™ / FoundRy -- okhp3.github.io/abrahamic-reference-engine
  */
 
 import {

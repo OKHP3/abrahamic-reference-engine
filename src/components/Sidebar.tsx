@@ -135,7 +135,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         <div className="border-t border-border-subtle pt-4">
           <div className="text-2xs font-sans font-bold tracking-widest uppercase text-muted mb-2">
-            OverKill Hill P3
+            OverKill Hill P³™
           </div>
           <div className="space-y-1.5">
             <a

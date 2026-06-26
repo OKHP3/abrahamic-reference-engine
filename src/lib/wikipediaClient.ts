@@ -16,7 +16,7 @@
  * Results cached in sessionStorage to prevent repeat calls.
  *
  * Zero external dependencies. MIT license.
- * OverKill Hill P3 / FoundRy -- okhp3.github.io/abrahamic-reference-engine
+ * OverKill Hill P³™ / FoundRy -- okhp3.github.io/abrahamic-reference-engine
  */
 
 import { WIKIPEDIA_ARTICLE_MAP, normalizeHolidayTitle } from './observanceHelpers';

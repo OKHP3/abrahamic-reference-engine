@@ -16,7 +16,7 @@
  *   Theophany      (all years)      -> January 19
  *
  * Zero dependencies. Zero cost. MIT license.
- * OverKill Hill P3 / FoundRy -- okhp3.github.io/abrahamic-reference-engine
+ * OverKill Hill P³™ / FoundRy -- okhp3.github.io/abrahamic-reference-engine
  */
 
 import {

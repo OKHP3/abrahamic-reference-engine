@@ -228,7 +228,7 @@ export default function OriginArchive() {
           Credit
         </h2>
         <p className="text-sm text-ink leading-relaxed">
-          Conceived, designed, and built by Patrick -- OverKill Hill P3.
+          Conceived by Patrick -- designed and built by OverKill Hill P³™.
         </p>
         <p className="text-xs text-muted mt-1 leading-relaxed">
           Origin conversation: ChatGPT, October 17, 2025.

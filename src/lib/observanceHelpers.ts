@@ -7,7 +7,7 @@
  * wikipediaClient, and icsGenerator.
  *
  * Zero dependencies. Zero cost. MIT license.
- * OverKill Hill P3 / FoundRy -- okhp3.github.io/abrahamic-reference-engine
+ * OverKill Hill P³™ / FoundRy -- okhp3.github.io/abrahamic-reference-engine
  */
 
 // ---------------------------------------------------------------------------
