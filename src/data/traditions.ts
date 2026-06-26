@@ -129,16 +129,16 @@ export const TRADITION_GROUPS: TraditionGroup[] = [
     denominations: DENOMINATIONS.filter(d => d.family === 'christianity'),
   },
   {
-    family: 'judaism',
-    label: 'Judaism',
-    totalPewPercent: 2,
-    denominations: DENOMINATIONS.filter(d => d.family === 'judaism'),
-  },
-  {
     family: 'islam',
     label: 'Islam',
     totalPewPercent: 1,
     denominations: DENOMINATIONS.filter(d => d.family === 'islam'),
+  },
+  {
+    family: 'judaism',
+    label: 'Judaism',
+    totalPewPercent: 2,
+    denominations: DENOMINATIONS.filter(d => d.family === 'judaism'),
   },
 ]
 

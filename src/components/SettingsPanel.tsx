@@ -21,7 +21,7 @@ const DENOMINATION_OPTIONS: Array<{ id: DenominationId; group: string }> = [
   { id: 'islam', group: 'Islam' },
 ]
 
-const GROUPS = ['Christianity', 'Judaism', 'Islam'] as const
+const GROUPS = ['Christianity', 'Islam', 'Judaism'] as const
 
 function GearIcon() {
   return (
