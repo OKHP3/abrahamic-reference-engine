@@ -244,44 +244,62 @@ export default function ObservancesCalendar() {
         />
       </section>
 
-      {/* Attribution footer */}
-      <footer className="mt-2 pt-4 border-t border-border-subtle space-y-1">
-        <p className="text-xs text-muted">
-          <a
-            href="https://www.hebcal.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-gold transition-colors underline underline-offset-2"
-          >
-            Calendar data via Hebcal.com (CC BY 4.0)
-          </a>
-          {' '}&middot;{' '}
-          <a
-            href="https://aladhan.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-gold transition-colors underline underline-offset-2"
-          >
-            Islamic calendar data via AlAdhan.com
-          </a>
-          {' '}&middot;{' '}
-          Christian dates via Ecclesiastical Computus
-          {' '}&middot;{' '}
-          Moon phases computed locally (Julian date algorithm)
+      <aside
+        className="border border-border-subtle rounded-lg bg-bg-elevated p-4 mb-6"
+        aria-labelledby="calendar-sources-heading"
+      >
+        <h2
+          id="calendar-sources-heading"
+          className="text-xs font-sans font-bold tracking-widest uppercase text-gold mb-3"
+        >
+          Calendar Data Sources
+        </h2>
+        <ul className="space-y-1.5 mb-3">
+          <li className="text-xs text-muted leading-relaxed">
+            Jewish holidays --{' '}
+            <a
+              href="https://www.hebcal.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-gold-light transition-colors no-underline"
+            >
+              Hebcal.com (CC BY 4.0)
+            </a>
+          </li>
+          <li className="text-xs text-muted leading-relaxed">
+            Islamic holidays --{' '}
+            <a
+              href="https://aladhan.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-gold-light transition-colors no-underline"
+            >
+              AlAdhan.com
+            </a>
+          </li>
+          <li className="text-xs text-muted leading-relaxed">
+            Christian dates -- Ecclesiastical Computus (calculated locally)
+          </li>
+          <li className="text-xs text-muted leading-relaxed">
+            Moon phases -- Julian date algorithm (calculated locally)
+          </li>
+          <li className="text-xs text-muted leading-relaxed">
+            Event descriptions --{' '}
+            <a
+              href="https://en.wikipedia.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-gold-light transition-colors no-underline"
+            >
+              Wikipedia (CC BY-SA 3.0)
+            </a>
+            , loaded on demand when you click an event
+          </li>
+        </ul>
+        <p className="text-2xs text-muted italic leading-relaxed">
+          All calendar data is fetched from free public APIs -- no account required.
         </p>
-        <p className="text-xs text-muted">
-          Event descriptions via{' '}
-          <a
-            href="https://en.wikipedia.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-gold transition-colors underline underline-offset-2"
-          >
-            Wikipedia (CC BY-SA 3.0)
-          </a>
-          , loaded on demand when you click an event.
-        </p>
-      </footer>
+      </aside>
 
       <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
         <Link
