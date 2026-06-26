@@ -4,6 +4,8 @@ import { TRADITION_KNOWLEDGE, DENOMINATION_KNOWLEDGE } from '../data/knowledge'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
 import ScopeExplainer from '../components/ScopeExplainer'
 import TraditionBadge from '../components/TraditionBadge'
+import { useSettings } from '../context/SettingsContext'
+import { getChristianDenominationSlug } from '../settings'
 import type { TraditionFamily } from '../types'
 
 const FAMILY_LABEL: Record<TraditionFamily, string> = {
@@ -12,7 +14,7 @@ const FAMILY_LABEL: Record<TraditionFamily, string> = {
   islam: 'Islam',
 }
 
-function TranslationList({ family }: { family: TraditionFamily }) {
+function TranslationList({ family, preferredTranslationId }: { family: TraditionFamily; preferredTranslationId?: string }) {
   const translations = TRANSLATIONS_BY_FAMILY[family]
   return (
     <div className="p-5 border border-border-subtle rounded-lg bg-bg-elevated">
@@ -22,9 +24,12 @@ function TranslationList({ family }: { family: TraditionFamily }) {
       <ul className="space-y-2">
         {translations.map(t => (
           <li key={t.id} className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 flex items-center gap-2 flex-wrap">
               <span className="text-sm font-sans text-parchment">{t.shortName}</span>
-              <span className="text-xs text-muted ml-2">{t.name}</span>
+              <span className="text-xs text-muted">{t.name}</span>
+              {preferredTranslationId === t.id && (
+                <span className="text-2xs font-sans text-gold italic">your default</span>
+              )}
             </div>
             <span
               className={`text-2xs font-sans px-1.5 py-0.5 rounded flex-shrink-0 ${
@@ -50,10 +55,18 @@ function TranslationList({ family }: { family: TraditionFamily }) {
 function ScriptureLinks({
   family,
   refs,
+  denominationSlug,
 }: {
   family: TraditionFamily
   refs: Array<{ display: string; lookup: string; note?: string }>
+  denominationSlug?: string
 }) {
+  function buildLookupUrl(ref: string) {
+    const params = new URLSearchParams({ tradition: family, ref })
+    if (denominationSlug) params.set('denomination', denominationSlug)
+    return `/lookup?${params.toString()}`
+  }
+
   return (
     <div className="p-5 border border-border-subtle rounded-lg bg-bg-elevated">
       <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-gold mb-3">
@@ -63,7 +76,7 @@ function ScriptureLinks({
         {refs.map(r => (
           <li key={r.lookup} className="flex items-start gap-3">
             <Link
-              to={`/lookup?tradition=${family}&ref=${encodeURIComponent(r.lookup)}`}
+              to={buildLookupUrl(r.lookup)}
               className="text-sm font-sans text-gold hover:text-gold-light transition-colors no-underline font-medium"
               aria-label={`Look up ${r.display}${r.note ? ` -- ${r.note}` : ''}`}
             >
@@ -81,6 +94,7 @@ function ScriptureLinks({
 
 function TraditionDetail({ slug }: { slug: string }) {
   const denomination = DENOMINATIONS.find(d => d.slug === slug)
+  const { settings } = useSettings()
 
   if (!denomination) {
     return (
@@ -95,6 +109,18 @@ function TraditionDetail({ slug }: { slug: string }) {
 
   const familyKnowledge = TRADITION_KNOWLEDGE[denomination.family]
   const denomKnowledge = DENOMINATION_KNOWLEDGE[denomination.id]
+  const isUserTradition = settings.denomination === denomination.id
+
+  const settingsDenomSlug = denomination.family === 'christianity'
+    ? getChristianDenominationSlug(settings.denomination)
+    : null
+
+  const preferredTranslationId: string | undefined =
+    denomination.family === 'christianity'
+      ? settings.defaultTranslations.christianity
+      : denomination.family === 'judaism'
+      ? settings.defaultTranslations.judaism
+      : settings.defaultTranslations.islam
 
   return (
     <article>
@@ -106,6 +132,11 @@ function TraditionDetail({ slug }: { slug: string }) {
               <p className="text-xs font-sans text-muted uppercase tracking-widest">
                 {FAMILY_LABEL[denomination.family]}
               </p>
+              {isUserTradition && (
+                <span className="text-2xs font-sans text-gold italic">
+                  your tradition
+                </span>
+              )}
             </div>
             <h1 className="text-2xl font-serif font-light text-gold mb-3">
               {denomination.name}
@@ -203,9 +234,13 @@ function TraditionDetail({ slug }: { slug: string }) {
             familyKnowledge?.primaryScriptures ??
             []
           }
+          denominationSlug={settingsDenomSlug ?? undefined}
         />
 
-        <TranslationList family={denomination.family} />
+        <TranslationList
+          family={denomination.family}
+          preferredTranslationId={settings.denomination ? preferredTranslationId : undefined}
+        />
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-border-subtle">

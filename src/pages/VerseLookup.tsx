@@ -10,6 +10,8 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
 import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
+import { useSettings } from '../context/SettingsContext'
+import { getChristianDenominationSlug } from '../settings'
 import type { Passage, Hadith, TraditionFamily, ApiStatus } from '../types'
 
 type ChristianDenomination = 'catholic' | 'protestant' | 'lds' | 'orthodox' | null
@@ -117,6 +119,7 @@ function buildHadithNumbers(ref: string): number[] {
 
 export default function VerseLookup() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { settings } = useSettings()
 
   const initialTradition = (searchParams.get('tradition') as TraditionFamily | null) ?? 'judaism'
   const initialRef = searchParams.get('ref') ?? ''
@@ -128,6 +131,8 @@ export default function VerseLookup() {
     : rawDenom === 'orthodox' ? 'orthodox'
     : null
 
+  const settingsDenomSlug = getChristianDenominationSlug(settings.denomination)
+
   const VALID_FAMILIES: TraditionFamily[] = ['judaism', 'christianity', 'islam']
   const validatedInitialTradition: TraditionFamily | null =
     VALID_FAMILIES.includes(initialTradition as TraditionFamily)
@@ -137,9 +142,12 @@ export default function VerseLookup() {
   const [tradition, setTradition] = useState<TraditionFamily>(
     validatedInitialTradition ?? 'judaism'
   )
-  const [denomination, setDenomination] = useState<ChristianDenomination>(
-    validatedInitialTradition === 'christianity' ? initialDenom : null
-  )
+  const [denomination, setDenomination] = useState<ChristianDenomination>(() => {
+    if (validatedInitialTradition === 'christianity') {
+      return initialDenom ?? settingsDenomSlug
+    }
+    return null
+  })
   const [reference, setReference] = useState(initialRef)
   const [translationId, setTranslationId] = useState('')
   const [status, setStatus] = useState<ApiStatus>('idle')
@@ -160,14 +168,22 @@ export default function VerseLookup() {
     t => t.license !== 'licensed'
   )
 
+  function getDefaultTranslation(trad: TraditionFamily): string {
+    const free = TRANSLATIONS_BY_FAMILY[trad].filter(t => t.license !== 'licensed')
+    let preferred: string
+    if (trad === 'christianity') preferred = settings.defaultTranslations.christianity
+    else if (trad === 'judaism') preferred = settings.defaultTranslations.judaism
+    else preferred = settings.defaultTranslations.islam
+    return free.find(t => t.id === preferred) ? preferred : (free[0]?.id ?? '')
+  }
+
   useEffect(() => {
-    const defaultTranslation = freeTranslations[0]?.id ?? ''
-    setTranslationId(defaultTranslation)
-  }, [tradition])
+    setTranslationId(getDefaultTranslation(tradition))
+  }, [tradition, settings.defaultTranslations.christianity, settings.defaultTranslations.judaism, settings.defaultTranslations.islam])
 
   useEffect(() => {
     if (validatedInitialTradition && isLikelyValidRef(validatedInitialTradition, initialRef)) {
-      doFetch(validatedInitialTradition, initialRef.trim(), freeTranslations[0]?.id ?? '', initialDenom)
+      doFetch(validatedInitialTradition, initialRef.trim(), getDefaultTranslation(validatedInitialTradition), initialDenom)
     }
   }, [])
 
@@ -284,7 +300,8 @@ export default function VerseLookup() {
 
   function handleTraditionChange(next: TraditionFamily) {
     setTradition(next)
-    setDenomination(null)
+    const nextDenom = next === 'christianity' ? settingsDenomSlug : null
+    setDenomination(nextDenom)
     setPassage(null)
     setError(null)
     setIsLdsFallback(false)
@@ -367,8 +384,13 @@ export default function VerseLookup() {
           {tradition === 'christianity' && (
             <div className="mb-4 pl-1 border-l-2 border-violet-900">
               <fieldset>
-                <legend className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
+                <legend className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block flex items-center gap-2">
                   Denomination
+                  {settings.denomination && settingsDenomSlug && denomination === settingsDenomSlug && !rawDenom && (
+                    <span className="text-2xs font-sans font-normal tracking-normal normal-case text-gold italic">
+                      -- from preferences
+                    </span>
+                  )}
                 </legend>
                 <div className="flex gap-2 flex-wrap">
                   {([
@@ -397,7 +419,8 @@ export default function VerseLookup() {
                 {denomination === 'catholic' && (
                   <p className="text-2xs text-muted mt-2">
                     Roman Catholic -- includes the deuterocanonical books (Tobit, Judith, 1-2 Maccabees,
-                    Wisdom, Sirach, Baruch). Translation defaults to Douay-Rheims where available.
+                    Wisdom, Sirach, Baruch). Defaults to World English Bible (WEB), which covers most
+                    deuterocanonicals via the free API. NABRE is not available in the free build.
                   </p>
                 )}
                 {denomination === 'protestant' && (

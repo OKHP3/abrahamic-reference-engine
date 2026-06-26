@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { useSettings } from '../context/SettingsContext'
+import SettingsPanel, { GearIcon } from './SettingsPanel'
 
 interface ModeNavProps {
   onMenuClick: () => void
@@ -38,45 +41,75 @@ function MoonIcon() {
 
 export default function ModeNav({ onMenuClick }: ModeNavProps) {
   const { theme, toggle } = useTheme()
+  const { settings } = useSettings()
+  const [settingsOpen, setSettingsOpen] = useState(false)
+
+  const hasDenomination = settings.denomination !== null
 
   return (
-    <header className="border-b border-border-subtle bg-bg-elevated flex-shrink-0 flex items-stretch">
-      <button
-        className="md:hidden flex-shrink-0 px-4 text-muted hover:text-parchment transition-colors border-r border-border-subtle"
-        onClick={onMenuClick}
-        aria-label="Open navigation"
-        aria-expanded={false}
-      >
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      </button>
-
-      <nav className="flex flex-1 min-w-0" aria-label="Application modes">
-        {MODES.map(mode => (
-          <NavLink
-            key={mode.to}
-            to={mode.to}
-            className={({ isActive }) =>
-              `mode-tab px-4 sm:px-6${isActive ? ' active' : ''}`
-            }
-            aria-label={mode.description}
-          >
-            {mode.label}
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="flex-shrink-0 flex items-center px-3 border-l border-border-subtle">
+    <>
+      <header className="border-b border-border-subtle bg-bg-elevated flex-shrink-0 flex items-stretch">
         <button
-          className="theme-toggle"
-          onClick={toggle}
-          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          className="md:hidden flex-shrink-0 px-4 text-muted hover:text-parchment transition-colors border-r border-border-subtle"
+          onClick={onMenuClick}
+          aria-label="Open navigation"
+          aria-expanded={false}
         >
-          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
         </button>
-      </div>
-    </header>
+
+        <nav className="flex flex-1 min-w-0" aria-label="Application modes">
+          {MODES.map(mode => (
+            <NavLink
+              key={mode.to}
+              to={mode.to}
+              className={({ isActive }) =>
+                `mode-tab px-4 sm:px-6${isActive ? ' active' : ''}`
+              }
+              aria-label={mode.description}
+            >
+              {mode.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="flex-shrink-0 flex items-center gap-1 px-3 border-l border-border-subtle">
+          <button
+            className={[
+              'relative p-1.5 rounded transition-colors',
+              hasDenomination
+                ? 'text-gold hover:text-gold-light'
+                : 'text-muted hover:text-parchment',
+            ].join(' ')}
+            onClick={() => setSettingsOpen(true)}
+            aria-label="Open settings"
+            title="Settings"
+          >
+            <GearIcon />
+            {hasDenomination && (
+              <span
+                className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-gold"
+                aria-hidden="true"
+              />
+            )}
+          </button>
+
+          <button
+            className="theme-toggle"
+            onClick={toggle}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          >
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+        </div>
+      </header>
+
+      {settingsOpen && (
+        <SettingsPanel onClose={() => setSettingsOpen(false)} />
+      )}
+    </>
   )
 }
