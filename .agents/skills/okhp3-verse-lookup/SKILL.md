@@ -183,6 +183,28 @@ Use `json.text` for the passage text. Normalize by replacing `\n` with ` ` and t
 
 LDS scripture lookup splits across two sources depending on which volume of the Standard Works is being referenced.
 
+### URL parameter: `denomination=lds`
+
+When a caller sets `denomination=lds` in the Verse Lookup URL (`/lookup?tradition=christianity&denomination=lds&ref=...`), the app activates LDS routing mode. The routing decision is made in `VerseLookup.tsx` (`doFetch`) using the exported helper `isLdsBibleRef` from `src/api/nephi.ts`:
+
+```
+if (tradition === 'christianity' && denomination === 'lds' && !isLdsBibleRef(ref))
+  → fetchNephiPassage(ref)      // Standard Works path
+else
+  → fetchPassage({ tradition, reference, translationId })   // Bible path (kjv)
+```
+
+### Routing entry points (src/api/nephi.ts)
+
+**`isLdsBibleRef(reference: string): boolean`**
+Returns `true` if the reference resolves to one of the 66 books of the Protestant Bible (the KJV used by the LDS church). Matching is prefix-based and case-insensitive. Any reference that is NOT a Bible book routes to scriptures.nephi.org.
+
+**`LdsApiUnavailableError`**
+A typed `Error` subclass (`isLdsFallback = true`) thrown by `fetchNephiPassage` on any failure (network error, non-2xx response, empty body, bad JSON). Callers should catch this specifically and surface the static fallback message rather than a generic error. `LdsApiUnavailableError` is never thrown for Bible-path lookups.
+
+**`fetchNephiPassage(reference: string): Promise<Passage>`**
+Fetches a non-Bible Standard Works passage. Throws `LdsApiUnavailableError` on any failure.
+
 ### Bible references (KJV only)
 
 Use bible-api.com with `translation=kjv`. The LDS church uses the King James Version of the Bible without modification.
@@ -198,6 +220,12 @@ Reference format: standard Christian book names, lowercase (e.g. `james 1:5`, `j
 **API:** scriptures.nephi.org -- community-maintained, no authentication required.
 
 **Base URL:** `https://scriptures.nephi.org`
+
+**Endpoint:**
+```
+GET https://scriptures.nephi.org/verses/{url-encoded-reference}
+```
+The reference is URL-encoded with `encodeURIComponent`. Response is JSON; the text is extracted from `scripture_phrase`, then `text`, then `verse` fields (first non-empty wins). Strip HTML tags before displaying.
 
 **Important:** This is a community API with no uptime guarantee. Treat it as best-effort and implement a graceful fallback to a static error message when unavailable.
 
@@ -251,8 +279,8 @@ Examples: `Moses 1:39`, `Abraham 3:22`, `A of F 1:13`
 try scriptures.nephi.org
   on success: return passage
   on failure: surface message "The LDS Standard Works (Book of Mormon, D&C, Pearl of
-    Great Price) are not available via a guaranteed free API at this time. Visit
-    https://www.churchofjesuschrist.org/study/scriptures to look up this passage."
+    Great Price) are not available via a guaranteed free API at this time.
+    Visit churchofjesuschrist.org/study/scriptures to look up this passage."
 ```
 
 Do not silently return empty content. Always surface the fallback message explicitly.
