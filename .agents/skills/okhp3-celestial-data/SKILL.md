@@ -155,15 +155,16 @@ export function getAstroSeason(date: Date = new Date()) {
 
 // ── Mercury Retrograde ──────────────────────────────────────────────────────
 // Hardcoded through 2031. Update this array annually.
-// 2026-2028: sourced from published ephemeris.
-// 2029-2031: projected from the synodic cycle pattern in the 2026-2028 data.
-//   Verify against NASA JPL Horizons (https://ssd.jpl.nasa.gov/horizons/)
-//   before a production release if precision beyond ±3 days matters.
-// Note: the first 2031 period begins in late December 2030 -- a real
-//   occurrence when the ~88-day gap from the previous period end falls
-//   before Jan 1. getMercuryStatus handles this correctly; the ISO
-//   date comparison is purely string-based and year boundary does not
-//   cause any off-by-one.
+// Sources:
+//   2026-2028 -- published ephemeris (original data set).
+//   2029      -- Cafe Astrology and cross-referenced sources (4 periods this year).
+//   2030      -- Astro-Seek Swiss Ephemeris planetary motion calendar; Dec period
+//                also confirmed by Cafe Astrology (station Rx Dec 6, sD Dec 25).
+//   2031      -- Astro-Seek Swiss Ephemeris (horoscopes.astro-seek.com/mercury-
+//                retrograde-astrology-calendar-2031; 6 station events confirmed).
+// Note: the 2029-12-22 entry straddles the year boundary (sD Jan 11, 2030).
+//   getMercuryStatus handles this correctly -- ISO string comparison is
+//   purely lexicographic and has no year-boundary edge case.
 const MERCURY_RETROGRADE = [
   { start: '2026-03-15', end: '2026-04-07' },
   { start: '2026-07-17', end: '2026-08-11' },
@@ -174,15 +175,16 @@ const MERCURY_RETROGRADE = [
   { start: '2028-02-15', end: '2028-03-09' },
   { start: '2028-06-16', end: '2028-07-11' },
   { start: '2028-10-09', end: '2028-10-30' },
-  { start: '2029-01-27', end: '2029-02-18' },
-  { start: '2029-05-28', end: '2029-06-22' },
-  { start: '2029-09-20', end: '2029-10-13' },
-  { start: '2030-01-09', end: '2030-02-01' },
-  { start: '2030-05-11', end: '2030-06-04' },
-  { start: '2030-09-02', end: '2030-09-25' },
-  { start: '2030-12-22', end: '2031-01-13' },
-  { start: '2031-04-22', end: '2031-05-14' },
-  { start: '2031-08-12', end: '2031-09-03' },
+  { start: '2029-01-07', end: '2029-01-27' },  // 2029 has 4 periods
+  { start: '2029-05-01', end: '2029-05-25' },
+  { start: '2029-09-02', end: '2029-09-25' },
+  { start: '2029-12-22', end: '2030-01-11' },  // straddles year; sD Jan 11 2030
+  { start: '2030-04-13', end: '2030-05-06' },
+  { start: '2030-08-16', end: '2030-09-08' },
+  { start: '2030-12-06', end: '2030-12-25' },
+  { start: '2031-03-26', end: '2031-04-18' },
+  { start: '2031-07-29', end: '2031-08-22' },
+  { start: '2031-11-19', end: '2031-12-09' },
 ];
 
 export function getMercuryStatus(date: Date = new Date()) {
@@ -222,7 +224,7 @@ events.forEach(e => console.log(`${e.emoji} ${e.type}: ${e.date.toDateString()}`
 
 - Moon phase accuracy: ±12 hours of exact phase
 - Astrological season boundaries: ±1 day (solar longitude not calculated exactly)
-- Mercury retrograde: 2026-2028 sourced from published ephemeris; 2029-2031 projected from the synodic cycle pattern -- verify against NASA JPL Horizons if precision beyond ±3 days matters; update the array annually
+- Mercury retrograde: all entries 2026-2031 sourced from published ephemeris (Cafe Astrology / Astro-Seek Swiss Ephemeris); update the array annually
 - All calculations are local, instant, and work offline
 
 ## Extending to other languages
