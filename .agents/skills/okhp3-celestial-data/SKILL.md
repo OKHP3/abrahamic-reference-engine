@@ -154,7 +154,16 @@ export function getAstroSeason(date: Date = new Date()) {
 }
 
 // ── Mercury Retrograde ──────────────────────────────────────────────────────
-// Hardcoded through 2028. Update this array as needed.
+// Hardcoded through 2031. Update this array annually.
+// 2026-2028: sourced from published ephemeris.
+// 2029-2031: projected from the synodic cycle pattern in the 2026-2028 data.
+//   Verify against NASA JPL Horizons (https://ssd.jpl.nasa.gov/horizons/)
+//   before a production release if precision beyond ±3 days matters.
+// Note: the first 2031 period begins in late December 2030 -- a real
+//   occurrence when the ~88-day gap from the previous period end falls
+//   before Jan 1. getMercuryStatus handles this correctly; the ISO
+//   date comparison is purely string-based and year boundary does not
+//   cause any off-by-one.
 const MERCURY_RETROGRADE = [
   { start: '2026-03-15', end: '2026-04-07' },
   { start: '2026-07-17', end: '2026-08-11' },
@@ -165,6 +174,15 @@ const MERCURY_RETROGRADE = [
   { start: '2028-02-15', end: '2028-03-09' },
   { start: '2028-06-16', end: '2028-07-11' },
   { start: '2028-10-09', end: '2028-10-30' },
+  { start: '2029-01-27', end: '2029-02-18' },
+  { start: '2029-05-28', end: '2029-06-22' },
+  { start: '2029-09-20', end: '2029-10-13' },
+  { start: '2030-01-09', end: '2030-02-01' },
+  { start: '2030-05-11', end: '2030-06-04' },
+  { start: '2030-09-02', end: '2030-09-25' },
+  { start: '2030-12-22', end: '2031-01-13' },
+  { start: '2031-04-22', end: '2031-05-14' },
+  { start: '2031-08-12', end: '2031-09-03' },
 ];
 
 export function getMercuryStatus(date: Date = new Date()) {
@@ -204,7 +222,7 @@ events.forEach(e => console.log(`${e.emoji} ${e.type}: ${e.date.toDateString()}`
 
 - Moon phase accuracy: ±12 hours of exact phase
 - Astrological season boundaries: ±1 day (solar longitude not calculated exactly)
-- Mercury retrograde: sourced from published ephemeris -- update the hardcoded array annually
+- Mercury retrograde: 2026-2028 sourced from published ephemeris; 2029-2031 projected from the synodic cycle pattern -- verify against NASA JPL Horizons if precision beyond ±3 days matters; update the array annually
 - All calculations are local, instant, and work offline
 
 ## Extending to other languages

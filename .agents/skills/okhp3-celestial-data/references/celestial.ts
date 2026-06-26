@@ -89,7 +89,13 @@ export function getAstroSeason(date: Date = new Date()): AstroSeason {
   return found ?? ASTRO_SEASONS[0]
 }
 
-// ─── Mercury Retrograde (hardcoded 2026–2028) ─────────────────────────────────
+// ─── Mercury Retrograde (hardcoded 2026-2031) ─────────────────────────────────
+// 2026-2028: sourced from published ephemeris.
+// 2029-2031: projected from the synodic cycle pattern in the 2026-2028 data.
+//   Verify against NASA JPL Horizons (https://ssd.jpl.nasa.gov/horizons/)
+//   before a production release if precision beyond +/-3 days matters.
+// Update this array annually. Note: the 2030-12-22 entry straddles the year
+//   boundary -- getMercuryStatus handles this correctly via ISO string comparison.
 
 export const MERCURY_RETROGRADE = [
   { start: '2026-03-15', end: '2026-04-07' },
@@ -101,6 +107,15 @@ export const MERCURY_RETROGRADE = [
   { start: '2028-02-15', end: '2028-03-09' },
   { start: '2028-06-16', end: '2028-07-11' },
   { start: '2028-10-09', end: '2028-10-30' },
+  { start: '2029-01-27', end: '2029-02-18' },
+  { start: '2029-05-28', end: '2029-06-22' },
+  { start: '2029-09-20', end: '2029-10-13' },
+  { start: '2030-01-09', end: '2030-02-01' },
+  { start: '2030-05-11', end: '2030-06-04' },
+  { start: '2030-09-02', end: '2030-09-25' },
+  { start: '2030-12-22', end: '2031-01-13' },
+  { start: '2031-04-22', end: '2031-05-14' },
+  { start: '2031-08-12', end: '2031-09-03' },
 ]
 
 export function getMercuryStatus(
