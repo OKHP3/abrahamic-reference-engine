@@ -277,7 +277,7 @@ Source threads: ChatGPT shared threads from 2026-06-14/15.
 - **Type:** SPA + Agent Skills Package
 - **GitHub:** https://github.com/OKHP3/abrahamic-reference-engine
 - **Notion Anchor:** https://app.notion.com/p/895d08a0f20f4f8dbb8dc9dd55dee405
-- **Local (Windows):** `C:\Users\jamie\OKH-Local\Projects\abrahamic-reference-engine`
+- **Local (Windows):** `C:\Users\jamie\OKH-Local\04_GitHub_Mirrors\abrahamic-reference-engine`
 - **Local (Mac):** `/Volumes/OKH-Local/04_GitHub_Mirrors/abrahamic-reference-engine`
 - **Status:** Active / In Development
 
