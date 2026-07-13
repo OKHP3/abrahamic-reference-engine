@@ -3,9 +3,9 @@
 **A neutral, citation-first scripture reference engine for exploring Judaism, Christianity, and Islam without preaching, ranking, or doctrinal combat.**
 
 [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![MIT License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 Live demo: **https://okhp3.github.io/abrahamic-reference-engine/**
@@ -162,10 +162,11 @@ The project favors free, open, public, and API-accessible sources, while respect
 
 ## Tech stack
 
-- Vite
-- React 18
-- TypeScript
-- Tailwind CSS
+- Vite 8
+- React 19
+- React Router 7
+- TypeScript 7
+- Tailwind CSS 4
 - GitHub Pages
 - Markdown-based agent skills
 - API adapters for Sefaria, bible-api.com, Quran.com, AlQuran.cloud, Hadith
