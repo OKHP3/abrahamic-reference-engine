@@ -298,3 +298,5 @@ Net-new content merged: audience framing, authority boundary, tone constraint, P
 ---
 
 *Generated: 2026-06-11 | Restructured to governance format: 2026-06-25 | Source: Notion API extraction + Session context*
+
+## Imported Claude Cowork project instructions
