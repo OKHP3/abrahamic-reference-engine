@@ -23,6 +23,26 @@ and current state.
 
 ---
 
+## Project Identity and Purpose
+
+**Confirmed:** This repository contains the Abrahamic Reference Engine, a
+neutral, citation-first reference tool for finding, comparing, and contextualizing
+scripture across Judaism, Christianity, and Islam. It serves a static web app and
+the reusable Markdown skills that support the same reference workflows.
+
+**Inferred mission:** Make religious references easier to locate and compare for
+students, writers, educators, secular readers, believers, and AI builders while
+keeping attribution, scope, and differences visible.
+
+**Inferred vision:** Become a dependable reference layer for cross-tradition
+scripture literacy without becoming a devotional, apologetics, ranking, or
+doctrinal-authority system.
+
+The source tree supports these conclusions. A longer-term roadmap, ownership
+model, and production guarantees are not established by repository evidence.
+
+---
+
 ## Section 0: Language Standard
 
 All content, code comments, commit messages, and documentation in this repo
@@ -52,6 +72,7 @@ The following are the only items allowed at the repo root:
 .agents/           skills, memory, and skill-scoped support files
 .github/           Actions workflows
 public/            static assets (favicon, etc.)
+scripts/           repository-level validation scripts
 src/               application source
 
 .gitattributes
@@ -66,7 +87,6 @@ index.html
 package.json
 package-lock.json
 postcss.config.js
-tailwind.config.ts
 tsconfig.json
 tsconfig.app.json
 tsconfig.node.json
@@ -76,7 +96,8 @@ vite.config.ts
 Anything not on this list is detritus and must be removed or relocated before committing.
 
 **No `docs/` directory.** Reference documents (OpenAPI specs, translation matrix) live inside the skill package that uses them: `.agents/skills/okhp3-verse-lookup/`.
-**No `scripts/` directory.** Post-merge setup is `npm install`. Document it in `replit.md`, not a shell script.
+The root `scripts/` directory is an intentional exception for repository-level
+validation. Do not add scratch scripts there.
 
 ---
 
@@ -84,10 +105,12 @@ Anything not on this list is detritus and must be removed or relocated before co
 
 - No scratch files, transcripts, or one-off scripts at root
 - No loose `.py`, `.json` (except package files), or stray `.md` at root
-- No `docs/` or `scripts/` directories -- these have been intentionally removed
+- No `docs/` directory
+- `scripts/` may contain only intentional, documented validation tooling
 - Agent-generated screenshots go in `attached_assets/` (gitignored)
 - `dist/` is gitignored -- never commit build output
-- Legacy ChatGPT Custom GPT artifacts have been deleted -- do not recreate them
+- The historical origin archive under `public/origin/` is intentional static
+  content. Do not recreate unrelated legacy artifacts at the root.
 
 ---
 
@@ -110,10 +133,10 @@ Anything not on this list is detritus and must be removed or relocated before co
 
 ## Section 5: Tech Stack
 
-- **Runtime:** Vite + React 18 + TypeScript + Tailwind CSS v3
+- **Runtime:** Vite 8 + React 19 + TypeScript 7 + Tailwind CSS 4
 - **Hosting:** GitHub Pages (static SPA) at `https://okhp3.github.io/abrahamic-reference-engine/`
-- **Routing:** React Router v6 with `basename="/abrahamic-reference-engine"` (required for Pages subpath)
-- **Build base path:** `vite.config.ts` has `base: '/abrahamic-reference-engine/'`
+- **Routing:** React Router 7 with `BrowserRouter` and a basename derived from `import.meta.env.BASE_URL`
+- **Build base path:** `vite.config.ts` uses `/` for development and `/abrahamic-reference-engine/` for production builds
 - **APIs (all free, anonymous, no key required):**
   - Sefaria API -- Judaism (Tanakh)
   - bible-api.com -- Christianity (multiple translations)
@@ -125,7 +148,7 @@ Anything not on this list is detritus and must be removed or relocated before co
 
 ## Section 6: Agent Skills
 
-ARE ships three `okhp3-*` skills distributed via https://github.com/OKHP3/skillz.
+ARE ships four project-specific `okhp3-*` skills distributed via https://github.com/OKHP3/skillz.
 Read the SKILL.md before using any skill. They are self-contained and work without the SPA.
 
 | Skill | Path | Purpose |
@@ -133,6 +156,11 @@ Read the SKILL.md before using any skill. They are self-contained and work witho
 | `okhp3-verse-lookup` | `.agents/skills/okhp3-verse-lookup/SKILL.md` | Fetch scripture for all three traditions |
 | `okhp3-tradition-reference` | `.agents/skills/okhp3-tradition-reference/SKILL.md` | Metadata: canon, translations, Pew share, API provider |
 | `okhp3-cross-tradition-compare` | `.agents/skills/okhp3-cross-tradition-compare/SKILL.md` | 20 pre-seeded cross-tradition themes |
+| `okhp3-tradition-observance-calendar` | `.agents/skills/okhp3-tradition-observance-calendar/SKILL.md` | Observance data, Computus, and iCalendar output |
+
+The repository also contains reusable tooling skills: `okhp3-celestial-data`,
+`okhp3-skill-cataloger`, and `okhp3-skill-foundry`. The generated inventory is
+`.agents/skills/README.md`.
 
 ---
 
@@ -140,18 +168,23 @@ Read the SKILL.md before using any skill. They are self-contained and work witho
 
 ```
 src/
-  api/          Sefaria, bible-api.com, Quran.com, Hadith fetch functions
-  components/   Shared UI: TraditionBadge, VerseCard, LoadingSpinner, ErrorMessage, ScopeExplainer, Layout
-  data/         Static data: traditions.ts, knowledge.ts, compareThemes.ts, translations.ts
-  pages/        TraditionBrowser, VerseLookup, CrossTraditionCompare
-  App.tsx       Root component with React Router (BrowserRouter + basename)
-  main.tsx      Entry point
-  index.css     Tailwind directives + custom color tokens
+  api/          Scripture, Hadith, and LDS passage fetch functions
+  components/   Shared UI, navigation, settings, verse, Hadith, and observance components
+  context/      Theme and user-settings providers
+  data/         Static tradition, knowledge, comparison, theme, and translation data
+  hooks/        Client-side usage analytics hook
+  lib/          Calendar clients, observance helpers, celestial math, and iCalendar generation
+  pages/        TraditionBrowser, VerseLookup, CrossTraditionCompare, ObservancesCalendar, OriginArchive
+  App.tsx       Root component with BrowserRouter and route definitions
+  main.tsx      Entry point and provider composition
+  index.css     Tailwind 4 import plus custom color tokens
+  settings.ts   Persisted user-settings schema and defaults
   types/        TypeScript type definitions
 
 .github/
   workflows/
-    deploy-pages.yml    GitHub Actions: build + deploy to GitHub Pages on push to main
+    ci.yml              Build check on pull requests and pushes to main
+    deploy-pages.yml    Build + deploy to GitHub Pages on push to main
 
 .agents/
   skills/
@@ -163,12 +196,50 @@ src/
       SKILL.md
       knowledge/                   Tradition primers, glossary, compare method, API gap register, UI copy, translation metadata (15 files)
     okhp3-cross-tradition-compare/
-    okhp3-notion-capture-router/
+    okhp3-celestial-data/
     okhp3-skill-cataloger/
-    (plus platform skills: find-skills, skill-creator, etc.)
+    okhp3-skill-foundry/
+    okhp3-tradition-observance-calendar/
   memory/
     MEMORY.md
 ```
+
+---
+
+## Section 7a: Commands and Validation
+
+Run `npm install` or `npm ci` after a fresh checkout when `node_modules/` is
+absent. The command inventory is:
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start the Vite dev server on port 5000 |
+| `npm run build` | Type-check and create the production bundle in `dist/` |
+| `npm run preview` | Serve the production bundle locally on port 5000 |
+| `npm run lint` | Intended ESLint check; currently unavailable because ESLint is not declared or configured |
+| `npm run test:api` | Live provider checks in `scripts/test-api-live.js`; use when changing API adapters |
+
+The GitHub Actions workflows run `npm ci` and `npm run build`. The repository
+currently has no unit-test suite. Live API checks require network access and
+are provider-dependent.
+
+---
+
+## Section 7b: Current Status and Architecture Boundaries
+
+Confirmed from the source tree and route definitions:
+
+- This is one Git repository containing a static SPA and a reusable skills package. No nested independent application was found.
+- The primary user workflows are browsing five Christian denominations across three tradition families, looking up passages, comparing 20 themes, and reviewing a year-selectable observance calendar with `.ics` downloads.
+- The hidden `/origin` route exposes a historical project archive from `public/origin/`; it is not a primary research workflow.
+- The browser calls public, anonymous providers directly. There is no backend, database, server-side rendering, or authentication layer.
+- `src/api/` owns passage and Hadith retrieval. `src/lib/` owns calendar integrations, local calendar math, Wikipedia descriptions, and `.ics` generation. Static content belongs in `src/data/` or the relevant skill package.
+- GitHub Pages deployment copies `dist/index.html` to `dist/404.html` for SPA fallback routing.
+
+Known gaps and risks:
+
+- `npm run lint` is declared but has no installed or configured ESLint dependency.
+- Provider availability, translation coverage, and calendar results can change independently of the repository. Record confirmed provider gaps in `.agents/skills/okhp3-tradition-reference/knowledge/reserve-02-api-gap-register.md`.
 
 ---
 

@@ -30,19 +30,20 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 
 - Exit 0 = all primary providers (Sefaria, bible-api.com, Quran.com) are healthy
 - Exit 1 = one or more primary providers failed -- output includes the failing test IDs and error details
-- Non-blocking warnings are printed for AlQuran.cloud, Hadith CDN, `drc` translation, and Pickthall (id=21) -- these represent known API gaps and do not affect exit code
+- Non-blocking warnings are printed for AlQuran.cloud and Hadith CDN checks -- these represent known provider gaps and do not affect exit code
 
 Run this before releasing any change that touches `src/api/`.
 
 ---
 
-## Current State (as of 2026-06-25)
+## Current State (repository audit: 2026-07-13)
 
-- SPA complete -- all four modes working
+- SPA complete -- four primary modes are implemented
 - TraditionBrowser: browse Judaism, Christianity (5 denominations), Islam with verse cards and Pew explainer
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
+- OriginArchive: hidden historical archive route backed by static content in `public/origin/`
 - Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar
 - GitHub Pages deploy workflow in place (.github/workflows/deploy-pages.yml)
 - Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on `command`)
@@ -105,7 +106,7 @@ Reference sources: [Node.js releases](https://nodejs.org/en/about/previous-relea
 | `@vitejs/plugin-react` | 6.0.3 | 6.0.3 | Current. |
 | Tailwind CSS | 4.3.2 | 4.3.2 | Current. CSS-first theme configuration is in `src/index.css`. |
 | PostCSS | 8.5.19 | 8.5.19 | Current. |
-| `@tailwindcss/postcss` | Not previously installed | 4.3.2 | Required Tailwind 4 PostCSS integration. |
+| `@tailwindcss/postcss` | 4.3.2 | 4.3.2 | Required Tailwind 4 PostCSS integration. |
 | `@types/react` | 19.2.17 | 19.2.17 | Current. |
 | `@types/react-dom` | 19.2.3 | 19.2.3 | Current. |
 | GitHub Actions | checkout v7; setup-node v6; configure-pages v6; upload-pages-artifact v5; deploy-pages v5 | Same major tags are current in the workflow | Dependabot tracks action updates separately. |
@@ -143,13 +144,12 @@ Dependabot.
 
 ### Audit findings
 
-- `npm run build` passes with the current lockfile.
+- The previous dependency audit recorded `npm run build` passing with the lockfile. A fresh checkout without `node_modules/` cannot run it until dependencies are installed.
 - `npm run lint` is declared but cannot run because ESLint is not installed or
   configured. It is not included in CI until that script is repaired.
-- The repository contains a Python origin generator and a live-test script even
-  though the current governance text says no scripts directory and the SPA has
-  no Python runtime dependency. Those are documented findings, not silently
-  removed files.
+- The repository contains a Python origin generator in the static historical
+  archive and a root live-test script. The Python file is not part of the SPA
+  runtime; the root script is intentional validation tooling.
 
 ### Routing
 
@@ -160,6 +160,7 @@ Dependabot.
 | `/lookup` | VerseLookup |
 | `/compare` | CrossTraditionCompare |
 | `/observances` | ObservancesCalendar |
+| `/origin` | OriginArchive (historical archive) |
 | `/*` | Redirects to `/browse` |
 
 ### APIs
@@ -215,15 +216,14 @@ Dependabot.
 - GitHub Pages: deploy workflow exists but Pages must be enabled in GitHub repo settings (Settings > Pages > Source: GitHub Actions) after pushing to main
 - GitHub push of `.github/workflows/` requires a token with `workflow` scope -- add the file via GitHub web UI if token lacks that scope
 - LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes tracked as a follow-up
-- GPT origin artifact bundle not yet imported into repo -- tracked as a follow-up
+- `npm run lint` is declared in `package.json`, but ESLint is not currently declared or configured, so the command cannot run until that tooling is intentionally added.
+- `node_modules/` is not committed; run `npm ci` or `npm install` before local build validation.
 
 ---
 
-## User Preferences
+## Documentation Conventions
 
 - No em dashes -- use -- (double hyphen) always
 - US English throughout
 - No emojis in code or docs
-- Standalone punchy lines -- do not consolidate into paragraphs
 - ROY principle: verbosity must earn its space
-- AutoCAD version is R10 (locked, not negotiable)

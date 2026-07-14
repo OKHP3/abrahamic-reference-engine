@@ -37,7 +37,7 @@ The goal is to make the text easier to find, cite, compare, and understand.
 
 ## What it does
 
-Abrahamic Reference Engine provides three core modes:
+Abrahamic Reference Engine provides four primary workflows:
 
 ### 1. Browse traditions
 
@@ -74,6 +74,15 @@ Comparisons are designed to preserve difference.
 
 This project does **not** flatten traditions into one vague soup of "basically the same thing." Similarities matter. Differences matter. The tiny nuance gremlins are the whole point.
 
+### 4. Review observances
+
+The Observances calendar combines Jewish and Islamic provider data with
+calculated Christian dates. Users can filter events and download individual or
+full-year iCalendar (`.ics`) files.
+
+The `/origin` route is a hidden historical archive of the project's source
+materials. It is not part of the primary research workflow.
+
 ---
 
 ## What this is not
@@ -100,7 +109,7 @@ The repo has two related tracks:
 
 ### Web application
 
-A React + TypeScript single-page application for browsing traditions, looking up passages, and comparing cross-tradition themes.
+A React + TypeScript single-page application for browsing traditions, looking up passages, comparing cross-tradition themes, and reviewing observances.
 
 ### Agent skills
 
@@ -109,6 +118,7 @@ Reusable Markdown skill packages that allow AI agents to use the same reference 
 - `okhp3-verse-lookup` -- fetch scripture for all three traditions
 - `okhp3-tradition-reference` -- metadata for traditions and denominations
 - `okhp3-cross-tradition-compare` -- 20 pre-seeded cross-tradition themes
+- `okhp3-tradition-observance-calendar` -- observance dates and iCalendar output
 
 ---
 
@@ -195,16 +205,22 @@ npm run preview  # preview the production build locally
 src/
   api/          Sefaria, bible-api.com, Quran.com, Hadith fetch functions
   components/   Shared UI components
+  context/      Theme and user-settings providers
   data/         Static data (traditions, compare themes, translations)
-  pages/        TraditionBrowser, VerseLookup, CrossTraditionCompare
-docs/
-  api/          OpenAPI specs for all five external APIs
-  translation-matrix.md
+  lib/          Calendar clients, observance helpers, and iCalendar generation
+  pages/        Browse, lookup, compare, observances, and origin archive routes
+scripts/
+  test-api-live.js  Live provider smoke tests
 .agents/skills/
   okhp3-verse-lookup/
   okhp3-tradition-reference/
   okhp3-cross-tradition-compare/
+  okhp3-tradition-observance-calendar/
 ```
+
+Reference documents and OpenAPI specs live inside the relevant skill package.
+The historical origin materials served by the hidden archive live under
+`public/origin/`.
 
 ---
 
