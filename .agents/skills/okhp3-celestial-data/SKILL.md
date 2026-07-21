@@ -16,11 +16,13 @@ description: >
 license: MIT
 metadata:
   author: Jamie Hill (OverKill Hill P³)
-  version: "1.1.0"
+  version: "1.2.0"
   category: wellness-astrology
   origin: okhp3/abrahamic-reference-engine
   homepage: https://overkillhill.com
   author-github: https://github.com/OKHP3
+  spec-version: "agentskills-1.0"
+  reviewed: "2026-07-21"
 compatibility: Any JavaScript or TypeScript environment. No network access required.
 ---
 
@@ -32,12 +34,32 @@ A self-contained celestial calculation library. All computations run locally usi
 the Julian Day Number system. Accurate to within hours for moon phases -- sufficient
 for display and UX purposes.
 
+## Execution contract
+
+- Input is a JavaScript `Date`; omitted input means the host environment's current
+  date and time. Validate invalid dates before calling the functions.
+- Return the typed structures shown below. Keep ISO dates and booleans machine
+  readable; format labels and symbols only at the display boundary.
+- Use the bundled reference implementation and run the Mercury date validator
+  after changing ephemeris windows. Do not substitute current dates from model
+  memory when the task needs an exact retrograde window.
+- State the approximation limits: moon phase is approximate, zodiac seasons use
+  display boundaries, and Mercury windows are maintained reference data rather
+  than a live astronomical ephemeris.
+- This skill is informational and cultural. It does not establish medical,
+  financial, or other consequential advice.
+
+The complete implementation lives in `references/celestial.ts`; read that file
+when copying or adapting the functions rather than reconstructing the algorithm
+from the summary types below.
+
 ## Validation scripts
 
 Two scripts ship with this skill for maintaining data integrity:
 
 - `scripts/validate-mercury-dates.cjs` -- validates the `MERCURY_RETROGRADE` array for ordering, overlaps, and large gaps. Run after any date update.
-- `scripts/validate-easter.js` -- in the `okhp3-tradition-observance-calendar` skill -- validates the Computus algorithm against known good Easter dates.
+- The `okhp3-tradition-observance-calendar` skill includes its own Easter
+  validator for the shared Computus workflow.
 
 Run:
 ```bash

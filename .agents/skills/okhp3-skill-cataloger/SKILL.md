@@ -1,37 +1,45 @@
 ---
 name: okhp3-skill-cataloger
 description: >
-  OverKill Hill P³ skill cataloger. Discover, index, and catalog all Agent Skills
-  in a repository's .agents/skills/ directory by scanning each SKILL.md file and
-  generating a structured, maintained README.md that serves as a living table of
-  contents for the skill ecosystem. Use when asked to catalog, list, inventory,
-  or update skills; regenerate the skills readme or catalog; show what skills are
-  installed; check skill versions; validate naming conventions; or refresh the
-  skills list. Also activates on "what skills does this project have",
-  "is the skills catalog current", or "run the skill cataloger".
-  Use the full index mode when asked to catalog the distribution surface, index all
-  available skills, rebuild README.md, run a full catalog, run a full index, index
-  all skills in this repo, or show all skills available for distribution. Also
-  generates a FAMILY.md inside each family directory with an auto-sourced summary
-  and skill inventory; use --no-family-md to skip. Also generates a FAMILY.md
-  inside each family directory with an auto-sourced summary and skill inventory;
-  use --no-family-md to skip. On first FAMILY.md creation, absorbs and deletes
-  any existing README.md in that family directory (use --no-absorb-readme to
-  skip). Also auto-updates the Families table in root README.md when
-  FAMILIES_TABLE_START/END markers are present.
+  Discover and catalog Agent Skills under .agents/skills/ by scanning SKILL.md
+  frontmatter and generating a maintained README index. Use when asked to list,
+  inventory, validate, version-check, or refresh skills. Use --full only for a
+  distribution surface: it can generate FAMILY.md files and absorb family
+  README.md files; use --no-absorb-readme to prevent that deletion. Also use
+  the bundled dependency-free Node checker when Python is unavailable.
 license: MIT
 metadata:
   author: Jamie Hill (OverKill Hill P³)
-  version: "1.4.0"
+  version: "1.5.0"
   category: universal
   origin: okhp3/skillz
   homepage: https://overkillhill.com
   author-github: https://github.com/OKHP3
+  spec-version: "agentskills-1.0"
+  reviewed: "2026-07-21"
+compatibility: Python 3.9+ for the catalog generator. Node.js 18+ runs the dependency-free conformance checker.
 ---
 
 # okhp3-skill-cataloger
 
 **OverKill Hill P³** · [overkillhill.com](https://overkillhill.com) · [github.com/OKHP3](https://github.com/OKHP3)
+
+## Safety and operating contract
+
+- Confirm the target repository and skills root before scanning. A catalog run
+  must not include unrelated directories or secrets in generated output.
+- Run `--check` to validate without writing, then `--dry-run` to preview the
+  exact catalog change. Only write after reviewing the preview.
+- Treat `--full` as a distribution-repository operation. It can create
+  `FAMILY.md` files and, unless `--no-absorb-readme` is supplied, remove a family
+  `README.md` after absorbing it. Use that behavior only when explicitly asked.
+- For clients without Python, run
+  `node scripts/validate-skills.mjs` from this skill directory or
+  `node .agents/skills/okhp3-skill-cataloger/scripts/validate-skills.mjs` from
+  the repository root. It checks Agent Skills frontmatter, naming, limits, and
+  referenced files without changing anything.
+- Report the number of discovered skills, validation result, files changed, and
+  any warnings. Never claim that a catalog is current if the generator failed.
 
 `okhp3-skill-cataloger` is an OverKill Hill P³–branded Agent Skill designed to
 automatically discover, index, and catalog all Agent Skills contained within a

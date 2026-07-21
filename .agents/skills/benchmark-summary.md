@@ -1,10 +1,15 @@
 # ARE Skills Benchmark Summary
 
 **Suite:** OverKill Hill P3 / FoundRy
-**Date:** 2026-06-26
-**Skills evaluated:** 5 (all okhp3-* skills, version 1.1.0)
-**Method:** ALL 30 runs (3 evals x 2 configs x 5 skills) via live delegation subagent executor + main-agent grader.
+**Date:** 2026-06-26 baseline
+**Skills evaluated:** 6 (historical v1.1.0 baseline, plus okhp3-skill-foundry v1.0.0)
+**Not benchmarked:** okhp3-skill-cataloger (now has deterministic conformance checks; add live trigger and execution evals before claiming a benchmark score)
+**Method:** ALL 36 runs (3 evals x 2 configs x 6 benchmarked skills) via live delegation subagent executor + main-agent grader.
 **No analytical stubs remain.**
+
+This file records historical evidence for the prior skill versions. The
+2026-07-21 v1.2.0/v1.5.0 edits in the skill directories require a fresh live
+rerun before their benchmark scores are treated as current.
 
 ---
 
@@ -17,7 +22,8 @@
 | okhp3-tradition-observance-calendar | 0.92 | 0.25 | +0.67 |
 | okhp3-tradition-reference | 1.00 | 0.33 | +0.67 |
 | okhp3-verse-lookup | 0.92 | 0.33 | +0.58 |
-| **GRAND AVERAGE** | **0.97** | **0.30** | **+0.67** |
+| okhp3-skill-foundry | 1.00 | 0.42 | +0.58 |
+| **GRAND AVERAGE (6 benchmarked skills)** | **0.97** | **0.32** | **+0.65** |
 
 ---
 
