@@ -110,6 +110,6 @@
     "All 3 evals: LIVE delegation subagent runs",
     "Eval 2 without_skill: provided WRONG Mercury retrograde dates (June 29 vs ARE's July 17 start) -- safety-critical error for a wellness tracker",
     "Eval 3 without_skill: used literal '⭐' as emoji field, not zodiac symbol -- developer asked for 'a star emoji' and LLM answered literally",
-    "workspace: .agents/skills/okhp3-celestial-data/workspace/iteration-1/"
+    "workspace: .agents/skills/okhp3-celestial-data/workspace/i1/"
   ]
 }

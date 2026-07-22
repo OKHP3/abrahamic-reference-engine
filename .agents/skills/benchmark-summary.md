@@ -153,13 +153,13 @@ One code fix applied during evals:
 
 ```
 .agents/skills/<skill>/benchmarks/benchmark.json      -- per-skill results (all 3 evals live)
-.agents/skills/<skill>-workspace/iteration-1/         -- executor workspaces
-  eval-<N>/with_skill/outputs/response.md             -- executor response
-  eval-<N>/with_skill/outputs/metrics.json            -- tool call counts
-  eval-<N>/with_skill/grading.json                    -- per-expectation pass/fail + evidence
-  eval-<N>/without_skill/outputs/response.md          -- executor response
-  eval-<N>/without_skill/outputs/metrics.json         -- tool call counts
-  eval-<N>/without_skill/grading.json                 -- per-expectation pass/fail + evidence
+.agents/skills/<skill>-workspace/i1/         -- executor workspaces
+  eval-<N>/skill/out/response.md             -- executor response
+  eval-<N>/skill/out/metrics.json            -- tool call counts
+  eval-<N>/skill/grading.json                    -- per-expectation pass/fail + evidence
+  eval-<N>/no-skill/out/response.md          -- executor response
+  eval-<N>/no-skill/out/metrics.json         -- tool call counts
+  eval-<N>/no-skill/grading.json                 -- per-expectation pass/fail + evidence
 .agents/skills/benchmark-summary.md                   -- this file
 ```
 

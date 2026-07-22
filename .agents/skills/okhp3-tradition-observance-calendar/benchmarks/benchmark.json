@@ -111,6 +111,6 @@
     "Eval 1 with_skill 0.75: Promise.allSettled gap found -- executor used Promise.all. WARNING box added to skill.",
     "Eval 1 without_skill 0.0: recommended Calendarific (PAID) -- highest-consequence failure in all 15 without-skill evals",
     "Eval 2 without_skill 0.5: Easter dates correct from training data but no Computus function code",
-    "workspace: .agents/skills/okhp3-tradition-observance-calendar/workspace/iteration-1/"
+    "workspace: .agents/skills/okhp3-tradition-observance-calendar/workspace/i1/"
   ]
 }

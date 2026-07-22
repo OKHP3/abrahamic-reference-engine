@@ -111,6 +111,6 @@
     "Eval 1 without_skill 0.75: LLM has good general interfaith sensitivity -- real differentiator is pre-seeded passage IDs",
     "Eval 2 without_skill 0.0: LLM INVERTED the proportional rule -- said equal distribution when ARE requires proportional (Pew-based)",
     "Eval 3 without_skill: Christianity=purple-700 (ARE=violet-950), no bridging note, no staticText -- all ARE-specific gaps",
-    "workspace: .agents/skills/okhp3-cross-tradition-compare/workspace/iteration-1/"
+    "workspace: .agents/skills/okhp3-cross-tradition-compare/workspace/i1/"
   ]
 }

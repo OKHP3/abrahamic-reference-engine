@@ -131,7 +131,7 @@ Written per skill: `<skill>/benchmarks/benchmark.json`
   "notes": [
     "All 3 evals: LIVE delegation subagent runs",
     "Eval N: <specific finding or consequence>",
-    "workspace: .agents/skills/<name>-workspace/iteration-1/"
+    "workspace: .agents/skills/<name>-workspace/i1/"
   ]
 }
 ```

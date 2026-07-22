@@ -202,6 +202,7 @@ src/
     okhp3-tradition-observance-calendar/
   memory/
     MEMORY.md
+    threads/                  persistent thread-context extracts and routing index
 ```
 
 ---

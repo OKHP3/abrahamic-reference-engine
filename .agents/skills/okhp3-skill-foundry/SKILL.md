@@ -164,8 +164,8 @@ You are an AI coding assistant. Answer a developer question using a specialized 
 INSTRUCTIONS:
 1. Read the skill file at: <skill-path>/SKILL.md
 2. Use the knowledge from that skill to answer the question below
-3. Write your complete response to: <workspace>/eval-<N>/with_skill/outputs/response.md
-4. Write execution metrics to: <workspace>/eval-<N>/with_skill/outputs/metrics.json
+3. Write your complete response to: <workspace>/eval-<N>/skill/out/response.md
+4. Write execution metrics to: <workspace>/eval-<N>/skill/out/metrics.json
 
 USER QUESTION:
 <eval prompt>
@@ -178,8 +178,8 @@ Do NOT read any skill files or SKILL.md files.
 
 INSTRUCTIONS:
 1. Answer the question below from your training knowledge only
-2. Write your complete response to: <workspace>/eval-<N>/without_skill/outputs/response.md
-3. Write execution metrics to: <workspace>/eval-<N>/without_skill/outputs/metrics.json
+2. Write your complete response to: <workspace>/eval-<N>/no-skill/out/response.md
+3. Write execution metrics to: <workspace>/eval-<N>/no-skill/out/metrics.json
 
 USER QUESTION:
 <eval prompt>
@@ -189,13 +189,13 @@ Use `startAsyncSubagent` for all 6 runs. Follow with a single `wait_for_backgrou
 
 Workspace layout:
 ```
-<skill-name>-workspace/iteration-1/
-  eval-1/with_skill/outputs/response.md
-  eval-1/with_skill/outputs/metrics.json
-  eval-1/with_skill/grading.json
-  eval-1/without_skill/outputs/response.md
-  eval-1/without_skill/outputs/metrics.json
-  eval-1/without_skill/grading.json
+<skill-name>-ws/i1/
+  eval-1/skill/out/response.md
+  eval-1/skill/out/metrics.json
+  eval-1/skill/grading.json
+  eval-1/no-skill/out/response.md
+  eval-1/no-skill/out/metrics.json
+  eval-1/no-skill/grading.json
 ```
 
 ---
