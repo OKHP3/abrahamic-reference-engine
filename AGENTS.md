@@ -70,6 +70,7 @@ The following are the only items allowed at the repo root:
 
 ```
 .agents/           skills, memory, and skill-scoped support files
+context/           preserved project thread-context extracts
 .github/           Actions workflows
 public/            static assets (favicon, etc.)
 scripts/           repository-level validation scripts
@@ -203,6 +204,9 @@ src/
   memory/
     MEMORY.md
     threads/                  persistent thread-context extracts and routing index
+
+context/
+  threads/                    preserved project thread-context extracts
 ```
 
 ---
