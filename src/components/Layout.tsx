@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import ModeNav from './ModeNav'
+import AppFooter from './AppFooter'
 import { usePageTracking } from '../hooks/usePageTracking'
 
 export default function Layout() {
@@ -28,6 +29,7 @@ export default function Layout() {
         <main className="flex-1 px-4 py-6 sm:px-6 md:px-8 w-full max-w-4xl">
           <Outlet />
         </main>
+        <AppFooter />
       </div>
     </div>
   )
