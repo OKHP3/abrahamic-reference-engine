@@ -24,7 +24,7 @@
     "repository": "OKHP3/skillz",
     "family": "universal",
     "package_path": "universal/okhp3-vite-github-pages",
-    "accepted_commit_or_hash": null,
+    "accepted_commit_or_hash": "217186408a7a4e32570a08bcd4c56bc768ca5965",
     "pull_request_url": "https://github.com/OKHP3/skillz/pull/38"
   },
   "inventory": [
@@ -39,7 +39,7 @@
       "Keep v1.0.0 in skillz — rejected; v1.0.0 contains project-specific references to 'Kieran's LifeTrkr' and '/kierans-lifetrkr/' that make it unusable as a generic skill."
     ],
     "unresolved_items": [
-      "PR #38 must be reviewed and merged in OKHP3/skillz before canonical_target.accepted_commit_or_hash can be recorded."
+      "PR #38 merged 2026-08-04; accepted_commit_or_hash recorded."
     ]
   },
   "safety": {
