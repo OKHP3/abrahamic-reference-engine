@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "skill": {
+    "name": "okhp3-vite-github-pages",
+    "version": "1.1.0",
+    "maturity": "promotion-ready",
+    "evidence_status": "analytical"
+  },
+  "source": {
+    "repository": "OKHP3/abrahamic-reference-engine",
+    "package_path": ".agents/skills/okhp3-vite-github-pages",
+    "selected_as_canonical_incubator": true,
+    "selection_reason": "Local .agents/skills/ copy is v1.1.0 with project-specific references removed (kierans-lifetrkr). Skillz distribution carried v1.0.0 with hard-coded project context (wrong project name and base path). ARE v1.1.0 is the corrected, generic upstream."
+  },
+  "mirrors": [
+    {
+      "path": "skills/okhp3-vite-github-pages",
+      "role": "publication-mirror",
+      "authorized": true,
+      "aggregate_sha256": "9ea0a607137e3174b17155246135a1b491732c56ff8c763b503f2540ea2c9abf"
+    }
+  ],
+  "canonical_target": {
+    "repository": "OKHP3/skillz",
+    "family": "universal",
+    "package_path": "universal/okhp3-vite-github-pages",
+    "accepted_commit_or_hash": null,
+    "pull_request_url": "https://github.com/OKHP3/skillz/pull/38"
+  },
+  "inventory": [
+    {
+      "file": "SKILL.md",
+      "sha256": "9ea0a607137e3174b17155246135a1b491732c56ff8c763b503f2540ea2c9abf"
+    }
+  ],
+  "decision": {
+    "status": "promotion-ready",
+    "alternatives_considered": [
+      "Keep v1.0.0 in skillz — rejected; v1.0.0 contains project-specific references to 'Kieran's LifeTrkr' and '/kierans-lifetrkr/' that make it unusable as a generic skill."
+    ],
+    "unresolved_items": [
+      "PR #38 must be reviewed and merged in OKHP3/skillz before canonical_target.accepted_commit_or_hash can be recorded."
+    ]
+  },
+  "safety": {
+    "license": "MIT",
+    "public_safety": "reviewed-clean",
+    "private_material_found": false,
+    "external_writes": "none-declared",
+    "adapter_differences": []
+  },
+  "authorization": {
+    "requested_actions": ["create-local-mirror", "record-provenance", "open-pull-request"],
+    "approved_actions": ["create-local-mirror", "record-provenance", "open-pull-request"],
+    "withheld_actions": ["merge", "direct-push-to-main"]
+  },
+  "verification": {
+    "checks": [
+      {
+        "name": "mirror-hash-equality",
+        "result": "pass",
+        "evidence": "analytical",
+        "detail": "SHA-256 of skills/okhp3-vite-github-pages/SKILL.md matches .agents/skills/okhp3-vite-github-pages/SKILL.md: 9ea0a607137e3174b17155246135a1b491732c56ff8c763b503f2540ea2c9abf"
+      },
+      {
+        "name": "no-private-material",
+        "result": "pass",
+        "evidence": "analytical",
+        "detail": "Skill contains no credentials, tokens, internal URLs, or PII. All project-specific references (kierans-lifetrkr) were removed in v1.1.0."
+      }
+    ],
+    "review_record": null,
+    "verified_at": "2026-08-04",
+    "limitations": [
+      "Live deployment smoke-test not run — requires an actual Vite/GitHub Pages deployment to verify end-to-end."
+    ]
+  },
+  "recovery": {
+    "path": "PR #38 on OKHP3/skillz can be closed without merging. The skills/ mirror and this manifest can be reverted via git. No files were deleted.",
+    "pre_sync_git_status_recorded": true
+  }
+}
