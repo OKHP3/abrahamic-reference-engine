@@ -23,7 +23,7 @@ Use this focused runbook to keep the Abrahamic Reference Engine compatible with 
 
 | In scope | Out of scope |
 | --- | --- |
-| `vite.config.ts`, `.github/workflows/static.yml`, production base paths, `HashRouter`, build artifacts, Pages permissions/artifacts, environment wiring, and deployment diagnosis | Servers, databases, backend proxies, `gh-pages` branches, the legacy `npm run deploy`, secret creation, commits, pushes, and unrelated application changes |
+| `vite.config.ts`, `.github/workflows/deploy-pages.yml`, production base paths, `BrowserRouter`, build artifacts, Pages permissions/artifacts, environment wiring, and deployment diagnosis | Servers, databases, backend proxies, `gh-pages` branches, the legacy `npm run deploy`, secret creation, commits, pushes, and unrelated application changes |
 
 ## Project contract
 
@@ -38,7 +38,7 @@ Treat these current facts as constraints, then re-read the files if the task may
 
 ### 1. Plan
 
-Read `AGENTS.md`, `vite.config.ts`, `.github/workflows/static.yml`, `package.json`, `src/App.tsx`, and the relevant recent diff. Check `git status --short`. Classify the request as configuration, workflow, artifact, or diagnosis before editing. Do not change deployment settings merely because a validation command succeeds.
+Read `AGENTS.md`, `vite.config.ts`, `.github/workflows/deploy-pages.yml`, `package.json`, `src/App.tsx`, and the relevant recent diff. Check `git status --short`. Classify the request as configuration, workflow, artifact, or diagnosis before editing. Do not change deployment settings merely because a validation command succeeds.
 
 ### 2. Validate the source of truth
 
@@ -60,7 +60,7 @@ Summarize changed files, verified local results, expected Actions behavior, requ
 
 - A wrong production `base` causes asset 404s under the repository subpath; do not “fix” this by changing the router to `BrowserRouter`.
 - A successful Vite build does not prove Pages permissions, secrets, CORS, or deployed behavior are healthy.
-- `VITE_GOOGLE_CLIENT_ID` is passed at build time; never print or hard-code secret values.
+- If environment variables are ever added to the Vite build, pass them via GitHub Actions secrets and never print or hard-code their values.
 - Preserve `npm ci` and the checked-in lockfile. Do not switch to pnpm or `npm install` as a workaround.
 - Do not claim `dist/404.html` exists from a local build unless the copy step was actually run; it is created by the workflow.
 
