@@ -14,6 +14,7 @@ interface Skill {
   githubUrl: string
   appRoute?: string
   appRouteLabel?: string
+  local?: boolean
 }
 
 // ── Data ───────────────────────────────────────────────────────────────────
