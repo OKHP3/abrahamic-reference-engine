@@ -135,6 +135,20 @@ export function getMercuryStatus(
   date: Date = new Date(),
 ): { retrograde: boolean; endDate: string | null } {
   const iso = date.toISOString().split('T')[0]
+
+  // Warn when the queried date is within 60 days of the last covered date,
+  // so callers notice before coverage silently runs out.
+  const lastEnd = MERCURY_RETROGRADE[MERCURY_RETROGRADE.length - 1].end
+  const msUntilLastEnd = new Date(lastEnd).getTime() - date.getTime()
+  const daysUntilLastEnd = msUntilLastEnd / 86_400_000
+  if (daysUntilLastEnd >= 0 && daysUntilLastEnd <= 60) {
+    console.warn(
+      `[getMercuryStatus] Mercury retrograde coverage expires in ` +
+      `${Math.round(daysUntilLastEnd)} day(s) (last entry ends ${lastEnd}). ` +
+      `Update MERCURY_RETROGRADE with the next year of ephemeris data.`
+    )
+  }
+
   const period = MERCURY_RETROGRADE.find(r => iso >= r.start && iso <= r.end)
   return { retrograde: !!period, endDate: period?.end ?? null }
 }

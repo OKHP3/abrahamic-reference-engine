@@ -31,3 +31,6 @@ jobs:
 
       - name: Check skill sync
         run: npm run test:skill-sync
+
+      - name: Check Mercury retrograde coverage
+        run: npm run test:mercury-dates
