@@ -464,6 +464,31 @@ function TraditionGrid() {
         </p>
       </div>
 
+      {/* Mobile-only Skill Library shortcut — surfaces the link before the tradition grid
+          so it is visible without scrolling on small screens (hidden on sm+ where the
+          full card below the grid is reachable). */}
+      <Link
+        to="/skills"
+        className="sm:hidden flex items-center gap-3 mb-6 px-3 py-2.5 border border-border-subtle rounded-lg bg-bg-elevated hover:border-gold hover:bg-bg-active transition-all duration-200 no-underline group"
+        aria-label="Open Skill Library"
+      >
+        <span className="text-lg flex-shrink-0" aria-hidden="true">🧰</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-sans font-semibold text-parchment group-hover:text-gold transition-colors">
+            Skill Library
+          </p>
+          <p className="text-2xs font-sans text-muted leading-tight">
+            How this app fetches scripture &amp; calendar data
+          </p>
+        </div>
+        <svg
+          className="flex-shrink-0 text-muted group-hover:text-gold transition-colors"
+          width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+        >
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </Link>
+
       {TRADITION_GROUPS.map(group => (
         <section key={group.family} className="mb-8" aria-label={`${group.label} denominations`}>
           <div className="flex items-baseline gap-3 mb-4">
