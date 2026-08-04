@@ -4,7 +4,7 @@ description: "OverKill Hill P³ Vite-to-GitHub-Pages deployment runbook. Use whe
 license: MIT
 metadata:
   author: Jamie Hill (OverKill Hill P³)
-  version: "1.0.0"
+  version: "1.1.0"
   category: deployment
   origin: okhp3/skillz
   homepage: https://overkillhill.com
