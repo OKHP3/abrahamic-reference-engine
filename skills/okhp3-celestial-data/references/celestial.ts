@@ -89,7 +89,7 @@ export function getAstroSeason(date: Date = new Date()): AstroSeason {
   return found ?? ASTRO_SEASONS[0]
 }
 
-// ─── Mercury Retrograde (hardcoded 2026-2031) ─────────────────────────────────
+// ─── Mercury Retrograde (hardcoded 2026-2032) ─────────────────────────────────
 // Sources:
 //   2026-2028 -- published ephemeris (original data set).
 //   2029-2031 -- verified against NASA JPL Horizons (geocentric apparent RA,
@@ -98,6 +98,10 @@ export function getAstroSeason(date: Date = new Date()): AstroSeason {
 //                Entries within 1 day of prior projected values were kept;
 //                5 date fields differing by 2 days were corrected:
 //                2029-01 end, 2029-05 start, 2030-12 end, 2031-11 start+end.
+//   2032      -- NASA JPL Horizons (geocentric apparent RA, daily step
+//                2032-01-01 to 2032-12-31, station dates from sign changes
+//                in daily RA motion; queried 2026-08-04).
+//                3 retrograde periods: Mar, Jul, Nov.
 // Update this array annually. Note: 2029-12-22 entry straddles the year boundary
 //   (JPL SD 2030-01-12, kept as 2030-01-11 within 1-day tolerance) --
 //   ISO string comparison handles this correctly.
@@ -122,6 +126,9 @@ export const MERCURY_RETROGRADE = [
   { start: '2031-03-26', end: '2031-04-18' },
   { start: '2031-07-29', end: '2031-08-22' },
   { start: '2031-11-21', end: '2031-12-11' }, // start+end corrected +2d vs prior
+  { start: '2032-03-08', end: '2032-03-30' }, // JPL Horizons station dates: SR 2032-03-08, SD 2032-03-30
+  { start: '2032-07-10', end: '2032-08-04' }, // JPL Horizons station dates: SR 2032-07-10, SD 2032-08-04
+  { start: '2032-11-04', end: '2032-11-23' }, // JPL Horizons station dates: SR 2032-11-04, SD 2032-11-23
 ]
 
 export function getMercuryStatus(
