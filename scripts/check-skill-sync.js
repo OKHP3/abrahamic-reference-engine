@@ -63,11 +63,26 @@ for (const skillName of mirrorEntries) {
 // contains non-publication skills (platform-provided, upstream-only, etc.) that
 // are not expected to have a skills/ mirror.
 const MANIFESTS_DIR = join(MIRRORS_DIR, 'promotion-manifests');
-const manifestedSkills = existsSync(MANIFESTS_DIR)
-  ? readdirSync(MANIFESTS_DIR)
-      .filter((f) => f.endsWith('.json'))
-      .map((f) => f.replace(/\.json$/, ''))
-  : [];
+
+if (!existsSync(MANIFESTS_DIR)) {
+  console.error(
+    `ERROR    ${MANIFESTS_DIR}  does not exist — cannot run reverse pass.\n` +
+      '         Create the directory and add at least one promotion manifest (.json) before running this check.'
+  );
+  process.exit(1);
+}
+
+const manifestedSkills = readdirSync(MANIFESTS_DIR)
+  .filter((f) => f.endsWith('.json'))
+  .map((f) => f.replace(/\.json$/, ''));
+
+if (manifestedSkills.length === 0) {
+  console.error(
+    `WARNING  ${MANIFESTS_DIR}  exists but contains no .json files — reverse pass skipped.\n` +
+      '         Add at least one promotion manifest so the reverse pass can verify mirror coverage.'
+  );
+  process.exit(1);
+}
 
 for (const skillName of manifestedSkills) {
   const canonicalPath = join(CANONICAL_DIR, skillName, 'SKILL.md');
