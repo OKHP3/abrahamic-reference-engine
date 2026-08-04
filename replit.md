@@ -23,6 +23,7 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 | `npm run preview` | Preview the production build locally |
 | `npm install` | Run after task-agent merges or pulling fresh |
 | `npm run test:api` | Run live API tests against all providers -- exit 0 = healthy |
+| `npm run test:skill-sync` | Verify skills/ mirrors match .agents/skills/ canonical copies -- exit 0 = in sync |
 
 ### Live API tests
 
@@ -222,6 +223,21 @@ Dependabot.
 - LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes tracked as a follow-up
 - `npm run lint` is declared in `package.json`, but ESLint is not currently declared or configured, so the command cannot run until that tooling is intentionally added.
 - `node_modules/` is not committed; run `npm ci` or `npm install` before local build validation.
+
+---
+
+## Skill Directory Sync Rule
+
+Agent skills live in two parallel directories:
+
+| Directory | Role |
+|-----------|------|
+| `.agents/skills/<name>/SKILL.md` | Canonical copy -- what agents load at runtime |
+| `skills/<name>/SKILL.md` | Publication mirror -- what gets promoted to OKHP3/skillz |
+
+**Both files must be identical.** When you update a skill in either location, copy the change to the other location in the same commit. Run `npm run test:skill-sync` before pushing; CI catches drift by comparing every mirrored skill pair and exits non-zero if any pair differs.
+
+Skills that are local-only (e.g. `.agents/skills/frontend-design/`) have no mirror in `skills/` and are not checked.
 
 ---
 
