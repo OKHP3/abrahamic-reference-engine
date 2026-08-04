@@ -43,8 +43,11 @@ Run this before releasing any change that touches `src/api/`.
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
-- OriginArchive: hidden historical archive route backed by static content in `public/origin/`
-- Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar
+- SkillsGallery: in-app catalog of all 14 .agents/skills, accessible at /skills via sidebar "Skill library" link
+- OriginArchive: hidden historical archive route backed by static content in `public/origin/` (easter egg -- no nav link in ModeNav)
+- Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar, okhp3-celestial-data
+- SkillsGallery page at /skills: in-app catalog of all 14 skills with descriptions, IN/OUT scope, category badges, GitHub links
+- Google Analytics 4 integrated: gtag snippet in index.html, usePageTracking hook fires page_view per route change
 - GitHub Pages deploy workflow in place (.github/workflows/deploy-pages.yml)
 - Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on `command`)
 - React Router basename driven by `import.meta.env.BASE_URL` -- empty in dev, `/abrahamic-reference-engine` in prod
@@ -160,7 +163,8 @@ Dependabot.
 | `/lookup` | VerseLookup |
 | `/compare` | CrossTraditionCompare |
 | `/observances` | ObservancesCalendar |
-| `/origin` | OriginArchive (historical archive) |
+| `/skills` | SkillsGallery (agent skills catalog) |
+| `/origin` | OriginArchive (historical archive, easter egg) |
 | `/*` | Redirects to `/browse` |
 
 ### APIs

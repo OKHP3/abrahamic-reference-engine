@@ -6,6 +6,7 @@ import SettingsPanel, { GearIcon } from './SettingsPanel'
 
 interface ModeNavProps {
   onMenuClick: () => void
+  sidebarOpen?: boolean
 }
 
 const MODES = [
@@ -54,7 +55,7 @@ const THEME_META = {
   dark:   { icon: <MoonIcon />,   label: 'Dark',   next: 'System' },
 } as const
 
-export default function ModeNav({ onMenuClick }: ModeNavProps) {
+export default function ModeNav({ onMenuClick, sidebarOpen = false }: ModeNavProps) {
   const { mode, cycle } = useTheme()
   const { settings } = useSettings()
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -69,7 +70,7 @@ export default function ModeNav({ onMenuClick }: ModeNavProps) {
           className="md:hidden flex-shrink-0 px-4 text-muted hover:text-parchment transition-colors border-r border-border-subtle"
           onClick={onMenuClick}
           aria-label="Open navigation"
-          aria-expanded={false}
+          aria-expanded={sidebarOpen}
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
             <path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>

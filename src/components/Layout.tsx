@@ -24,7 +24,7 @@ export default function Layout() {
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
       <div className="flex flex-col flex-1 min-w-0 md:ml-72">
-        <ModeNav onMenuClick={openSidebar} />
+        <ModeNav onMenuClick={openSidebar} sidebarOpen={sidebarOpen} />
         <main className="flex-1 px-4 py-6 sm:px-6 md:px-8 w-full max-w-4xl">
           <Outlet />
         </main>

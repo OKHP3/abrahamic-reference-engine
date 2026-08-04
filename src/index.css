@@ -40,6 +40,7 @@
 
 @layer base {
   :root {
+    color-scheme: dark;
     --gold: #c9a84c;
     --gold-light: #e0c878;
     --gold-dark: #a07830;
@@ -57,6 +58,7 @@
   }
 
   :root.light {
+    color-scheme: light;
     --gold: #8a5c0a;
     --gold-light: #b07820;
     --gold-dark: #5a3a00;
@@ -80,6 +82,30 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 
   body {

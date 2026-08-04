@@ -1,0 +1,44 @@
+# ARE Light -- Light Mode Variant Profile
+# Part of the Abrahamic Reference Engine Brand Style Registry
+
+id: are-light
+name: "ARE Light"
+version: "1.0.0"
+source: "src/index.css :root.light block"
+provenance: confirmed
+confidence: high
+
+concept: "Parchment reading"
+metaphor: >
+  Warm paper under natural light. The cream-white base evokes aged parchment;
+  deep amber-gold accents provide contrast without harsh black; warm ink text
+  mirrors handwritten manuscript letterforms.
+
+palette:
+  primary:
+    gold:       "#8a5c0a"
+    gold_light: "#b07820"
+    gold_dark:  "#5a3a00"
+    gold_muted: "#b88e28"
+
+  surfaces:
+    bg_base:     "#f5efe0"
+    bg_elevated: "#fdf8ee"
+    bg_hover:    "#ede3cc"
+    bg_active:   "#e4d4a0"
+
+  text:
+    parchment: "#1a0e00"   # Deep warm near-black (primary text in light mode)
+    ink:       "#3a2810"
+    dimmed:    "#5a4830"
+    muted:     "#7a6040"
+
+  borders:
+    border_subtle: "#d8cba8"
+    border_mid:    "#c4b488"
+
+notes: >
+  The light profile inverts text/background roles from are-dark.
+  "parchment" becomes the primary text color (dark warm brown) rather than
+  a light text color. Gold shifts to a warmer amber to maintain contrast
+  on light surfaces.

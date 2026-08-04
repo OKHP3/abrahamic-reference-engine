@@ -113,15 +113,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="text-2xs font-sans font-bold tracking-widest uppercase text-gold mb-2">
             Agent Skills
           </div>
-          <a
-            href="https://github.com/OKHP3/skillz/tree/main/abrahamic"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-2xs font-sans text-muted hover:text-gold transition-colors duration-150 no-underline block leading-relaxed"
-            aria-label="ARE Agent Skills on GitHub (opens in new tab)"
+          <NavLink
+            to="/skills"
+            onClick={onClose}
+            className={({ isActive }) =>
+              `text-2xs font-sans transition-colors duration-150 no-underline block leading-relaxed ${isActive ? 'text-gold' : 'text-muted hover:text-gold'}`
+            }
           >
-            🧰 ARE skills on GitHub &rarr;
-          </a>
+            🧰 Skill library &rarr;
+          </NavLink>
           <NavLink
             to="/origin"
             onClick={onClose}

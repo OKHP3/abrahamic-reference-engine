@@ -5,6 +5,7 @@ import VerseLookup from './pages/VerseLookup'
 import CrossTraditionCompare from './pages/CrossTraditionCompare'
 import ObservancesCalendar from './pages/ObservancesCalendar'
 import OriginArchive from './pages/OriginArchive'
+import SkillsGallery from './pages/SkillsGallery'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="lookup" element={<VerseLookup />} />
           <Route path="compare" element={<CrossTraditionCompare />} />
           <Route path="observances" element={<ObservancesCalendar />} />
+          <Route path="skills" element={<SkillsGallery />} />
           <Route path="origin" element={<OriginArchive />} />
           <Route path="*" element={<Navigate to="/browse" replace />} />
         </Route>

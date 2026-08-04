@@ -1,0 +1,87 @@
+# ARE Dark -- Primary Brand Profile
+# Part of the Abrahamic Reference Engine Brand Style Registry
+
+id: are-dark
+name: "ARE Dark (default)"
+version: "1.0.0"
+source: "src/index.css :root block + TraditionBadge color tokens"
+provenance: confirmed
+confidence: high
+
+# ── Design concept ──────────────────────────────────────────────────────────
+concept: "Scholarly manuscript"
+metaphor: >
+  Aged stone tablet surfaces under candlelight. The near-black base evokes
+  archaeological darkness; gold accents recall gilded illuminated manuscripts;
+  parchment text sits at comfortable reading contrast without cold white brightness.
+
+# ── Color tokens ─────────────────────────────────────────────────────────────
+palette:
+  primary:
+    gold:       "#c9a84c"   # Headings, active states, links, accents
+    gold_light: "#e0c878"   # Hover states on gold elements
+    gold_dark:  "#a07830"   # Pressed/deep gold
+    gold_muted: "#7a6030"   # Subtle gold borders, metadata labels
+
+  surfaces:
+    bg_base:     "#0f0f0f"  # Page background (near-black)
+    bg_elevated: "#1a1a1a"  # Cards, panels, sidebar
+    bg_hover:    "#252525"  # Row and item hover
+    bg_active:   "#2a2010"  # Active/selected item (warm dark amber)
+
+  text:
+    parchment: "#e8e0d0"    # Primary body text (warm off-white)
+    ink:       "#cccccc"    # Secondary text
+    dimmed:    "#aaaaaa"    # Tertiary/supporting text
+    muted:     "#666666"    # Placeholder, metadata
+
+  borders:
+    border_subtle: "#2a2a2a"  # Default card borders
+    border_mid:    "#383838"  # Hover/active card borders
+
+  tradition_accents:
+    judaism:      "blue-*"    # Tailwind blue family
+    christianity: "violet-*"  # Tailwind violet family
+    islam:        "emerald-*" # Tailwind emerald family
+
+# ── Typography ────────────────────────────────────────────────────────────────
+typography:
+  serif:      "Georgia, Cambria, 'Times New Roman', serif"
+  sans:       "system-ui, -apple-system, sans-serif"
+  mono:       "ui-monospace, Menlo, Monaco, monospace"
+
+  scale:
+    "2xs": "10px / 1.4"
+    xs:    "11px / 1.5"
+    sm:    "13px / 1.5"
+    base:  "15px / 1.75"
+    lg:    "18px / 1.6"
+    xl:    "22px / 1.4"
+    "2xl": "28px / 1.3"
+    "3xl": "36px / 1.2"
+
+  roles:
+    page_heading:    "font-serif, text-2xl, text-parchment"
+    section_heading: "font-sans, text-xs, font-bold, tracking-widest, uppercase, text-gold"
+    body:            "font-serif, text-base, text-parchment"
+    label:           "font-sans, text-xs, text-dimmed"
+    micro:           "font-sans, text-2xs, text-muted"
+
+# ── UI patterns ───────────────────────────────────────────────────────────────
+ui:
+  card:
+    background: bg_elevated
+    border:     border_subtle
+    radius:     "rounded-lg"
+    padding:    "p-5"
+
+  section_rule:
+    element:    "1px horizontal line"
+    color:      gold (60% opacity)
+    width:      "2rem (w-8)"
+
+  nav_active:
+    text:       gold
+    border:     "2px bottom border, gold"
+
+  sidebar_width: "18rem (w-72)"

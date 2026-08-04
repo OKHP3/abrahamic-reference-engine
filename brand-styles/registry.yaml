@@ -1,0 +1,28 @@
+# Abrahamic Reference Engine -- Brand Style Registry
+# Managed by okhp3-brand-style-registry skill
+# Do not edit profiles inline; update the profile YAML files and regenerate.
+
+version: "1.0.0"
+last_updated: "2026-08-03"
+maintainer: "Jamie Hill (OverKill Hill P³)"
+
+profiles:
+  - id: are-dark
+    name: "ARE Dark (default)"
+    version: "1.0.0"
+    file: profiles/are-dark.yaml
+    status: active
+    description: >
+      The primary dark-mode visual identity of the Abrahamic Reference Engine.
+      Scholarly, quiet, and authoritative. Deep near-black backgrounds, gold accents,
+      and parchment text evoking aged manuscript and stone tablet surfaces.
+
+  - id: are-light
+    name: "ARE Light"
+    version: "1.0.0"
+    file: profiles/are-light.yaml
+    status: active
+    description: >
+      The light-mode variant. Inverts the base/text relationship while
+      preserving the gold accent system. Off-white parchment fields,
+      warm ink text, and muted gold borders.
