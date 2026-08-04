@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom'
 import { fetchPassage, fetchNephiPassage, isLdsBibleRef, LdsApiUnavailableError } from '../api'
 import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
+import { ORTHODOX_GAP_BOOKS_DATA } from '../data/orthodoxGapTexts'
 import { getContextualThemes, isContextualMatch } from '../data/themeMapping'
 import VerseCard from '../components/VerseCard'
 import HadithCard from '../components/HadithCard'
@@ -16,13 +17,13 @@ import type { Passage, Hadith, TraditionFamily, ApiStatus, HadithCollection } fr
 
 type ChristianDenomination = 'catholic' | 'protestant' | 'lds' | 'orthodox' | null
 
-interface OrthodoxGapBook {
+interface OrthodoxGapMeta {
   name: string
   description: string
   searchUrl: string
 }
 
-const ORTHODOX_GAP_BOOKS: Record<string, OrthodoxGapBook> = {
+const ORTHODOX_GAP_BOOKS: Record<string, OrthodoxGapMeta> = {
   '3maccabees': {
     name: '3 Maccabees',
     description:
@@ -43,18 +44,91 @@ const ORTHODOX_GAP_BOOKS: Record<string, OrthodoxGapBook> = {
   },
 }
 
-function detectOrthodoxGap(ref: string): OrthodoxGapBook | null {
+function detectOrthodoxGapKey(ref: string): string | null {
   const lower = ref.toLowerCase().trim()
-  if (lower.startsWith('3 macc') || lower.startsWith('iii macc') || lower.startsWith('3macc')) {
-    return ORTHODOX_GAP_BOOKS['3maccabees']
-  }
-  if (lower.startsWith('4 macc') || lower.startsWith('iv macc') || lower.startsWith('4macc')) {
-    return ORTHODOX_GAP_BOOKS['4maccabees']
-  }
-  if (/^psalms?\s+151\b/.test(lower)) {
-    return ORTHODOX_GAP_BOOKS['psalm151']
-  }
+  if (lower.startsWith('3 macc') || lower.startsWith('iii macc') || lower.startsWith('3macc')) return '3maccabees'
+  if (lower.startsWith('4 macc') || lower.startsWith('iv macc') || lower.startsWith('4macc')) return '4maccabees'
+  if (/^psalms?\s+151\b/.test(lower)) return 'psalm151'
   return null
+}
+
+/** Parse chapter / verse position from a gap-book reference string. */
+function parseGapRef(
+  ref: string,
+  bookKey: string,
+): { chapter: number; verseStart: number | null; verseEnd: number | null } | null {
+  const lower = ref.toLowerCase().trim()
+  let rest = lower
+  if (bookKey === '3maccabees')
+    rest = lower.replace(/^(3\s?macc(abees?)?|iii\s?macc(abees?)?)/, '').trim()
+  else if (bookKey === '4maccabees')
+    rest = lower.replace(/^(4\s?macc(abees?)?|iv\s?macc(abees?)?)/, '').trim()
+  else if (bookKey === 'psalm151')
+    rest = lower.replace(/^psalms?\s+151/, '').trim()
+
+  if (!rest) return { chapter: 1, verseStart: null, verseEnd: null }
+
+  // Psalm 151 has only one chapter — "Psalm 151:1" leaves ":5" after stripping the book
+  // name. Normalise leading-colon forms to "1:<verse>" so the regex below matches.
+  if (rest.startsWith(':')) rest = '1' + rest
+
+  const chVerse = rest.match(/^(\d+):(\d+)(?:-(\d+))?$/)
+  if (chVerse) {
+    return {
+      chapter: parseInt(chVerse[1], 10),
+      verseStart: parseInt(chVerse[2], 10),
+      verseEnd: chVerse[3] ? parseInt(chVerse[3], 10) : null,
+    }
+  }
+  const chOnly = rest.match(/^(\d+)$/)
+  if (chOnly) return { chapter: parseInt(chOnly[1], 10), verseStart: null, verseEnd: null }
+  return null
+}
+
+/** Look up a passage from the bundled static gap-text dataset. */
+function lookupGapPassage(ref: string, bookKey: string): Passage | null {
+  const bookData = ORTHODOX_GAP_BOOKS_DATA[bookKey]
+  if (!bookData) return null
+  const parsed = parseGapRef(ref, bookKey)
+  if (!parsed) return null
+  const chapterData = bookData.verses[parsed.chapter]
+  if (!chapterData) return null
+
+  let primaryText: string
+  let displayRef: string
+
+  if (parsed.verseStart !== null) {
+    const end = parsed.verseEnd ?? parsed.verseStart
+    const texts: string[] = []
+    for (let v = parsed.verseStart; v <= end; v++) {
+      const t = chapterData[v]
+      if (t) texts.push(t)
+    }
+    if (texts.length === 0) return null
+    primaryText = texts.join(' ')
+    displayRef = parsed.verseEnd
+      ? `${bookData.name} ${parsed.chapter}:${parsed.verseStart}-${parsed.verseEnd}`
+      : `${bookData.name} ${parsed.chapter}:${parsed.verseStart}`
+  } else {
+    // Whole chapter — join with verse numbers
+    const entries = Object.entries(chapterData)
+      .map(([v, t]) => [parseInt(v, 10), t] as [number, string])
+      .sort(([a], [b]) => a - b)
+    if (entries.length === 0) return null
+    primaryText = entries.map(([v, t]) => `[${v}] ${t}`).join(' ')
+    displayRef = `${bookData.name} ${parsed.chapter}`
+  }
+
+  return {
+    reference: displayRef,
+    displayReference: displayRef,
+    tradition: 'christianity',
+    primaryText,
+    translationId: `orthodox-static-${bookKey}`,
+    translationName: bookData.translationName,
+    sourceUrl: `https://www.biblegateway.com/passage/?search=${encodeURIComponent(displayRef)}&version=NRSV`,
+    attribution: bookData.attribution,
+  }
 }
 
 const TRADITION_EXAMPLES: Record<TraditionFamily, Array<{ label: string; ref: string }>> = {
@@ -154,7 +228,7 @@ export default function VerseLookup() {
   const [passage, setPassage] = useState<Passage | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLdsFallback, setIsLdsFallback] = useState(false)
-  const [canonGapBook, setCanonGapBook] = useState<OrthodoxGapBook | null>(null)
+  const [canonGapBook, setCanonGapBook] = useState<OrthodoxGapMeta | null>(null)
   const [hadiths, setHadiths] = useState<Hadith[]>([])
   const [hadithStatus, setHadithStatus] = useState<ApiStatus>('idle')
   const [hadithIndex, setHadithIndex] = useState(0)
@@ -203,9 +277,26 @@ export default function VerseLookup() {
     ) => {
       if (!ref.trim()) return
       if (denom === 'orthodox') {
-        const gap = detectOrthodoxGap(ref)
-        if (gap) {
-          setCanonGapBook(gap)
+        const gapKey = detectOrthodoxGapKey(ref)
+        if (gapKey) {
+          const staticPassage = lookupGapPassage(ref, gapKey)
+          if (staticPassage) {
+            // Serve the bundled static text — no API call needed
+            setPassage(staticPassage)
+            setStatus('success')
+            setFetchedRef(ref.trim())
+            setFetchedTradition(trad)
+            setError(null)
+            setIsLdsFallback(false)
+            setCanonGapBook(null)
+            setHadiths([])
+            setHadithStatus('idle')
+            setHadithIndex(0)
+            setHadithError(null)
+            return
+          }
+          // Ref is just a book name — prompt user to specify chapter:verse
+          setCanonGapBook(ORTHODOX_GAP_BOOKS[gapKey])
           setStatus('error')
           setPassage(null)
           setError(null)
@@ -462,8 +553,8 @@ export default function VerseLookup() {
                 {denomination === 'orthodox' && (
                   <p className="text-2xs text-muted mt-2">
                     Eastern and Oriental Orthodox -- uses the Septuagint-based canon (76-78 books).
-                    Most books work normally; 3 Maccabees, 4 Maccabees, and Psalm 151 are not yet
-                    covered by the connected API.
+                    Most books work normally; 3 Maccabees, 4 Maccabees, and Psalm 151 are served
+                    from a bundled static dataset (enter e.g. <span className="font-mono">3 Maccabees 1:1</span>).
                   </p>
                 )}
               </fieldset>
@@ -581,15 +672,16 @@ export default function VerseLookup() {
       {status === 'error' && canonGapBook && (
         <div className="mb-6 p-5 border border-violet-800 rounded-lg bg-bg-elevated">
           <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-violet-400 mb-1">
-            Orthodox Canon -- Coverage Gap
+            Orthodox Canon -- Specify a Reference
           </h3>
           <p className="text-base font-serif text-parchment mb-2">{canonGapBook.name}</p>
           <p className="text-sm text-ink leading-relaxed mb-3">
             {canonGapBook.description}
           </p>
           <p className="text-sm text-ink leading-relaxed mb-4">
-            This text is part of the Orthodox canon but is not yet available through the
-            connected API (bible-api.com WEB). Coverage may be added in a future update.
+            This text is available as a bundled static dataset. Enter a chapter and verse to
+            read it -- for example:{' '}
+            <span className="font-mono text-parchment">{canonGapBook.name} 1:1</span>.
           </p>
           <a
             href={canonGapBook.searchUrl}
