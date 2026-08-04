@@ -495,6 +495,11 @@ function TraditionGrid() {
                 <p className="text-xs font-sans text-muted leading-relaxed line-clamp-2">
                   {d.canonScope}
                 </p>
+                {d.id === 'christianity-orthodox' && (
+                  <span className="inline-block mt-2 text-2xs font-sans font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-900 text-emerald-300 border border-emerald-700">
+                    Full coverage
+                  </span>
+                )}
               </Link>
             ))}
           </div>
