@@ -27,16 +27,18 @@
     "accepted_commit_or_hash": null
   },
   "inventory": [
-    { "file": "SKILL.md", "sha256": "41f6866fb823934bd79ac7bade5332cbbff75f406fbcfae9003fb0f9b2ede95f" }
+    {
+      "file": "SKILL.md",
+      "sha256": "41f6866fb823934bd79ac7bade5332cbbff75f406fbcfae9003fb0f9b2ede95f"
+    }
   ],
   "decision": {
-    "status": "drift",
-    "drift_direction": "canonical-ahead",
-    "drift_note": "OKHP3/skillz carries v1.2.0 (reviewed 2026-07-21) with full API coverage, LDS routing, attribution rules, and translation matrix. Local .agents/skills/ draft is unversioned and contains only the foundational routing table. Mirror and canonical are byte-identical; local source is not. No overwrite of the canonical version is warranted.",
+    "status": "canonical",
     "alternatives_considered": [
       "Overwrite skills/ mirror from local .agents/skills/ — rejected; local is the older draft, canonical is ahead."
     ],
-    "unresolved_items": []
+    "unresolved_items": [],
+    "sync_note": "Local .agents/skills/ copy upgraded to match canonical mirror in skills/ (task #73). All files are now byte-identical."
   },
   "safety": {
     "license": "MIT",
@@ -46,9 +48,20 @@
     "adapter_differences": []
   },
   "authorization": {
-    "requested_actions": ["create-local-mirror", "record-provenance"],
-    "approved_actions": ["create-local-mirror", "record-provenance"],
-    "withheld_actions": ["commit", "push", "pull-request", "overwrite-canonical"]
+    "requested_actions": [
+      "create-local-mirror",
+      "record-provenance"
+    ],
+    "approved_actions": [
+      "create-local-mirror",
+      "record-provenance"
+    ],
+    "withheld_actions": [
+      "commit",
+      "push",
+      "pull-request",
+      "overwrite-canonical"
+    ]
   },
   "verification": {
     "checks": [

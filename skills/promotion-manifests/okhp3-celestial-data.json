@@ -27,19 +27,21 @@
     "accepted_commit_or_hash": null
   },
   "inventory": [
-    { "file": "SKILL.md", "sha256": "dc99ad2257870356c97e26b97a72ee928813e26c4a2f0788da9bc7dc18a77fae" }
+    {
+      "file": "SKILL.md",
+      "sha256": "dc99ad2257870356c97e26b97a72ee928813e26c4a2f0788da9bc7dc18a77fae"
+    }
   ],
   "decision": {
-    "status": "drift",
-    "drift_direction": "canonical-ahead",
-    "drift_note": "OKHP3/skillz carries v1.3.0 with bundled celestial.ts implementation, validation scripts (check-date.cjs, validate-mercury-dates.cjs), evals, benchmarks, and workspace results. The local .agents/skills/ draft has the calculation algorithm descriptions only (no implementation files, no evals). Mirror was absent and was created from the canonical skillz package. This skill belongs to the lifetrkr family in skillz (not abrahamic), reflecting its cross-app utility beyond the ARE.",
+    "status": "canonical",
     "alternatives_considered": [
       "Create mirror from local .agents/skills/ draft — rejected; draft is unversioned and missing bundled implementation and validation scripts. Canonical is authoritative.",
       "Place in abrahamic/ family — rejected; AGENTS.md routes celestial-data to lifetrkr/ family."
     ],
     "unresolved_items": [
       "Local .agents/skills/okhp3-celestial-data/SKILL.md should be updated to match the canonical v1.3.0 version in a future reconciliation pass."
-    ]
+    ],
+    "sync_note": "Local .agents/skills/ copy upgraded to match canonical mirror in skills/ (task #73). All files are now byte-identical."
   },
   "safety": {
     "license": "MIT",
@@ -51,9 +53,20 @@
     ]
   },
   "authorization": {
-    "requested_actions": ["create-local-mirror", "record-provenance"],
-    "approved_actions": ["create-local-mirror", "record-provenance"],
-    "withheld_actions": ["commit", "push", "pull-request", "overwrite-canonical"]
+    "requested_actions": [
+      "create-local-mirror",
+      "record-provenance"
+    ],
+    "approved_actions": [
+      "create-local-mirror",
+      "record-provenance"
+    ],
+    "withheld_actions": [
+      "commit",
+      "push",
+      "pull-request",
+      "overwrite-canonical"
+    ]
   },
   "verification": {
     "checks": [

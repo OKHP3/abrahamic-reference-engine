@@ -27,16 +27,18 @@
     "accepted_commit_or_hash": null
   },
   "inventory": [
-    { "file": "SKILL.md", "sha256": "55b48358bf785b226111a6f76d90e8c3eb6f4a68e17a269b774b8cfb5ade2aaa" }
+    {
+      "file": "SKILL.md",
+      "sha256": "55b48358bf785b226111a6f76d90e8c3eb6f4a68e17a269b774b8cfb5ade2aaa"
+    }
   ],
   "decision": {
-    "status": "drift",
-    "drift_direction": "canonical-ahead",
-    "drift_note": "OKHP3/skillz carries v1.2.0 (reviewed 2026-07-21) with full canon scope tables, per-denomination breakdowns, translation matrix, Pew demographic citations, and API routing detail. Local .agents/skills/ draft covers the high-level metadata fields only. Mirror and canonical are byte-identical; local source is not.",
+    "status": "canonical",
     "alternatives_considered": [
       "Overwrite skills/ mirror from local .agents/skills/ — rejected; local is the older draft."
     ],
-    "unresolved_items": []
+    "unresolved_items": [],
+    "sync_note": "Local .agents/skills/ copy upgraded to match canonical mirror in skills/ (task #73). All files are now byte-identical."
   },
   "safety": {
     "license": "MIT",
@@ -46,9 +48,20 @@
     "adapter_differences": []
   },
   "authorization": {
-    "requested_actions": ["create-local-mirror", "record-provenance"],
-    "approved_actions": ["create-local-mirror", "record-provenance"],
-    "withheld_actions": ["commit", "push", "pull-request", "overwrite-canonical"]
+    "requested_actions": [
+      "create-local-mirror",
+      "record-provenance"
+    ],
+    "approved_actions": [
+      "create-local-mirror",
+      "record-provenance"
+    ],
+    "withheld_actions": [
+      "commit",
+      "push",
+      "pull-request",
+      "overwrite-canonical"
+    ]
   },
   "verification": {
     "checks": [
