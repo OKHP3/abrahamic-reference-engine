@@ -1,1 +1,2 @@
 - [Post-merge setup](post-merge-setup.md) -- script at .local/post-merge.sh, configured via setPostMergeConfig
+- [Git push fallback](git-push-fallback.md) -- gitPush() callback intermittently fails PUSH_REJECTED even on clean fast-forwards; shell push with PAT is reliable
