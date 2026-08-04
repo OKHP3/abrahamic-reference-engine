@@ -499,6 +499,30 @@ function TraditionGrid() {
 
       <ScopeExplainer className="mt-4 mb-6" />
 
+      <Link
+        to="/skills"
+        className="flex items-center justify-between gap-4 mb-6 p-4 border border-border-subtle rounded-lg bg-bg-elevated hover:border-gold hover:bg-bg-active transition-all duration-200 no-underline group"
+        aria-label="Open Skill Library"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-xl flex-shrink-0" aria-hidden="true">🧰</span>
+          <div className="min-w-0">
+            <p className="text-sm font-sans font-semibold text-parchment group-hover:text-gold transition-colors">
+              Skill Library
+            </p>
+            <p className="text-xs font-sans text-muted leading-relaxed">
+              How this app fetches scripture, hadith, and calendar data
+            </p>
+          </div>
+        </div>
+        <svg
+          className="flex-shrink-0 text-muted group-hover:text-gold transition-colors"
+          width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+        >
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </Link>
+
       <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
         <Link
           to="/observances"
