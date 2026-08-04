@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "skill": {
     "name": "okhp3-celestial-data",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "maturity": "canonical",
     "evidence_status": "analytical"
   },
@@ -24,8 +24,9 @@
     "repository": "OKHP3/skillz",
     "family": "lifetrkr",
     "package_path": "lifetrkr/okhp3-celestial-data",
-    "accepted_commit_or_hash": "fbefff368cf5e34d76ac0363e94f7e258dfddcae",
-    "accepted_commit_date": "2026-07-31"
+    "accepted_commit_or_hash": "57b1c5e3523996906010d5ea343891c0de6a241d",
+    "accepted_commit_date": "2026-08-04",
+    "pull_request_url": "https://github.com/OKHP3/skillz/pull/39"
   },
   "inventory": [
     {
@@ -60,12 +61,10 @@
     ],
     "approved_actions": [
       "create-local-mirror",
-      "record-provenance"
+      "record-provenance",
+      "pull-request"
     ],
     "withheld_actions": [
-      "commit",
-      "push",
-      "pull-request",
       "overwrite-canonical"
     ]
   },
@@ -86,7 +85,7 @@
     ],
     "review_record": null,
     "re_verified_at": "2026-08-04",
-    "re_verification_note": "git blob SHA comparison: local .agents/skills/okhp3-celestial-data/SKILL.md == lifetrkr/okhp3-celestial-data/SKILL.md in OKHP3/skillz (both 6527920d2a55252c8675b5228a1f39af9041fb40). Note: references/celestial.ts was updated in this repo (Mercury date corrections + 2032 extension) but SKILL.md was not modified, so SKILL.md equality holds. The references/ file is ARE-local only and is not tracked in skillz.",
+    "re_verification_note": "git blob SHA comparison 2026-08-04: SKILL.md matches (both 6527920d2a55252c8675b5228a1f39af9041fb40). Previously detected drift in references/celestial.ts, validate-mercury-dates.cjs, and check-date.cjs resolved via PR #39 (merged 2026-08-04, squash commit 57b1c5e3523996906010d5ea343891c0de6a241d). skillz now carries JPL-verified Mercury dates (2029-2031) and 2032 coverage.",
     "verified_at": "2026-08-04",
     "limitations": [
       "Mirror was absent prior to this promotion pass; no prior authorization history exists in this repository.",
