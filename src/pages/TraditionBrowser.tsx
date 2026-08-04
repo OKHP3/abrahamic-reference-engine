@@ -463,12 +463,20 @@ function TraditionDetail({ slug }: { slug: string }) {
         >
           Population data: {denomination.pewCitation.source}, {denomination.pewCitation.year} &rarr;
         </a>
-        <Link
-          to="/compare"
-          className="text-xs font-sans text-gold hover:text-gold-light transition-colors no-underline"
-        >
-          See cross-tradition comparisons &rarr;
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/skills"
+            className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
+          >
+            Skill Library &rarr;
+          </Link>
+          <Link
+            to="/compare"
+            className="text-xs font-sans text-gold hover:text-gold-light transition-colors no-underline"
+          >
+            See cross-tradition comparisons &rarr;
+          </Link>
+        </div>
       </div>
     </article>
   )
