@@ -80,6 +80,8 @@
       }
     ],
     "review_record": null,
+    "re_verified_at": "2026-08-04",
+    "re_verification_note": "git blob SHA comparison: local .agents/skills/okhp3-cross-tradition-compare/SKILL.md == abrahamic/okhp3-cross-tradition-compare/SKILL.md in OKHP3/skillz (both 3ab3fba05438d7708395b3a751cb2d034bb614ce). No drift.",
     "verified_at": "2026-08-04",
     "limitations": [
       "Mirror equality proves current equality only; it does not reconstruct prior promotion authorization history."

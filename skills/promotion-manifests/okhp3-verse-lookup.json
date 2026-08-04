@@ -80,6 +80,8 @@
       }
     ],
     "review_record": null,
+    "re_verified_at": "2026-08-04",
+    "re_verification_note": "git blob SHA comparison: local .agents/skills/okhp3-verse-lookup/SKILL.md == abrahamic/okhp3-verse-lookup/SKILL.md in OKHP3/skillz (both 58b1a0c961c35482c191704feaa9b78a8e884160). No drift.",
     "verified_at": "2026-08-04",
     "limitations": [
       "Aggregate hash covers SKILL.md only; full package files (api/, references/, evals/, tests/) are present in the mirror but not individually hashed in this manifest.",
