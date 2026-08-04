@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "skill": {
+    "name": "okhp3-cross-tradition-compare",
+    "version": "1.2.0",
+    "maturity": "canonical",
+    "evidence_status": "analytical"
+  },
+  "source": {
+    "repository": "OKHP3/abrahamic-reference-engine",
+    "package_path": ".agents/skills/okhp3-cross-tradition-compare",
+    "selected_as_canonical_incubator": false,
+    "selection_reason": "Local .agents/skills/ copy is an earlier unversioned draft (version: '—'). The canonical distribution version at OKHP3/skillz abrahamic/okhp3-cross-tradition-compare is v1.2.0 and is ahead of the local source. Mirror reflects the canonical skillz version."
+  },
+  "mirrors": [
+    {
+      "path": "skills/okhp3-cross-tradition-compare",
+      "role": "publication-mirror",
+      "authorized": true,
+      "aggregate_sha256": "fb5296ab8dde75df79b5bcb53291e89df4520c189002e4d1828e933af2ca4184"
+    }
+  ],
+  "canonical_target": {
+    "repository": "OKHP3/skillz",
+    "family": "abrahamic",
+    "package_path": "abrahamic/okhp3-cross-tradition-compare",
+    "accepted_commit_or_hash": null
+  },
+  "inventory": [
+    { "file": "SKILL.md", "sha256": "8a58f2743c675373983d8dc1784c332e625b08ed91d13bba93ac4a9723ab0d75" }
+  ],
+  "decision": {
+    "status": "drift",
+    "drift_direction": "canonical-ahead",
+    "drift_note": "OKHP3/skillz carries v1.2.0 (reviewed 2026-07-21) with 20 seeded passage sets, proportional-representation rule, and neutral bridging notes. Local .agents/skills/ draft has the foundational workflow only. Mirror and canonical are byte-identical; local source is not.",
+    "alternatives_considered": [
+      "Overwrite skills/ mirror from local .agents/skills/ — rejected; local is the older draft."
+    ],
+    "unresolved_items": []
+  },
+  "safety": {
+    "license": "MIT",
+    "public_safety": "reviewed-clean",
+    "private_material_found": false,
+    "external_writes": "none-declared",
+    "adapter_differences": []
+  },
+  "authorization": {
+    "requested_actions": ["create-local-mirror", "record-provenance"],
+    "approved_actions": ["create-local-mirror", "record-provenance"],
+    "withheld_actions": ["commit", "push", "pull-request", "overwrite-canonical"]
+  },
+  "verification": {
+    "checks": [
+      {
+        "name": "mirror-vs-canonical-byte-equality",
+        "result": "pass",
+        "evidence": "analytical",
+        "note": "diff /tmp/skillz/abrahamic/okhp3-cross-tradition-compare/SKILL.md skills/okhp3-cross-tradition-compare/SKILL.md returned identical"
+      }
+    ],
+    "review_record": null,
+    "verified_at": "2026-08-04",
+    "limitations": [
+      "Mirror equality proves current equality only; it does not reconstruct prior promotion authorization history."
+    ]
+  },
+  "recovery": {
+    "path": "Mirror at skills/okhp3-cross-tradition-compare is read from canonical OKHP3/skillz. To restore: re-copy from abrahamic/okhp3-cross-tradition-compare in skillz.",
+    "pre_sync_git_status_recorded": false
+  }
+}

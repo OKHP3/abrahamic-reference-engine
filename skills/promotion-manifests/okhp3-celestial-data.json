@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "skill": {
+    "name": "okhp3-celestial-data",
+    "version": "1.3.0",
+    "maturity": "canonical",
+    "evidence_status": "analytical"
+  },
+  "source": {
+    "repository": "OKHP3/abrahamic-reference-engine",
+    "package_path": ".agents/skills/okhp3-celestial-data",
+    "selected_as_canonical_incubator": false,
+    "selection_reason": "Local .agents/skills/ copy is an earlier unversioned draft (version: '—', origin: okhp3/skillz). The canonical distribution version at OKHP3/skillz lifetrkr/okhp3-celestial-data is v1.3.0 and is ahead of the local source. Mirror was created from the canonical skillz version (reverse-sync from canonical to local mirror, authorized by task-level instruction)."
+  },
+  "mirrors": [
+    {
+      "path": "skills/okhp3-celestial-data",
+      "role": "publication-mirror",
+      "authorized": true,
+      "aggregate_sha256": "e5882b2382aeb46d64f9555522b94e4bc92ccd963cd95b68159faa163e78d4ef"
+    }
+  ],
+  "canonical_target": {
+    "repository": "OKHP3/skillz",
+    "family": "lifetrkr",
+    "package_path": "lifetrkr/okhp3-celestial-data",
+    "accepted_commit_or_hash": null
+  },
+  "inventory": [
+    { "file": "SKILL.md", "sha256": "dc99ad2257870356c97e26b97a72ee928813e26c4a2f0788da9bc7dc18a77fae" }
+  ],
+  "decision": {
+    "status": "drift",
+    "drift_direction": "canonical-ahead",
+    "drift_note": "OKHP3/skillz carries v1.3.0 with bundled celestial.ts implementation, validation scripts (check-date.cjs, validate-mercury-dates.cjs), evals, benchmarks, and workspace results. The local .agents/skills/ draft has the calculation algorithm descriptions only (no implementation files, no evals). Mirror was absent and was created from the canonical skillz package. This skill belongs to the lifetrkr family in skillz (not abrahamic), reflecting its cross-app utility beyond the ARE.",
+    "alternatives_considered": [
+      "Create mirror from local .agents/skills/ draft — rejected; draft is unversioned and missing bundled implementation and validation scripts. Canonical is authoritative.",
+      "Place in abrahamic/ family — rejected; AGENTS.md routes celestial-data to lifetrkr/ family."
+    ],
+    "unresolved_items": [
+      "Local .agents/skills/okhp3-celestial-data/SKILL.md should be updated to match the canonical v1.3.0 version in a future reconciliation pass."
+    ]
+  },
+  "safety": {
+    "license": "MIT",
+    "public_safety": "reviewed-clean",
+    "private_material_found": false,
+    "external_writes": "none-declared",
+    "adapter_differences": [
+      "Local .agents/skills/ draft references okhp3/skillz as origin (not this ARE repo), confirming celestial-data was authored in skillz and incubated here as a simplified probe copy."
+    ]
+  },
+  "authorization": {
+    "requested_actions": ["create-local-mirror", "record-provenance"],
+    "approved_actions": ["create-local-mirror", "record-provenance"],
+    "withheld_actions": ["commit", "push", "pull-request", "overwrite-canonical"]
+  },
+  "verification": {
+    "checks": [
+      {
+        "name": "mirror-vs-canonical-byte-equality",
+        "result": "pass",
+        "evidence": "analytical",
+        "note": "sha256sum /tmp/skillz/lifetrkr/okhp3-celestial-data/SKILL.md skills/okhp3-celestial-data/SKILL.md both returned dc99ad2257870356c97e26b97a72ee928813e26c4a2f0788da9bc7dc18a77fae"
+      }
+    ],
+    "review_record": null,
+    "verified_at": "2026-08-04",
+    "limitations": [
+      "Mirror was absent prior to this promotion pass; no prior authorization history exists in this repository.",
+      "Aggregate hash covers the full package including workspace/ eval results. SKILL.md hash individually confirmed above."
+    ]
+  },
+  "recovery": {
+    "path": "Mirror at skills/okhp3-celestial-data was created from canonical OKHP3/skillz lifetrkr/okhp3-celestial-data. To restore: re-copy from that path. Do not overwrite skillz with the local .agents/skills/ draft.",
+    "pre_sync_git_status_recorded": false
+  }
+}
