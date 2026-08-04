@@ -24,7 +24,8 @@
     "repository": "OKHP3/skillz",
     "family": "lifetrkr",
     "package_path": "lifetrkr/okhp3-celestial-data",
-    "accepted_commit_or_hash": null
+    "accepted_commit_or_hash": "fbefff368cf5e34d76ac0363e94f7e258dfddcae",
+    "accepted_commit_date": "2026-07-31"
   },
   "inventory": [
     {
@@ -75,6 +76,12 @@
         "result": "pass",
         "evidence": "analytical",
         "note": "sha256sum /tmp/skillz/lifetrkr/okhp3-celestial-data/SKILL.md skills/okhp3-celestial-data/SKILL.md both returned dc99ad2257870356c97e26b97a72ee928813e26c4a2f0788da9bc7dc18a77fae"
+      },
+      {
+        "name": "skillz-commit-lookup",
+        "result": "pass",
+        "evidence": "live-api",
+        "note": "GitHub API repos/OKHP3/skillz/commits?path=<package_path>&per_page=1 returned commit fbefff368cf5e34d76ac0363e94f7e258dfddcae dated 2026-07-31. All five skills share this commit (promoted in a single batch)."
       }
     ],
     "review_record": null,
