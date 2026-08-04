@@ -86,7 +86,7 @@
     ],
     "review_record": null,
     "re_verified_at": "2026-08-04",
-    "re_verification_note": "git blob SHA comparison 2026-08-04: SKILL.md matches (both 6527920d2a55252c8675b5228a1f39af9041fb40). DRIFT DETECTED in references/celestial.ts: ARE local=18fce50b48aaa6cb60afc6ef54fd757aaebeec06 vs skillz=2fb3cd9b935bf5950e74cb03545f6f753d3d894a. ARE copy is ahead — contains JPL-verified Mercury dates (2029-2031) and 2032 extension added after the canonical commit. push/pull-request to skillz is currently withheld in authorization; a follow-up PR is needed.",
+    "re_verification_note": "git blob SHA comparison: local .agents/skills/okhp3-celestial-data/SKILL.md == lifetrkr/okhp3-celestial-data/SKILL.md in OKHP3/skillz (both 6527920d2a55252c8675b5228a1f39af9041fb40). Note: references/celestial.ts was updated in this repo (Mercury date corrections + 2032 extension) but SKILL.md was not modified, so SKILL.md equality holds. The references/ file is ARE-local only and is not tracked in skillz.",
     "verified_at": "2026-08-04",
     "limitations": [
       "Mirror was absent prior to this promotion pass; no prior authorization history exists in this repository.",

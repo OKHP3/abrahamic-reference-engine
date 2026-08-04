@@ -28,3 +28,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Check skill sync
+        run: npm run test:skill-sync
