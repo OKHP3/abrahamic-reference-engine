@@ -254,6 +254,18 @@ await run('T-AQ-03', 'Al-Fatiha 1:1 Shakir (en.shakir, migrated from Quran.com I
   assert(lc.includes('merciful') || lc.includes('mercy') || lc.includes('beneficent'), `Missing mercy/beneficent: "${json.data.text?.slice(0, 120)}"`)
 })
 
+// Pickthall (AlQuran.cloud en.pickthall -- ARE translation quran-21 primary is Quran.com/19; en.pickthall is the AlQuran.cloud fallback)
+await run('T-AQ-04', '2:255 Pickthall (en.pickthall, AlQuran.cloud fallback)', false, async () => {
+  const json = await getJson('https://api.alquran.cloud/v1/ayah/2:255/en.pickthall')
+  assert(json.code === 200, `Expected code 200, got ${json.code}`)
+  assert(json.data, 'json.data is missing')
+  const edition = json.data.edition?.identifier
+  assert(edition === 'en.pickthall', `Expected edition en.pickthall, got "${edition}"`)
+  const lc = normalize(json.data.text || '')
+  assert(lc.includes('allah') || lc.includes('god'), `Missing "Allah"/"God": "${json.data.text?.slice(0, 120)}"`)
+  assert(lc.includes('throne') || lc.includes('kursi') || lc.includes('eternal') || lc.includes('alive'), `Missing expected words: "${json.data.text?.slice(0, 120)}"`)
+})
+
 // ---------------------------------------------------------------------------
 // Section 5 -- Hadith API (non-blocking)
 // Note: per-hadith URL format (/{number}.json) returns 404 on jsDelivr as of 2026-06-25.
