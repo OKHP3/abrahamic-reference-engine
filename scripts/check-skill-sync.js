@@ -58,6 +58,30 @@ for (const skillName of mirrorEntries) {
   checked++;
 }
 
+// Reverse pass: canonicals that have a promotion manifest but no mirror.
+// We intentionally scope this to manifested skills only — .agents/skills/ also
+// contains non-publication skills (platform-provided, upstream-only, etc.) that
+// are not expected to have a skills/ mirror.
+const MANIFESTS_DIR = join(MIRRORS_DIR, 'promotion-manifests');
+const manifestedSkills = existsSync(MANIFESTS_DIR)
+  ? readdirSync(MANIFESTS_DIR)
+      .filter((f) => f.endsWith('.json'))
+      .map((f) => f.replace(/\.json$/, ''))
+  : [];
+
+for (const skillName of manifestedSkills) {
+  const canonicalPath = join(CANONICAL_DIR, skillName, 'SKILL.md');
+  const mirrorPath = join(MIRRORS_DIR, skillName, 'SKILL.md');
+
+  if (!existsSync(canonicalPath)) continue; // canonical absent — not our problem here
+  if (existsSync(mirrorPath)) continue;     // already covered (and passing) in forward pass
+
+  console.error(
+    `MISSING  ${mirrorPath}  (canonical exists at ${canonicalPath} but no mirror — manifest requires one)`
+  );
+  failures++;
+}
+
 console.log(`\n${checked} skill(s) checked, ${failures} failure(s).`);
 
 if (failures > 0) {
