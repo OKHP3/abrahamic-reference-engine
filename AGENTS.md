@@ -70,8 +70,9 @@ The following are the only items allowed at the repo root:
 
 ```
 .agents/           skills, memory, and skill-scoped support files
-context/           preserved project thread-context extracts
 .github/           Actions workflows
+brand-styles/      ARE visual style registry and profiles
+docs/              durable architecture decision records
 public/            static assets (favicon, etc.)
 scripts/           repository-level validation scripts
 src/               application source
@@ -96,7 +97,9 @@ vite.config.ts
 
 Anything not on this list is detritus and must be removed or relocated before committing.
 
-**No `docs/` directory.** Reference documents (OpenAPI specs, translation matrix) live inside the skill package that uses them: `.agents/skills/okhp3-verse-lookup/`.
+Reference documents and OpenAPI specifications live inside the skill package that
+uses them: `.agents/skills/okhp3-verse-lookup/`. Architecture decisions live in
+`docs/adr/`; visual style profiles live in `brand-styles/`.
 The root `scripts/` directory is an intentional exception for repository-level
 validation. Do not add scratch scripts there.
 
@@ -106,7 +109,6 @@ validation. Do not add scratch scripts there.
 
 - No scratch files, transcripts, or one-off scripts at root
 - No loose `.py`, `.json` (except package files), or stray `.md` at root
-- No `docs/` directory
 - `scripts/` may contain only intentional, documented validation tooling
 - Agent-generated screenshots go in `attached_assets/` (gitignored)
 - `dist/` is gitignored -- never commit build output
@@ -205,8 +207,12 @@ src/
     MEMORY.md
     threads/                  persistent thread-context extracts and routing index
 
-context/
-  threads/                    preserved project thread-context extracts
+docs/
+  adr/                         durable architecture decision records
+
+brand-styles/
+  registry.yaml                ARE style registry
+  profiles/                    dark and light profiles
 ```
 
 ---

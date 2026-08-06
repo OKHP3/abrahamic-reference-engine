@@ -9,6 +9,10 @@ dist-ssr
 *.log
 .cache
 
+# Python-generated files
+__pycache__/
+*.pyc
+
 # Agent artifacts
 attached_assets/
 .local/state/

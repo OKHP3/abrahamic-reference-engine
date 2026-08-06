@@ -216,6 +216,7 @@ scripts/
   okhp3-tradition-reference/
   okhp3-cross-tradition-compare/
   okhp3-tradition-observance-calendar/
+  okhp3-celestial-data/
 ```
 
 Reference documents and OpenAPI specs live inside the relevant skill package.

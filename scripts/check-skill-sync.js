@@ -2,19 +2,68 @@
 /**
  * check-skill-sync.js
  *
- * Verifies that every SKILL.md in skills/<name>/ (publication mirrors) matches
- * its canonical counterpart in .agents/skills/<name>/. Exits non-zero if any
- * pair differs so CI catches drift early.
+ * Verifies that every publication package in skills/<name>/ matches its
+ * canonical counterpart in .agents/skills/<name>/, including resources,
+ * evaluations, and package evidence. Exits non-zero if any pair differs so
+ * CI catches drift early.
  *
  * Usage: node scripts/check-skill-sync.js
  *        npm run test:skill-sync
  */
 
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
+import { join, relative } from 'node:path';
 
 const MIRRORS_DIR = 'skills';
 const CANONICAL_DIR = '.agents/skills';
+
+function packageFiles(root) {
+  const files = [];
+  function walk(current) {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      const fullPath = join(current, entry.name);
+      if (entry.isDirectory()) walk(fullPath);
+      else if (entry.isFile()) files.push(relative(root, fullPath));
+    }
+  }
+  walk(root);
+  return files.sort();
+}
+
+function comparePackages(skillName, mirrorPath, canonicalPath) {
+  const mirrorFiles = packageFiles(mirrorPath);
+  const canonicalFiles = packageFiles(canonicalPath);
+  const allFiles = [...new Set([...mirrorFiles, ...canonicalFiles])].sort();
+  const differences = [];
+
+  for (const file of allFiles) {
+    const mirrorFile = join(mirrorPath, file);
+    const canonicalFile = join(canonicalPath, file);
+    if (!existsSync(mirrorFile)) {
+      differences.push(`missing mirror file ${file}`);
+      continue;
+    }
+    if (!existsSync(canonicalFile)) {
+      differences.push(`missing canonical file ${file}`);
+      continue;
+    }
+    if (!statSync(mirrorFile).isFile() || !statSync(canonicalFile).isFile()) {
+      differences.push(`non-file package entry ${file}`);
+      continue;
+    }
+    if (!readFileSync(mirrorFile).equals(readFileSync(canonicalFile))) {
+      differences.push(`content drift ${file}`);
+    }
+  }
+
+  if (differences.length) {
+    console.error(`DRIFT    ${skillName}`);
+    for (const difference of differences) console.error(`         ${difference}`);
+    return false;
+  }
+  console.log(`OK       ${skillName}`);
+  return true;
+}
 
 // Collect skill names that exist in the mirrors directory (skip non-directory entries)
 const mirrorEntries = readdirSync(MIRRORS_DIR, { withFileTypes: true })
@@ -35,26 +84,13 @@ for (const skillName of mirrorEntries) {
 
   if (!existsSync(canonicalPath)) {
     console.error(
-      `MISSING  ${canonicalPath}  (mirror exists at ${mirrorPath} but no canonical copy)`
+      `MISSING  ${canonicalPath}  (mirror exists at ${mirrorPath} but no canonical package)`
     );
     failures++;
     continue;
   }
 
-  const mirrorContent = readFileSync(mirrorPath, 'utf8');
-  const canonicalContent = readFileSync(canonicalPath, 'utf8');
-
-  if (mirrorContent !== canonicalContent) {
-    console.error(`DRIFT    ${skillName}`);
-    console.error(`         mirror:    ${mirrorPath}`);
-    console.error(`         canonical: ${canonicalPath}`);
-    console.error(
-      `         Files differ -- copy the updated version to the other location and commit both.`
-    );
-    failures++;
-  } else {
-    console.log(`OK       ${skillName}`);
-  }
+  if (!comparePackages(skillName, join(MIRRORS_DIR, skillName), join(CANONICAL_DIR, skillName))) failures++;
   checked++;
 }
 
@@ -101,8 +137,8 @@ console.log(`\n${checked} skill(s) checked, ${failures} failure(s).`);
 
 if (failures > 0) {
   console.error(
-    '\nFix: keep skills/<name>/SKILL.md and .agents/skills/<name>/SKILL.md identical.\n' +
-      'When updating a skill, copy the change to the other location in the same commit.'
+    '\nFix: keep skills/<name>/ and .agents/skills/<name>/ identical.\n' +
+    'When updating a mirrored skill, copy the complete package to the other location in the same commit.'
   );
   process.exit(1);
 }

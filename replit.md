@@ -44,10 +44,10 @@ Run this before releasing any change that touches `src/api/`.
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
-- SkillsGallery: in-app catalog of all 14 .agents/skills, accessible at /skills via sidebar "Skill library" link
+- SkillsGallery: in-app catalog of the five ARE operational skills, accessible at /skills via sidebar "Skill library" link; the repository catalog indexes 23 local skill packages
 - OriginArchive: hidden historical archive route backed by static content in `public/origin/` (easter egg -- no nav link in ModeNav)
 - Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar, okhp3-celestial-data
-- SkillsGallery page at /skills: in-app catalog of all 14 skills with descriptions, IN/OUT scope, category badges, GitHub links
+- SkillsGallery page at /skills: in-app catalog of the five ARE operational skills with descriptions, IN/OUT scope, category badges, GitHub links. The catalog also includes local governance, design, evaluation, and deployment skills used by agents but not exposed as app features.
 - Google Analytics 4 integrated: gtag snippet in index.html, usePageTracking hook fires page_view per route change
 - GitHub Pages deploy workflow in place (.github/workflows/deploy-pages.yml)
 - Vite base path: `/` in dev, `/abrahamic-reference-engine/` in production build (conditional on `command`)
@@ -232,10 +232,10 @@ Agent skills live in two parallel directories:
 
 | Directory | Role |
 |-----------|------|
-| `.agents/skills/<name>/SKILL.md` | Canonical copy -- what agents load at runtime |
-| `skills/<name>/SKILL.md` | Publication mirror -- what gets promoted to OKHP3/skillz |
+| `.agents/skills/<name>/` | Complete canonical package -- what agents load at runtime |
+| `skills/<name>/` | Complete publication mirror -- what gets promoted to OKHP3/skillz |
 
-**Both files must be identical.** When you update a skill in either location, copy the change to the other location in the same commit. Run `npm run test:skill-sync` before pushing; CI catches drift by comparing every mirrored skill pair and exits non-zero if any pair differs.
+**Both packages must be identical for mirrored skills.** When you update a mirrored skill, copy the complete package to the other location in the same commit. Run `npm run test:skill-sync` before pushing; CI compares every mirrored package file and exits non-zero if any pair differs.
 
 Skills that are local-only (e.g. `.agents/skills/frontend-design/`) have no mirror in `skills/` and are not checked.
 
