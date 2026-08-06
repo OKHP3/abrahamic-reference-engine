@@ -75,6 +75,7 @@ brand-styles/      ARE visual style registry and profiles
 docs/              durable architecture decision records
 public/            static assets (favicon, etc.)
 scripts/           repository-level validation scripts
+skills/            reviewed Agent Skills publication mirrors
 src/               application source
 
 .gitattributes
@@ -102,6 +103,10 @@ uses them: `.agents/skills/okhp3-verse-lookup/`. Architecture decisions live in
 `docs/adr/`; visual style profiles live in `brand-styles/`.
 The root `scripts/` directory is an intentional exception for repository-level
 validation. Do not add scratch scripts there.
+The root `skills/` directory is an intentional publication surface. Its complete
+package mirrors are generated from `.agents/skills/` and validated by the skill
+sync checks. Do not edit the publication mirrors as independent source files or
+move them under `.agents/` without updating the publication contract.
 
 ---
 
@@ -213,6 +218,10 @@ docs/
 brand-styles/
   registry.yaml                ARE style registry
   profiles/                    dark and light profiles
+
+skills/
+  <published skill package mirrors>
+  promotion-manifests/         provenance and publication records
 ```
 
 ---
