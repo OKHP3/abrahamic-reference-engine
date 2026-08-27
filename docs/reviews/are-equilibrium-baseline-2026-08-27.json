@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "review_protocol": "equilibrium-v1",
+  "review_mode": "conditional-five-role",
+  "evaluation_status": "analytical",
+  "artifact": {
+    "path": "docs/reviews/are-baseline-artifact-2026-08-27.md",
+    "sha256": "5f68e019e65171e12322b281a75908a89086501b2097b45b6989fe1508018999",
+    "version": "git:3d12e40f97d934c01cba3ca529a642af0e82e680"
+  },
+  "decision_question": "Is the product ready for public release within its explicitly stated scope as a neutral, citation-first scripture reference and comparative-literacy SPA?",
+  "acceptance_criteria": [
+    "Public claims match observable implementation and traceable sources.",
+    "The four core workflows serve their stated audiences.",
+    "Attribution, licensing, canon and denomination limits, and provider failure boundaries are clear.",
+    "Neutrality, safety, privacy, and portability boundaries are credible.",
+    "Quality evidence is repeatable enough to support the product's public claims."
+  ],
+  "independence": {
+    "reviewer_contexts_separated": true,
+    "shared_model_or_source_limits": [
+      "All initial reviewers inspected the same repository commit and origin archive.",
+      "Reviewer model family was shared and results are therefore correlated.",
+      "The review was analytical; no external holdout or specialist audit was used."
+    ]
+  },
+  "initial_reviews": [
+    {
+      "role": "evidence",
+      "decision": "defer-for-evidence",
+      "confidence": "medium-high",
+      "evidence_status": "analytical",
+      "material_findings": [
+        "Demographic scope claims lack exact report, table, denominator, and extraction provenance.",
+        "Orthodox and LDS coverage is represented more strongly than the available editions and fallbacks support.",
+        "The advertised Sefaria bilingual option was not routed through the bilingual adapter.",
+        "CI and lint do not yet provide complete repeatable evidence for public claims."
+      ]
+    },
+    {
+      "role": "outcome",
+      "decision": "approve-with-limits",
+      "confidence": "medium",
+      "evidence_status": "analytical",
+      "material_findings": [
+        "Browse, exact lookup, seeded comparison, and observance workflows are substantially implemented.",
+        "Paraphrase discovery, ambiguity handling, commentary-level control, and broad translation comparison remain absent or partial.",
+        "Partial/fallback provider paths need stronger point-of-use communication."
+      ]
+    },
+    {
+      "role": "safety-portability",
+      "decision": "defer-for-evidence",
+      "confidence": "medium",
+      "evidence_status": "analytical",
+      "material_findings": [
+        "The reference UI has no chat-style hostile-prompt surface, but its original refusal behavior is not implemented as a public contract.",
+        "GitHub Pages subpath assets and direct-route behavior need production verification.",
+        "Accessibility and stale-request behavior lack automated release evidence."
+      ]
+    }
+  ],
+  "concordance": "material-agreement-on-limits",
+  "disruptor": {
+    "triggered": true,
+    "authority": "exploratory-analytical",
+    "falsification_hypotheses": [
+      "Sefaria bilingual selection may return English-only text.",
+      "A production deep link may load without correct subpath assets or metadata.",
+      "A slower earlier lookup response may overwrite a newer request.",
+      "Orthodox users may infer complete edition coverage from a partial data path.",
+      "Keyboard and 200-percent zoom users may lose essential lookup or calendar state.",
+      "The declared lint command may fail from a clean install."
+    ],
+    "test_results": [
+      {
+        "id": "DIS-01",
+        "status": "not-run",
+        "note": "Requires deterministic API and UI test harness."
+      },
+      {
+        "id": "DIS-02",
+        "status": "not-run",
+        "note": "Requires a production-path Pages smoke test."
+      },
+      {
+        "id": "DIS-03",
+        "status": "not-run",
+        "note": "Requires controlled async request fixtures."
+      },
+      {
+        "id": "DIS-04",
+        "status": "partially-addressed",
+        "note": "The misleading full-coverage label was replaced with explicit partial-coverage wording."
+      },
+      {
+        "id": "DIS-05",
+        "status": "not-run",
+        "note": "Requires automated accessibility and keyboard matrix."
+      },
+      {
+        "id": "DIS-06",
+        "status": "passed",
+        "note": "Lint now runs successfully after adding compatible ESLint/Babel tooling."
+      }
+    ]
+  },
+  "negotiator": {
+    "triggered": true,
+    "decision": "approve-with-limits",
+    "decisive_evidence": [
+      "The core routes exist and live provider smoke tests passed for the current provider set.",
+      "The repository and independent reviews identify blocked claims that cannot be supported by current automated evidence.",
+      "Coverage and translation wording defects are material because they change what users believe they are reading."
+    ],
+    "unresolved_items": [
+      "Exact demographic provenance and denominator compatibility.",
+      "Complete production deep-link and subpath asset behavior.",
+      "Automated accessibility, routing, race, and provider-contract coverage.",
+      "Whether bounded paraphrase discovery and context levels remain committed product requirements."
+    ]
+  },
+  "release_decision": "approve-with-limits",
+  "limitations": [
+    "Exact-reference lookup is supported; fuzzy/paraphrase discovery is not yet a release capability.",
+    "Christian denominational coverage is uneven and Orthodox/LDS paths are partial or community/static fallbacks.",
+    "Public-provider availability and data freshness remain external dependencies.",
+    "No unrestricted claim of full canon, translation, commentary, accessibility, or scholarly coverage is supported.",
+    "This is not theological, legal, accessibility-certification, security, or other specialist authority."
+  ],
+  "follow_up": [
+    "Add deterministic provider/provenance, routing, state, and accessibility tests.",
+    "Verify GitHub Pages production paths and assets.",
+    "Reconcile exact demographic sources and point-of-use scope copy.",
+    "Decide and implement or explicitly retire paraphrase and commentary-level requirements.",
+    "Re-run the equilibrium review after the release candidate is frozen."
+  ]
+}

@@ -86,6 +86,9 @@ export interface Passage {
   displayReference: string
   tradition: TraditionFamily
   primaryText: string
+  secondaryText?: string
+  secondaryLabel?: string
+  secondaryDirection?: 'ltr' | 'rtl'
   translationId: string
   translationName: string
   sourceUrl: string

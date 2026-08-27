@@ -23,7 +23,7 @@ export {
 } from './nephi'
 
 import type { Passage } from '../types'
-import { fetchSefariaText } from './sefaria'
+import { fetchSefariaBilingual, fetchSefariaText } from './sefaria'
 import { fetchAyah } from './quran'
 import { fetchBiblePassage } from './bible'
 import type { BibleApiTranslation } from './bible'
@@ -40,6 +40,10 @@ export async function fetchPassage(opts: FetchPassageOptions): Promise<Passage> 
 
   switch (tradition) {
     case 'judaism': {
+      if (translationId === 'sefaria-he-en') {
+        const { passage } = await fetchSefariaBilingual(reference)
+        return passage
+      }
       return fetchSefariaText(reference, 'en')
     }
 

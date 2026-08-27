@@ -12,22 +12,71 @@ export interface SefariaTextResponse {
   book: string
   categories: string[]
   type: string
+  sections?: number[]
+  toSections?: number[]
   license?: string
   licenseVetted?: boolean
   sources?: string[]
   error?: string
 }
 
-function collapseTextArray(value: string | string[]): string {
-  if (Array.isArray(value)) {
-    return value
-      .map(v => (typeof v === 'string' ? v : ''))
+function cleanSefariaText(value: string): string {
+  return value
+    .replace(/<i[^>]*class=["'][^"']*footnote[^"']*["'][^>]*>[\s\S]*?<\/i>/gi, '')
+    .replace(/<sup[^>]*class=["'][^"']*footnote-marker[^"']*["'][^>]*>[\s\S]*?<\/sup>/gi, '')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function selectRequestedSegments(
+  value: string | string[],
+  response: SefariaTextResponse
+): string | string[] {
+  if (!Array.isArray(value)) return value ?? ''
+
+  const sections = response.sections ?? []
+  const toSections = response.toSections ?? sections
+  const startChapter = Number(sections[0])
+  const endChapter = Number(toSections[0])
+  const startVerse = Number(sections[1])
+  const endVerse = Number(toSections[1])
+
+  // Sefaria may return the full chapter array for a verse reference. Slice
+  // same-chapter requests so a single citation never becomes a whole chapter.
+  if (
+    sections.length >= 2 &&
+    toSections.length >= 2 &&
+    startChapter === endChapter &&
+    Number.isInteger(startVerse) &&
+    Number.isInteger(endVerse) &&
+    startVerse > 0 &&
+    endVerse >= startVerse
+  ) {
+    return value.slice(startVerse - 1, endVerse)
+  }
+
+  return value
+}
+
+function collapseTextArray(
+  value: string | string[],
+  response: SefariaTextResponse
+): string {
+  const selected = selectRequestedSegments(value, response)
+  if (Array.isArray(selected)) {
+    return selected
+      .map(v => (typeof v === 'string' ? cleanSefariaText(v) : ''))
       .filter(Boolean)
       .join(' ')
-      .replace(/<[^>]+>/g, '')
       .trim()
   }
-  return (value ?? '').replace(/<[^>]+>/g, '').trim()
+  return cleanSefariaText(selected)
 }
 
 export async function fetchSefariaText(
@@ -48,7 +97,7 @@ export async function fetchSefariaText(
     throw new Error(`Sefaria reference error: ${json.error}`)
   }
 
-  const englishText = collapseTextArray(json.text)
+  const englishText = collapseTextArray(json.text, json)
   if (!englishText) {
     throw new Error(`Sefaria returned empty text for ref: ${ref}`)
   }
@@ -84,8 +133,11 @@ export async function fetchSefariaBilingual(
     throw new Error(`Sefaria reference error: ${json.error}`)
   }
 
-  const english = collapseTextArray(json.text)
-  const hebrew = collapseTextArray(json.he)
+  const english = collapseTextArray(json.text, json)
+  const hebrew = collapseTextArray(json.he, json)
+  if (!english || !hebrew) {
+    throw new Error(`Sefaria returned incomplete bilingual text for ref: ${ref}`)
+  }
   const sourceUrl = `https://www.sefaria.org/${encodeURIComponent(ref)}?lang=bi`
 
   return {
@@ -96,6 +148,9 @@ export async function fetchSefariaBilingual(
       displayReference: json.ref,
       tradition: 'judaism',
       primaryText: english,
+      secondaryText: hebrew,
+      secondaryLabel: 'Hebrew original',
+      secondaryDirection: 'rtl',
       translationId: 'sefaria-he-en',
       translationName: 'Sefaria Hebrew + English',
       sourceUrl,

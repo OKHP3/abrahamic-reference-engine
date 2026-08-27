@@ -131,8 +131,11 @@ export async function fetchAyah(
     try {
       return await fetchFromAlQuranCloud(key, 'en.asad', areTranslationId)
     } catch (fallbackError) {
-      throw new Error(
-        `Both Quran APIs failed.\nPrimary: ${(primaryError as Error).message}\nFallback: ${(fallbackError as Error).message}`
+      throw Object.assign(
+        new Error(
+          `Both Quran APIs failed.\nPrimary: ${(primaryError as Error).message}\nFallback: ${(fallbackError as Error).message}`
+        ),
+        { cause: fallbackError }
       )
     }
   }

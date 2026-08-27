@@ -22,6 +22,8 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 | `npm run build` | Production build -- outputs to `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm install` | Run after task-agent merges or pulling fresh |
+| `npm run lint` | Run ESLint syntactic checks over the TypeScript/JSX source |
+| `npm run test:unit` | Run deterministic API contract tests without network access |
 | `npm run test:api` | Run live API tests against all providers -- exit 0 = healthy |
 | `npm run test:skill-sync` | Verify skills/ mirrors match .agents/skills/ canonical copies -- exit 0 = in sync |
 
@@ -70,7 +72,7 @@ All data fetched from public free APIs or served from static pre-seeded files
 
 ## Technology Inventory and Update Policy
 
-Audit date: 2026-07-13. Package versions below are the exact versions installed
+Audit date: 2026-08-27. Package versions below are the exact versions installed
 from `package-lock.json` unless marked as a runtime or action tag. Latest stable
 values were checked against the official project release pages or the npm
 registry on the audit date.
@@ -92,6 +94,7 @@ Reference sources: [Node.js releases](https://nodejs.org/en/about/previous-relea
 | TypeScript | 7.0.2 | 7.0.2 | Current. |
 | JavaScript | Node ESM; `scripts/test-api-live.js`; Replit `nodejs-24` | Node.js 26.3.1 Current; Node.js 24.17.0 LTS | CI and Pages use `lts/*` so the supported LTS line advances automatically. |
 | npm | 11.6.2 locally; lockfile version 3 | 11.18.0 | npm is supplied with Node but is also independently versioned. |
+| ESLint | 10.9.1 with Babel TypeScript/JSX parser | 10.9.1 | Syntactic linting; TypeScript type checking remains the build's responsibility. |
 | Python | 3.14 declared by `.replit`; skill support scripts only | 3.14.6 | Python is not part of the built SPA. |
 | HTML | HTML5 in `index.html` and the SPA fallback | Living standard | No project-pinned version. |
 | CSS | CSS custom properties plus Tailwind utility classes | Living standard | Processed by PostCSS and Tailwind CSS. |
@@ -113,7 +116,7 @@ Reference sources: [Node.js releases](https://nodejs.org/en/about/previous-relea
 | `@tailwindcss/postcss` | 4.3.2 | 4.3.2 | Required Tailwind 4 PostCSS integration. |
 | `@types/react` | 19.2.17 | 19.2.17 | Current. |
 | `@types/react-dom` | 19.2.3 | 19.2.3 | Current. |
-| GitHub Actions | checkout v7; setup-node v6; configure-pages v6; upload-pages-artifact v5; deploy-pages v5 | Same major tags are current in the workflow | Dependabot tracks action updates separately. |
+| GitHub Actions | checkout v7; setup-node v7; configure-pages v6; upload-pages-artifact v5; deploy-pages v5 | Same major tags are current in the workflow | Dependabot tracks action updates separately. |
 
 ### Platform and service interfaces
 
@@ -141,6 +144,8 @@ Dependabot.
 - Major updates are raised separately so future migrations receive explicit
   review.
 - `.github/workflows/ci.yml` builds every pull request and push to `main`.
+- CI also runs lint, deterministic API contract tests, skill synchronization,
+  and Mercury coverage checks.
 - The Pages workflow uses `node-version: "lts/*"` with `check-latest: true`,
   keeping hosted builds on the newest Node LTS line.
 - Provider APIs remain outside Dependabot's scope and are covered by the
@@ -149,11 +154,15 @@ Dependabot.
 ### Audit findings
 
 - The previous dependency audit recorded `npm run build` passing with the lockfile. A fresh checkout without `node_modules/` cannot run it until dependencies are installed.
-- `npm run lint` is declared but cannot run because ESLint is not installed or
-  configured. It is not included in CI until that script is repaired.
+- `npm run lint` now runs with ESLint's flat configuration in `eslint.config.js`.
+  It provides syntactic TypeScript/JSX linting; `npm run build` remains the
+  type-checking gate because the current TypeScript release is newer than the
+  supported peer range for `typescript-eslint`.
 - The repository contains a Python origin generator in the static historical
   archive and a root live-test script. The Python file is not part of the SPA
   runtime; the root script is intentional validation tooling.
+- Deterministic API contract tests live under `tests/`; they stub network
+  responses and do not replace the live-provider smoke suite.
 
 ### Routing
 
@@ -221,7 +230,11 @@ Dependabot.
 - GitHub Pages: deploy workflow exists but Pages must be enabled in GitHub repo settings (Settings > Pages > Source: GitHub Actions) after pushing to main
 - GitHub push of `.github/workflows/` requires a token with `workflow` scope -- add the file via GitHub web UI if token lacks that scope
 - LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes tracked as a follow-up
-- `npm run lint` is declared in `package.json`, but ESLint is not currently declared or configured, so the command cannot run until that tooling is intentionally added.
+- The current release still lacks deterministic route, accessibility, async-race, and provider-contract test coverage.
+- Deterministic API contract coverage is now present; route, accessibility, and
+  async-race coverage remain open.
+- GitHub Pages direct-route, favicon, manifest, and subpath behavior still requires a production smoke test.
+- Paraphrase discovery and commentary-level controls remain origin requirements that are not implemented in the current exact-reference SPA.
 - `node_modules/` is not committed; run `npm ci` or `npm install` before local build validation.
 
 ---

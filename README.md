@@ -33,6 +33,11 @@ The goal is not to decide which tradition is right.
 
 The goal is to make the text easier to find, cite, compare, and understand.
 
+The current public build is a deliberately bounded prototype: it supports
+exact-reference lookup, seeded theme comparisons, and public-provider-dependent
+observance data. It does not claim full canon or translation coverage, fuzzy
+paraphrase discovery, scholarly commentary, or specialist authority.
+
 ---
 
 ## What it does
@@ -120,6 +125,14 @@ Reusable Markdown skill packages that allow AI agents to use the same reference 
 - `okhp3-cross-tradition-compare` -- 20 pre-seeded cross-tradition themes
 - `okhp3-tradition-observance-calendar` -- observance dates and iCalendar output
 
+## Review status
+
+The 2026-08-27 baseline review is recorded in
+[`docs/reviews/are-equilibrium-baseline-2026-08-27.md`](docs/reviews/are-equilibrium-baseline-2026-08-27.md).
+It approves the bounded prototype with limits while deferring unrestricted
+release claims until provider provenance, accessibility, routing, and
+deterministic test evidence are stronger.
+
 ---
 
 ## Scope
@@ -195,6 +208,8 @@ The dev server runs on `http://localhost:5000`.
 ```bash
 npm run build    # production build -> dist/
 npm run preview  # preview the production build locally
+npm run lint     # syntactic linting for TypeScript/JSX
+npm run test:unit # deterministic API contract tests
 ```
 
 ---

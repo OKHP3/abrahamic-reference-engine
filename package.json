@@ -8,14 +8,21 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx",
+    "test:unit": "node --import tsx --test tests/api-contracts.test.ts",
     "test:api": "node scripts/test-api-live.js",
     "test:skill-sync": "node scripts/check-skill-sync.js",
     "test:mercury-dates": "node .agents/skills/okhp3-celestial-data/scripts/validate-mercury-dates.cjs"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^8.0.1",
+    "@babel/preset-react": "^8.0.1",
+    "@babel/preset-typescript": "^8.0.1",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.1"
+    "react-router-dom": "^7.18.1",
+    "tsx": "^4.23.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",

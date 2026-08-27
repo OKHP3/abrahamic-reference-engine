@@ -36,6 +36,20 @@ export default function VerseCard({
         {passage.primaryText}
       </blockquote>
 
+      {passage.secondaryText && (
+        <div className="mb-4 border-l-2 border-border-subtle pl-4">
+          <p className="text-2xs font-sans text-muted uppercase tracking-widest mb-1">
+            {passage.secondaryLabel ?? 'Additional text'}
+          </p>
+          <p
+            className="text-base font-serif text-parchment leading-relaxed"
+            dir={passage.secondaryDirection}
+          >
+            {passage.secondaryText}
+          </p>
+        </div>
+      )}
+
       {showAttribution && (
         <footer className="flex items-center justify-between gap-3">
           <p className="text-2xs font-sans text-muted leading-relaxed flex-1 min-w-0">

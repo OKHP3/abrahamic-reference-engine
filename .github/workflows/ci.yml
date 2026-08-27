@@ -29,6 +29,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Run deterministic API contract tests
+        run: npm run test:unit
+
       - name: Check skill sync
         run: npm run test:skill-sync
 

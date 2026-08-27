@@ -294,18 +294,19 @@ function TraditionDetail({ slug }: { slug: string }) {
           <div className="p-5 border border-emerald-800 rounded-lg bg-emerald-950/20">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xs font-sans font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-900 text-emerald-300 border border-emerald-700">
-                Full coverage
+                Partial coverage
               </span>
               <h2 className="text-xs font-sans font-bold tracking-widest uppercase text-emerald-400">
-                Orthodox OT -- all books available
+                Orthodox OT -- bundled gaps only
               </h2>
             </div>
             <p className="text-sm text-ink leading-relaxed mb-3">
-              The three Orthodox-specific texts not served by any public API —{' '}
+              The three Orthodox-specific texts not served by the current public APIs --{' '}
               <span className="text-parchment font-medium">3 Maccabees</span>,{' '}
               <span className="text-parchment font-medium">4 Maccabees</span>, and{' '}
-              <span className="text-parchment font-medium">Psalm 151</span> — are now available
-              through a bundled static dataset.
+              <span className="text-parchment font-medium">Psalm 151</span> are available
+              through a bundled static dataset. Other Orthodox books may be routed through
+              a shared Christian API and should not be treated as a complete Orthodox edition.
             </p>
             <p className="text-sm text-muted leading-relaxed mb-4">
               3 &amp; 4 Maccabees use the World English Bible Deuterocanon (public domain).
@@ -320,7 +321,7 @@ function TraditionDetail({ slug }: { slug: string }) {
               rel="noopener noreferrer"
               className="text-xs font-sans text-emerald-400 hover:text-emerald-300 transition-colors no-underline"
             >
-              Read the full Orthodox canon at BibleGateway &rarr;
+              Consult the full Orthodox canon at BibleGateway &rarr;
             </a>
           </div>
         )}
