@@ -1,6 +1,13 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { fetchPassage, fetchNephiPassage, isLdsBibleRef, LdsApiUnavailableError } from '../api'
+import {
+  fetchPassage,
+  fetchNephiPassage,
+  isLdsBibleRef,
+  isLikelyValidRef,
+  LdsApiUnavailableError,
+  LOOKUP_CAPABILITIES,
+} from '../api'
 import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
 import { ORTHODOX_GAP_BOOKS_DATA } from '../data/orthodoxGapTexts'
@@ -171,15 +178,6 @@ const TRADITION_LABELS: Record<TraditionFamily, string> = {
   judaism: 'Judaism',
   christianity: 'Christianity',
   islam: 'Islam',
-}
-
-function isLikelyValidRef(tradition: TraditionFamily, ref: string): boolean {
-  const t = ref.trim()
-  if (!t) return false
-  if (tradition === 'islam') {
-    return /^\d+:\d+$/.test(t)
-  }
-  return /^[1-9]?\s?[a-zA-Z].*\s\d/.test(t)
 }
 
 function buildHadithNumbers(ref: string, collection: HadithCollection = 'bukhari'): number[] {
@@ -395,6 +393,20 @@ export default function VerseLookup() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!isLikelyValidRef(tradition, reference)) {
+      fetchRequestIdRef.current += 1
+      hadithRequestIdRef.current += 1
+      setPassage(null)
+      setCanonGapBook(null)
+      setIsLdsFallback(false)
+      setHadiths([])
+      setHadithStatus('idle')
+      setHadithIndex(0)
+      setHadithError(null)
+      setStatus('error')
+      setError('Enter an exact source reference, not a paraphrase or free-text question.')
+      return
+    }
     const params: Record<string, string> = { tradition, ref: reference }
     if (denomination) params.denomination = denomination
     setSearchParams(params)
@@ -591,7 +603,7 @@ export default function VerseLookup() {
                 onChange={e => setReference(e.target.value)}
                 placeholder={currentPlaceholder}
                 className="w-full bg-bg-base border border-border-mid rounded px-3 py-2 text-sm font-sans text-parchment placeholder-muted focus:outline-none focus:border-gold-muted transition-colors"
-                aria-describedby="reference-hint"
+                aria-describedby="reference-hint lookup-boundary"
                 autoComplete="off"
                 spellCheck={false}
               />
@@ -603,6 +615,15 @@ export default function VerseLookup() {
                   : tradition === 'judaism'
                   ? 'Format: Book Chapter:Verse (e.g. Genesis 1:1)'
                   : 'Format: book chapter:verse (e.g. john 3:16)'}
+              </p>
+              <p id="lookup-boundary" className="text-2xs text-muted mt-2">
+                {LOOKUP_CAPABILITIES.exactReferenceLookup
+                  ? 'Exact references only. '
+                  : ''}
+                {!LOOKUP_CAPABILITIES.paraphraseSearch &&
+                  'Paraphrase and fuzzy discovery are not available. '}
+                {!LOOKUP_CAPABILITIES.contextModes &&
+                  'This prototype has no none, brief, or scholarly context modes.'}
               </p>
             </div>
 
@@ -776,18 +797,18 @@ export default function VerseLookup() {
           <div className="mb-6">
             <div className="flex items-baseline gap-2 mb-3">
               <h2 className="text-xs font-sans font-bold tracking-widest uppercase text-muted">
-                Explore Parallels
+                Seeded Theme Parallels
               </h2>
               {contextual && (
                 <span className="text-2xs font-sans text-gold italic">
-                  matched to this passage
+                  linked to this exact reference
                 </span>
               )}
             </div>
             <p className="text-sm text-ink mb-4 leading-relaxed">
               {contextual
-                ? 'Themes drawn from this part of scripture -- see how the other traditions approach them:'
-                : 'See how the other two traditions address similar themes:'}
+                ? 'Fixed themes linked to this reference in the project dataset -- see the source passages for each tradition:'
+                : 'Fixed, pre-seeded themes from the project dataset -- not paraphrase matches or generated commentary:'}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {themes.map(theme => (

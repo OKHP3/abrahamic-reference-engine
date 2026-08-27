@@ -22,7 +22,21 @@ export {
   LDS_UNAVAILABLE_MSG,
 } from './nephi'
 
-import type { Passage } from '../types'
+/**
+ * Public product boundary for passage discovery and context.
+ *
+ * Keep these capabilities explicit so UI copy and acceptance tests cannot
+ * imply that the exact-reference prototype supports generated discovery or
+ * commentary controls.
+ */
+export const LOOKUP_CAPABILITIES = {
+  exactReferenceLookup: true,
+  paraphraseSearch: false,
+  contextModes: false,
+  seededThemeComparisons: true,
+} as const
+
+import type { Passage, TraditionFamily } from '../types'
 import { fetchSefariaBilingual, fetchSefariaText } from './sefaria'
 import { fetchAyah } from './quran'
 import { fetchBiblePassage } from './bible'
@@ -31,8 +45,23 @@ import { TRANSLATION_BY_ID } from '../data/translations'
 
 export interface FetchPassageOptions {
   tradition: 'judaism' | 'christianity' | 'islam'
+  /** An exact source reference, not a paraphrase or free-text query. */
   reference: string
   translationId?: string
+}
+
+/**
+ * Guard the UI boundary against free-text discovery requests.
+ *
+ * Provider adapters still own canonical reference validation and response
+ * normalization. This check only decides whether a value looks like a
+ * reference-shaped input before a lookup begins.
+ */
+export function isLikelyValidRef(tradition: TraditionFamily, ref: string): boolean {
+  const trimmed = ref.trim()
+  if (!trimmed) return false
+  if (tradition === 'islam') return /^\d+:\d+$/.test(trimmed)
+  return /^[1-9]?\s?[a-zA-Z].*\s\d/.test(trimmed)
 }
 
 export async function fetchPassage(opts: FetchPassageOptions): Promise<Passage> {

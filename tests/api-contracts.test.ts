@@ -1,12 +1,45 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { afterEach, test } from 'node:test'
-import { fetchPassage } from '../src/api/index.ts'
+import {
+  fetchPassage,
+  isLikelyValidRef,
+  LOOKUP_CAPABILITIES,
+} from '../src/api/index.ts'
 import { fetchAyah } from '../src/api/quran.ts'
 
 const originalFetch = globalThis.fetch
 
 afterEach(() => {
   globalThis.fetch = originalFetch
+})
+
+test('keeps paraphrase discovery and context-depth modes outside the prototype boundary', () => {
+  assert.deepEqual(LOOKUP_CAPABILITIES, {
+    exactReferenceLookup: true,
+    paraphraseSearch: false,
+    contextModes: false,
+    seededThemeComparisons: true,
+  })
+  assert.equal(isLikelyValidRef('christianity', 'John 3:16'), true)
+  assert.equal(isLikelyValidRef('islam', '2:255'), true)
+  assert.equal(isLikelyValidRef('christianity', 'What does the text say about mercy?'), false)
+  assert.equal(isLikelyValidRef('islam', 'mercy and forgiveness'), false)
+
+  const lookupPage = readFileSync(new URL('../src/pages/VerseLookup.tsx', import.meta.url), 'utf8')
+  const comparePage = readFileSync(new URL('../src/pages/CrossTraditionCompare.tsx', import.meta.url), 'utf8')
+  const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8')
+
+  assert.match(lookupPage, /Exact references only\./)
+  assert.match(lookupPage, /Paraphrase and fuzzy discovery are not available\./)
+  assert.match(lookupPage, /no none, brief, or scholarly context modes/)
+  assert.match(lookupPage, /Fixed, pre-seeded themes/)
+  assert.match(lookupPage, /not paraphrase matches or generated commentary/)
+  assert.match(comparePage, /quoted from the labeled translation and linked source/)
+  assert.match(comparePage, /ARE editorial commentary, not source text/)
+  assert.match(readme, /accepts exact references only/)
+  assert.match(readme, /does\s+not offer fuzzy or paraphrase search/)
+  assert.match(readme, /none\/brief\/\s*scholarly context-depth modes/)
 })
 
 function mockFetch(

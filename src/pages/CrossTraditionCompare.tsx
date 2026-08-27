@@ -296,6 +296,10 @@ export default function CrossTraditionCompare() {
             </button>
           </div>
         </div>
+        <p className="text-2xs text-muted italic">
+          Passage text is quoted from the labeled translation and linked source below.
+          The comparison note is ARE editorial commentary, not source text.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -311,7 +315,7 @@ export default function CrossTraditionCompare() {
 
       <div className="p-5 border border-border-subtle rounded-lg bg-bg-elevated mb-6">
         <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-gold mb-3">
-          What Connects These?
+          Editorial Bridge
         </h3>
         <p className="text-sm text-ink leading-relaxed">{activeTheme.bridgingNote}</p>
         <p className="text-xs text-muted mt-3 italic">

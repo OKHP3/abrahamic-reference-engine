@@ -31,7 +31,8 @@ It is for:
 
 The goal is not to decide which tradition is right.
 
-The goal is to make the text easier to find, cite, compare, and understand.
+The goal is to make source text easier to find and cite, then compare it through
+clearly labeled, pre-seeded themes.
 
 The current public build is a deliberately bounded prototype: it supports
 exact-reference lookup, seeded theme comparisons, and public-provider-dependent
@@ -71,6 +72,11 @@ Supported data pathways:
 - Quran.com and AlQuran.cloud for Qur'an references;
 - structured local metadata for translations, traditions, themes, and comparison logic.
 
+**Lookup boundary:** The public prototype accepts exact references only. It does
+not offer fuzzy or paraphrase search, candidate suggestions, or none/brief/
+scholarly context-depth modes. A failed exact lookup is not converted into a
+guess. Use **Cross-Tradition Compare** for the separate, pre-seeded theme set.
+
 ### 3. Compare themes across traditions
 
 Compare how Judaism, Christianity, and Islam address shared themes such as justice, mercy, creation, covenant, prayer, charity, forgiveness, and judgment.
@@ -104,7 +110,9 @@ This project is not:
 
 It is a reference engine.
 
-It helps users locate text, compare themes, and understand context while keeping attribution and neutrality visible.
+It helps users locate source text, compare pre-seeded themes, and inspect
+attribution while keeping neutrality visible. It does not provide generated
+commentary or context-depth controls.
 
 ---
 
@@ -169,9 +177,11 @@ The engine should present traditions respectfully without declaring winners, los
 
 Whenever possible, passages include translation, source, provider, and licensing context.
 
-### Context without preaching
+### Context boundary
 
-The project may explain how a passage is commonly understood, but it does not exhort users to believe or practice.
+The prototype does not generate commentary or offer context-depth controls.
+Source metadata and pre-seeded comparison notes are labeled so they are not
+mistaken for quoted scripture or religious authority.
 
 ### Difference is data
 

@@ -55,14 +55,23 @@ ordered by dependency and consequence, not by visual polish.
 - **Acceptance:** every displayed percentage has traceable source metadata and
   the inclusion rule is reproducible.
 
-### M5. Decide bounded discovery and context modes
+### M5. Decide bounded discovery and context modes -- complete (2026-08-27)
 
 - **Depends on:** M1
 - **Purpose:** either implement source-grounded paraphrase/ambiguity candidates
   and none/brief/scholarly context controls, or explicitly retire those origin
   promises from product copy.
-- **Acceptance:** a written decision, updated UI copy, and acceptance tests for
-  the chosen boundary.
+- **Decision:** Retire these promises for the current static prototype. Lookup
+  accepts exact references only. It does not generate paraphrase candidates,
+  fuzzy matches, ambiguity suggestions, or context-depth modes. The separate
+  comparison route remains a fixed, pre-seeded theme dataset. Its bridging text
+  is labeled as ARE editorial commentary and is not presented as source text.
+- **Evidence:** `docs/reviews/are-paraphrase-context-boundary-2026-08-27.md`,
+  `src/api/index.ts`, `src/pages/VerseLookup.tsx`, `src/pages/CrossTraditionCompare.tsx`,
+  `README.md`, and `tests/api-contracts.test.ts`.
+- **Acceptance:** deterministic tests assert the capability boundary and public
+  copy; a source reference remains distinct from a paraphrase query, and
+  comparison commentary remains labeled separately from quoted text.
 
 ### M6. Normalize canon and edition coverage
 
