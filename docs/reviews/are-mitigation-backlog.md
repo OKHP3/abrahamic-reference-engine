@@ -71,11 +71,13 @@ ordered by dependency and consequence, not by visual polish.
 
 ## Deployment and maintenance
 
-### M7. Verify GitHub Pages portability
+### M7. Verify GitHub Pages portability -- artifact check complete
 
 - **Depends on:** M2
 - **Purpose:** prove direct routes, refreshes, assets, favicon, manifest, and
   share links under the production subpath.
+- **Evidence:** `scripts/check-pages-artifact.js` validates the built base path
+  and manifest assets in CI.
 - **Acceptance:** a production smoke run is recorded for all public routes and
   known fallback behavior is documented.
 

@@ -29,6 +29,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check GitHub Pages artifact paths
+        run: npm run test:pages
+
       - name: Lint
         run: npm run lint
 

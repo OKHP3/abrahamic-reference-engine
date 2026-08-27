@@ -24,6 +24,7 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 | `npm install` | Run after task-agent merges or pulling fresh |
 | `npm run lint` | Run ESLint syntactic checks over the TypeScript/JSX source |
 | `npm run test:unit` | Run deterministic API contract tests without network access |
+| `npm run test:pages` | Verify production base-path assets and manifest paths |
 | `npm run test:api` | Run live API tests against all providers -- exit 0 = healthy |
 | `npm run test:skill-sync` | Verify skills/ mirrors match .agents/skills/ canonical copies -- exit 0 = in sync |
 
@@ -145,7 +146,7 @@ Dependabot.
   review.
 - `.github/workflows/ci.yml` builds every pull request and push to `main`.
 - CI also runs lint, deterministic API contract tests, skill synchronization,
-  and Mercury coverage checks.
+  Pages artifact checks, and Mercury coverage checks.
 - The Pages workflow uses `node-version: "lts/*"` with `check-latest: true`,
   keeping hosted builds on the newest Node LTS line.
 - Provider APIs remain outside Dependabot's scope and are covered by the
@@ -234,6 +235,8 @@ Dependabot.
 - Deterministic API contract coverage is now present; route, accessibility, and
   async-race coverage remain open.
 - GitHub Pages direct-route, favicon, manifest, and subpath behavior still requires a production smoke test.
+- The local Pages artifact check covers generated subpath asset and manifest
+  paths; a hosted production smoke test is still required for direct routes.
 - Paraphrase discovery and commentary-level controls remain origin requirements that are not implemented in the current exact-reference SPA.
 - `node_modules/` is not committed; run `npm ci` or `npm install` before local build validation.
 
