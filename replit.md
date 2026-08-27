@@ -164,6 +164,8 @@ Dependabot.
   runtime; the root script is intentional validation tooling.
 - Deterministic API contract tests live under `tests/`; they stub network
   responses and do not replace the live-provider smoke suite.
+- Lookup requests use generation guards so stale passage or Hadith responses
+  cannot overwrite a newer selection; browser-level race tests remain open.
 
 ### Routing
 
@@ -231,9 +233,10 @@ Dependabot.
 - GitHub Pages: deploy workflow exists but Pages must be enabled in GitHub repo settings (Settings > Pages > Source: GitHub Actions) after pushing to main
 - GitHub push of `.github/workflows/` requires a token with `workflow` scope -- add the file via GitHub web UI if token lacks that scope
 - LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes tracked as a follow-up
-- The current release still lacks deterministic route, accessibility, async-race, and provider-contract test coverage.
-- Deterministic API contract coverage is now present; route, accessibility, and
-  async-race coverage remain open.
+- The current release still lacks deterministic route, accessibility, and
+  provider-contract test coverage.
+- Deterministic API contract coverage and runtime stale-response guards are now
+  present; browser route, accessibility, and race-state tests remain open.
 - GitHub Pages direct-route, favicon, manifest, and subpath behavior still requires a production smoke test.
 - The local Pages artifact check covers generated subpath asset and manifest
   paths; a hosted production smoke test is still required for direct routes.

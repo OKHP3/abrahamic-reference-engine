@@ -12,6 +12,7 @@ ordered by dependency and consequence, not by visual polish.
 - Add reproducible machine-readable and human-readable baseline review records.
 - Repair the declared lint command with a compatible ESLint/Babel configuration.
 - Preserve causes when both Quran providers fail.
+- Prevent stale lookup and Hadith responses from replacing newer user choices.
 
 ## Next task group -- deterministic evidence
 
@@ -31,6 +32,8 @@ ordered by dependency and consequence, not by visual polish.
 - **Depends on:** M1
 - **Purpose:** verify browse, lookup, compare, observances, settings, deep links,
   loading, empty, error, retry, copy-link, and stale-response states.
+- **Progress:** runtime request-generation guards now protect passage and Hadith
+  state; browser-level assertions are still required.
 - **Acceptance:** a browser test matrix runs locally and in CI at desktop and
   narrow mobile widths without live providers.
 

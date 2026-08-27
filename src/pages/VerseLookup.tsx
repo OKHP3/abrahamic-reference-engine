@@ -238,6 +238,8 @@ export default function VerseLookup() {
   const [fetchedTradition, setFetchedTradition] = useState<TraditionFamily>('judaism')
   const [copied, setCopied] = useState(false)
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const fetchRequestIdRef = useRef(0)
+  const hadithRequestIdRef = useRef(0)
 
   const allTranslations = TRANSLATIONS_BY_FAMILY[tradition]
   const hasGappedTranslations = allTranslations.some(t => t.license === 'licensed')
@@ -276,6 +278,9 @@ export default function VerseLookup() {
       denom: ChristianDenomination = null,
     ) => {
       if (!ref.trim()) return
+      const requestId = ++fetchRequestIdRef.current
+      hadithRequestIdRef.current += 1
+      const isCurrentRequest = () => fetchRequestIdRef.current === requestId
       if (denom === 'orthodox') {
         const gapKey = detectOrthodoxGapKey(ref)
         if (gapKey) {
@@ -325,15 +330,19 @@ export default function VerseLookup() {
         } else {
           result = await fetchPassage({ tradition: trad, reference: ref.trim(), translationId: xlation })
         }
+        if (!isCurrentRequest()) return
         setPassage(result)
         setStatus('success')
         setFetchedRef(ref.trim())
         setFetchedTradition(trad)
         if (trad === 'islam') {
           setHadithStatus('loading')
+          const hadithRequestId = ++hadithRequestIdRef.current
+          const isCurrentHadithRequest = () => hadithRequestIdRef.current === hadithRequestId
           const numbers = buildHadithNumbers(ref.trim(), 'bukhari')
           fetchHadithBatch('bukhari', numbers)
             .then(results => {
+              if (!isCurrentRequest() || !isCurrentHadithRequest()) return
               if (results.length > 0) {
                 setHadiths(results)
                 setHadithStatus('success')
@@ -350,11 +359,13 @@ export default function VerseLookup() {
               })
             })
             .catch(() => {
+              if (!isCurrentRequest() || !isCurrentHadithRequest()) return
               setHadithStatus('error')
               setHadithError('Hadith could not be loaded.')
             })
         }
       } catch (err) {
+        if (!isCurrentRequest()) return
         if (err instanceof LdsApiUnavailableError) {
           setIsLdsFallback(true)
           setError(err.message)
@@ -391,6 +402,8 @@ export default function VerseLookup() {
   }
 
   function handleTraditionChange(next: TraditionFamily) {
+    fetchRequestIdRef.current += 1
+    hadithRequestIdRef.current += 1
     setTradition(next)
     const nextDenom = next === 'christianity' ? settingsDenomSlug : null
     setDenomination(nextDenom)
@@ -408,6 +421,8 @@ export default function VerseLookup() {
   }
 
   function handleDenominationChange(next: ChristianDenomination) {
+    fetchRequestIdRef.current += 1
+    hadithRequestIdRef.current += 1
     setDenomination(next)
     setPassage(null)
     setError(null)
@@ -432,9 +447,11 @@ export default function VerseLookup() {
     setHadiths([])
     setHadithIndex(0)
     setHadithError(null)
+    const requestId = ++hadithRequestIdRef.current
     const numbers = buildHadithNumbers(fetchedRef, collection)
     try {
       const results = await fetchHadithBatch(collection, numbers)
+      if (hadithRequestIdRef.current !== requestId) return
       if (results.length > 0) {
         setHadiths(results)
         setHadithStatus('success')
@@ -443,6 +460,7 @@ export default function VerseLookup() {
         setHadithError('No hadith returned from collection.')
       }
     } catch {
+      if (hadithRequestIdRef.current !== requestId) return
       setHadithStatus('error')
       setHadithError('Hadith could not be loaded.')
     }
@@ -465,7 +483,7 @@ export default function VerseLookup() {
       </div>
 
       <div className="p-5 border border-border-mid rounded-lg bg-bg-elevated mb-6">
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate aria-busy={status === 'loading'}>
           <div className="mb-4">
             <fieldset>
               <legend className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block">
@@ -635,7 +653,7 @@ export default function VerseLookup() {
       </div>
 
       {status === 'loading' && (
-        <div className="py-6 flex justify-center">
+        <div className="py-6 flex justify-center" aria-live="polite">
           <LoadingSpinner label="Fetching passage from API..." size="md" />
         </div>
       )}
@@ -695,7 +713,7 @@ export default function VerseLookup() {
       )}
 
       {status === 'success' && passage && (
-        <div className="mb-6">
+        <div className="mb-6" aria-live="polite">
           <VerseCard passage={passage} showBadge showAttribution />
           <div className="mt-3 flex justify-end">
             <button
