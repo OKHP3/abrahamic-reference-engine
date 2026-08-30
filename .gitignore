@@ -16,3 +16,7 @@ __pycache__/
 # Agent artifacts
 attached_assets/
 .local/state/
+
+# Playwright browser-test output
+test-results/
+playwright-report/
