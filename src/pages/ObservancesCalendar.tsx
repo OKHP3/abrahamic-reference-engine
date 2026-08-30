@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import type { Tradition } from '../lib/observanceHelpers'
 import { generateChristianHolidays } from '../lib/christianCalendar'
@@ -69,8 +69,10 @@ export default function ObservancesCalendar() {
   )
   const [christianFilter, setChristianFilter] = useState<ChristianDenomFilter>('all')
   const [selectedId, setSelectedId] = useState<string>('')
+  const loadRequestIdRef = useRef(0)
 
   const loadYear = useCallback(async (y: number) => {
+    const requestId = ++loadRequestIdRef.current
     const christian = generateChristianHolidays(y)
     setAllEvents(christian)
     setLoadState({ judaism: 'loading', islam: 'loading' })
@@ -81,6 +83,7 @@ export default function ObservancesCalendar() {
       fetchJewishHolidays(y),
       fetchIslamicHolidays(y),
     ])
+    if (loadRequestIdRef.current !== requestId) return
 
     const jewishEvents: ObservanceEvent[] =
       jewishResult.status === 'fulfilled' ? jewishResult.value : []

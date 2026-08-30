@@ -32,8 +32,9 @@ ordered by dependency and consequence, not by visual polish.
 - **Depends on:** M1
 - **Purpose:** verify browse, lookup, compare, observances, settings, deep links,
   loading, empty, error, retry, copy-link, and stale-response states.
-- **Progress:** runtime request-generation guards now protect passage and Hadith
-  state; browser-level assertions are still required.
+- **Progress:** runtime request-generation guards protect passage, Hadith,
+  comparison panels, and calendar year loads; deterministic browser assertions
+  cover the primary routes and interaction states in `tests/browser/app.spec.ts`.
 - **Acceptance:** a browser test matrix runs locally and in CI at desktop and
   narrow mobile widths without live providers.
 

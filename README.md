@@ -220,6 +220,7 @@ npm run build    # production build -> dist/
 npm run preview  # preview the production build locally
 npm run lint     # syntactic linting for TypeScript/JSX
 npm run test:unit # deterministic API contract tests
+npm run test:e2e  # deterministic desktop/mobile browser checks (Playwright)
 ```
 
 ---

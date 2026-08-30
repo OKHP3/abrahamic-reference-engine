@@ -12,13 +12,15 @@
     "test:pages": "node scripts/check-pages-artifact.js",
     "test:api": "node scripts/test-api-live.js",
     "test:skill-sync": "node scripts/check-skill-sync.js",
-    "test:mercury-dates": "node .agents/skills/okhp3-celestial-data/scripts/validate-mercury-dates.cjs"
+    "test:mercury-dates": "node .agents/skills/okhp3-celestial-data/scripts/validate-mercury-dates.cjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@babel/eslint-parser": "^8.0.1",
     "@babel/preset-react": "^8.0.1",
     "@babel/preset-typescript": "^8.0.1",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
     "eslint": "^10.9.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

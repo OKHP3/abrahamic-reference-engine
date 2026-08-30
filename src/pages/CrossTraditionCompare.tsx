@@ -182,8 +182,16 @@ export default function CrossTraditionCompare() {
   const [panels, setPanels] = useState<Record<TraditionFamily, PanelState>>(
     buildInitialPanels(activeTheme)
   )
+  const panelRequestIdsRef = useRef<Record<TraditionFamily, number>>({
+    judaism: 0,
+    christianity: 0,
+    islam: 0,
+  })
 
   function selectTheme(id: string) {
+    for (const family of FAMILIES) {
+      panelRequestIdsRef.current[family] += 1
+    }
     setActiveThemeId(id)
     setSearchParams({ theme: id })
     const theme = COMPARE_THEMES.find(t => t.id === id)!
@@ -208,6 +216,8 @@ export default function CrossTraditionCompare() {
 
   async function refreshPanel(family: TraditionFamily) {
     const p = activeTheme.passages[family]
+    const requestId = ++panelRequestIdsRef.current[family]
+    const isCurrentRequest = () => panelRequestIdsRef.current[family] === requestId
     setPanels(prev => ({
       ...prev,
       [family]: { ...prev[family], status: 'loading', error: null },
@@ -221,11 +231,13 @@ export default function CrossTraditionCompare() {
         reference: p.lookup,
         translationId: xlationId,
       })
+      if (!isCurrentRequest()) return
       setPanels(prev => ({
         ...prev,
         [family]: { ...prev[family], status: 'success', passage: result, error: null },
       }))
     } catch (err) {
+      if (!isCurrentRequest()) return
       setPanels(prev => ({
         ...prev,
         [family]: {

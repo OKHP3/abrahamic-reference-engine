@@ -38,6 +38,12 @@ jobs:
       - name: Run deterministic API contract tests
         run: npm run test:unit
 
+      - name: Install Chromium for browser checks
+        run: npx playwright install --with-deps chromium
+
+      - name: Run deterministic browser checks
+        run: npm run test:e2e
+
       - name: Check skill sync
         run: npm run test:skill-sync
 

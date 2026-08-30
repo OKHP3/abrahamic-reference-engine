@@ -136,7 +136,8 @@
 
 @layer components {
   .mode-tab {
-    @apply flex-1 py-2.5 text-xs font-sans font-semibold tracking-widest uppercase text-dimmed transition-all duration-150;
+    @apply min-w-0 flex-1 py-2.5 text-[10px] font-sans font-semibold tracking-wider uppercase text-dimmed transition-all duration-150;
+    @apply sm:text-xs sm:tracking-widest;
     @apply border-b-2 border-transparent;
   }
 

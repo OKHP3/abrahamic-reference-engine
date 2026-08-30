@@ -24,6 +24,7 @@ For governance rules, scope constraints, and agent guidelines, see [AGENTS.md](A
 | `npm install` | Run after task-agent merges or pulling fresh |
 | `npm run lint` | Run ESLint syntactic checks over the TypeScript/JSX source |
 | `npm run test:unit` | Run deterministic API contract tests without network access |
+| `npm run test:e2e` | Run deterministic desktop/mobile browser checks without live providers |
 | `npm run test:pages` | Verify production base-path assets and manifest paths |
 | `npm run test:api` | Run live API tests against all providers -- exit 0 = healthy |
 | `npm run test:skill-sync` | Verify skills/ mirrors match .agents/skills/ canonical copies -- exit 0 = in sync |
