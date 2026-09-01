@@ -1,9 +1,34 @@
 import type { PewCitation, Denomination, TraditionGroup } from '../types'
 
-const PEW_2023: PewCitation = {
-  source: 'Pew Research Center, Religious Landscape Study',
-  year: 2023,
-  url: 'https://www.pewresearch.org/religion/religious-landscape-study/',
+const PEW_RLS_URL = 'https://www.pewresearch.org/religious-landscape-study/region/united-states/'
+const PEW_RLS_REPORT = '2023-24 U.S. Religious Landscape Study'
+const PEW_RLS_TABLE = 'Interactive database → U.S. adults → Religious composition → 2023-24'
+const PEW_RLS_DENOMINATOR = 'U.S. adults'
+const PEW_RLS_FIELDWORK = 'July 17, 2023–March 4, 2024'
+const PEW_RLS_PUBLICATION = 'February 26, 2025'
+const PEW_RLS_RETRIEVED = 'August 31, 2026'
+
+function pewCitation(
+  sourceCategory: string,
+  extractionNote: string,
+  compatibilityNote: string,
+  status: PewCitation['status'] = 'confirmed'
+): PewCitation {
+  return {
+    source: 'Pew Research Center',
+    year: 2025,
+    url: PEW_RLS_URL,
+    reportTitle: PEW_RLS_REPORT,
+    table: PEW_RLS_TABLE,
+    sourceCategory,
+    denominator: PEW_RLS_DENOMINATOR,
+    fieldworkDate: PEW_RLS_FIELDWORK,
+    publicationDate: PEW_RLS_PUBLICATION,
+    retrievedDate: PEW_RLS_RETRIEVED,
+    extractionNote,
+    compatibilityNote,
+    status,
+  }
 }
 
 export const DENOMINATIONS: Denomination[] = [
@@ -12,8 +37,12 @@ export const DENOMINATIONS: Denomination[] = [
     name: 'Evangelical Protestant',
     shortName: 'Evangelical',
     family: 'christianity',
-    pewPercent: 25,
-    pewCitation: PEW_2023,
+    pewPercent: 23,
+    pewCitation: pewCitation(
+      'Evangelical Protestant',
+      'Read the top-level Evangelical Protestant category as published; this is a whole-percent display value, not a sum of the nested church-family rows.',
+      'The survey category is a self-identification grouping, not a statement about a church’s canon, doctrine, or API coverage.'
+    ),
     description:
       'The largest single Christian grouping in the US, emphasizing personal salvation, biblical authority, and evangelism. Includes Baptist, Pentecostal, non-denominational, and other evangelical churches.',
     keyTexts: ['Holy Bible (66 books)', 'Old Testament', 'New Testament'],
@@ -28,8 +57,12 @@ export const DENOMINATIONS: Denomination[] = [
     name: 'Catholic',
     shortName: 'Catholic',
     family: 'christianity',
-    pewPercent: 20,
-    pewCitation: PEW_2023,
+    pewPercent: 19,
+    pewCitation: pewCitation(
+      'Catholic',
+      'Read the top-level Catholic category as published; this is a whole-percent display value.',
+      'The population category is compatible with the app’s Catholic lens, but does not measure Catholic canon adherence or the completeness of the available translation set.'
+    ),
     description:
       'The largest single Christian denomination worldwide, centered on apostolic succession, the Eucharist, and the Magisterium. The Catholic canon includes the deuterocanonical books not found in Protestant Bibles.',
     keyTexts: ['Holy Bible (73 books)', 'Catechism of the Catholic Church'],
@@ -44,8 +77,12 @@ export const DENOMINATIONS: Denomination[] = [
     name: 'Mainline Protestant',
     shortName: 'Mainline',
     family: 'christianity',
-    pewPercent: 16,
-    pewCitation: PEW_2023,
+    pewPercent: 11,
+    pewCitation: pewCitation(
+      'Mainline Protestant',
+      'Read the top-level Mainline Protestant category as published; this is a whole-percent display value, not a sum of the nested denomination rows.',
+      'The survey category is a self-identification grouping, not a statement about a specific Protestant denomination, canon, or API coverage.'
+    ),
     description:
       'Historic Protestant denominations including Methodist, Presbyterian, Lutheran, Episcopal/Anglican, and United Church of Christ. Generally characterized by ecumenical openness and critical biblical scholarship.',
     keyTexts: ['Holy Bible (66 books)', 'Westminster Confession', 'Book of Common Prayer'],
@@ -61,7 +98,11 @@ export const DENOMINATIONS: Denomination[] = [
     shortName: 'LDS',
     family: 'christianity',
     pewPercent: 2,
-    pewCitation: PEW_2023,
+    pewCitation: pewCitation(
+      'Latter-day Saint (Mormon)',
+      'Read the top-level Latter-day Saint (Mormon) category as published; the app displays the source’s whole-percent value.',
+      'This source category is used as a population-context match for the app’s LDS / Restorationist lens; it does not validate the completeness of Standard Works coverage.'
+    ),
     description:
       'The Latter-day Saint movement, founded by Joseph Smith in the 19th century as a restoration of original Christianity. Uses the Bible alongside additional scriptures revealed through Joseph Smith.',
     keyTexts: ['Holy Bible (KJV)', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price'],
@@ -77,7 +118,11 @@ export const DENOMINATIONS: Denomination[] = [
     shortName: 'Orthodox',
     family: 'christianity',
     pewPercent: 1,
-    pewCitation: PEW_2023,
+    pewCitation: pewCitation(
+      'Orthodox Christian',
+      'Read the top-level Orthodox Christian category as published; the app displays the source’s whole-percent value.',
+      'This source category combines the population label used by the survey; it does not resolve Eastern versus Oriental Orthodox distinctions or imply complete Orthodox text coverage.'
+    ),
     description:
       'Eastern Orthodox and Oriental Orthodox churches tracing their lineage to the early church councils. Emphasizes Tradition, liturgy, theosis, and the Church Fathers alongside Scripture.',
     keyTexts: ['Holy Bible (expanded OT)', 'Church Fathers', 'Divine Liturgy'],
@@ -93,7 +138,11 @@ export const DENOMINATIONS: Denomination[] = [
     shortName: 'Judaism',
     family: 'judaism',
     pewPercent: 2,
-    pewCitation: PEW_2023,
+    pewCitation: pewCitation(
+      'Jewish',
+      'Read the top-level Jewish category under Other religions as published; the app displays the source’s whole-percent value.',
+      'The population category is compatible with the app’s Judaism lens, but does not represent a denomination, level of observance, or a claim about Jewish identity.'
+    ),
     description:
       "The oldest Abrahamic faith, centered on the covenant between God and the Jewish people. The Tanakh (Hebrew Bible) forms the foundational scripture, supplemented by the Talmud, Midrash, and rabbinic literature.",
     keyTexts: ["Tanakh (Torah, Nevi'im, Ketuvim)", 'Talmud (Babylonian and Jerusalem)', 'Midrash'],
@@ -109,7 +158,11 @@ export const DENOMINATIONS: Denomination[] = [
     shortName: 'Islam',
     family: 'islam',
     pewPercent: 1,
-    pewCitation: PEW_2023,
+    pewCitation: pewCitation(
+      'Muslim',
+      'Read the top-level Muslim category under Other religions as published; the app displays the source’s whole-percent value.',
+      'The population category is compatible with the app’s Islam lens, but does not distinguish sect, school, ethnicity, or level of observance.'
+    ),
     description:
       "The youngest of the Abrahamic faiths, founded in the 7th century CE by the Prophet Muhammad. The Quran is considered the direct word of God (Allah), supplemented by the Hadith (sayings and actions of the Prophet).",
     keyTexts: ['The Quran (114 surahs)', 'Hadith collections (Sahih Bukhari, Sahih Muslim, etc.)'],
@@ -125,35 +178,63 @@ export const TRADITION_GROUPS: TraditionGroup[] = [
   {
     family: 'christianity',
     label: 'Christianity',
-    totalPewPercent: 63,
+    totalPewPercent: 62,
+    pewCitation: pewCitation(
+      'Christians',
+      'Read the top-level Christians category as published. This value is a direct source category, not a sum of the five Christian lenses displayed by this app.',
+      'The source category is broader than the app’s five Christian lenses and includes Historically Black Protestant, Jehovah’s Witness, and other Christian categories.'
+    ),
+    pewRollupNote:
+      'Pew’s 62% total combines Evangelical Protestant (23%), Mainline Protestant (11%), Historically Black Protestant (5%), Catholic (19%), Latter-day Saint (2%), Orthodox Christian (1%), Jehovah’s Witness (<1%), and Other Christian (1%). The app shows five lenses, so their badges must not be added to reproduce this total. Pew notes that published figures may not sum to 100% because of rounding.',
     denominations: DENOMINATIONS.filter(d => d.family === 'christianity'),
   },
   {
     family: 'islam',
     label: 'Islam',
     totalPewPercent: 1,
+    pewCitation: pewCitation(
+      'Muslim',
+      'Read the top-level Muslim category under Other religions as published; the group total repeats that direct source category.',
+      'This is a direct population category, not a rollup across Islamic schools, sects, or denominations.'
+    ),
+    pewRollupNote: 'Direct source category; no constituent denomination rollup is performed.',
     denominations: DENOMINATIONS.filter(d => d.family === 'islam'),
   },
   {
     family: 'judaism',
     label: 'Judaism',
     totalPewPercent: 2,
+    pewCitation: pewCitation(
+      'Jewish',
+      'Read the top-level Jewish category under Other religions as published; the group total repeats that direct source category.',
+      'This is a direct population category, not a rollup across Jewish denominations or movements.'
+    ),
+    pewRollupNote: 'Direct source category; no constituent denomination rollup is performed.',
     denominations: DENOMINATIONS.filter(d => d.family === 'judaism'),
   },
 ]
 
 export const PEW_SCOPE_NOTE = {
-  citation: PEW_2023,
+  citation: pewCitation(
+    'Religious composition — top-level categories',
+    'The inclusion review uses the U.S. adults / Religious composition table and only treats categories published at or above the threshold as reproducible population evidence.',
+    'The threshold is a population-scope rule for this prototype; it is not a theological, doctrinal, or textual ranking.'
+  ),
+  threshold: {
+    minimumPercent: 1,
+    denominator: PEW_RLS_DENOMINATOR,
+    rule: 'Include an Abrahamic category when Pew publishes that separately reported top-level category at 1% or more of U.S. adults. Do not infer eligibility for groups that are not separately reported at that threshold.',
+  },
   qualifyingCriteria: [
     'Traceable Abrahamic lineage (descended from the faith of Abraham)',
-    '1% or more of the US population (Pew Research Center Religious Landscape Study)',
+    'A separately reported top-level category at 1% or more of U.S. adults in the cited Pew table',
   ],
   excluded: [
     { name: 'Hinduism', reason: 'Not Abrahamic' },
     { name: 'Buddhism', reason: 'Not Abrahamic' },
-    { name: "Baha'i", reason: 'Abrahamic, but below 1% US threshold' },
+    { name: "Baha'i", reason: 'Abrahamic, but not separately reported at the 1% threshold in the cited table' },
     { name: 'Sikhism', reason: 'Not Abrahamic' },
-    { name: 'Druze', reason: 'Abrahamic, but below 1% US threshold' },
+    { name: 'Druze', reason: 'Abrahamic, but not separately reported at the 1% threshold in the cited table' },
   ],
-  note: 'Exclusions are methodological, not judgments of worth. Every tradition listed here is presented with equal respect.',
+  note: 'The threshold is reproducible but conservative: absence of a separately reported category is not evidence that a community is below 1%. Exclusions are methodological, not judgments of worth. Every tradition listed here is presented with equal respect.',
 }

@@ -1,4 +1,5 @@
 import { PEW_SCOPE_NOTE } from '../data/traditions'
+import PewProvenance from './PewProvenance'
 
 interface Props {
   compact?: boolean
@@ -31,6 +32,13 @@ export default function ScopeExplainer({ compact = false, className = '' }: Prop
         ))}
       </ol>
 
+      <p className={`${compact ? 'text-2xs' : 'text-xs'} text-muted leading-relaxed mb-3`}>
+        Reproducible threshold: at least {PEW_SCOPE_NOTE.threshold.minimumPercent}% of{' '}
+        {PEW_SCOPE_NOTE.threshold.denominator}, using a separately reported top-level
+        category. The threshold does not treat an unreported group as proof of being
+        below 1%.
+      </p>
+
       {!compact && (
         <>
           <p className="text-sm text-ink leading-relaxed mb-3">
@@ -52,15 +60,7 @@ export default function ScopeExplainer({ compact = false, className = '' }: Prop
         {PEW_SCOPE_NOTE.note}
       </p>
 
-      <a
-        href={PEW_SCOPE_NOTE.citation.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${compact ? 'text-2xs' : 'text-xs'} font-sans text-gold hover:text-gold-light transition-colors no-underline`}
-        aria-label="Pew Research Center Religious Landscape Study (opens in new tab)"
-      >
-        Source: {PEW_SCOPE_NOTE.citation.source}, {PEW_SCOPE_NOTE.citation.year} &rarr;
-      </a>
+      <PewProvenance citation={PEW_SCOPE_NOTE.citation} compact={compact} />
     </aside>
   )
 }

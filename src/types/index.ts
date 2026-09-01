@@ -11,6 +11,8 @@ export type TraditionFamily = 'christianity' | 'judaism' | 'islam'
 
 export type TranslationLicense = 'public-domain' | 'open-source' | 'licensed'
 
+export type PewStatisticStatus = 'confirmed' | 'inferred' | 'rounded'
+
 export type HadithCollection =
   | 'bukhari'
   | 'muslim'
@@ -23,7 +25,16 @@ export interface PewCitation {
   source: string
   year: number
   url: string
-  percentage?: number
+  reportTitle: string
+  table: string
+  sourceCategory: string
+  denominator: string
+  fieldworkDate: string
+  publicationDate: string
+  retrievedDate: string
+  extractionNote: string
+  compatibilityNote: string
+  status: PewStatisticStatus
 }
 
 export interface Tradition {
@@ -53,6 +64,8 @@ export interface TraditionGroup {
   family: TraditionFamily
   label: string
   totalPewPercent: number
+  pewCitation: PewCitation
+  pewRollupNote: string
   denominations: Denomination[]
 }
 

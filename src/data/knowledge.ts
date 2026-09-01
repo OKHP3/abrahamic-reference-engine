@@ -63,7 +63,7 @@ export const TRADITION_KNOWLEDGE: Record<TraditionFamily, TraditionKnowledge> = 
   christianity: {
     family: 'christianity',
     overview:
-      'Christianity emerged from Second Temple Judaism in the 1st century CE, centered on the life, death, and resurrection of Jesus of Nazareth. It is the world\'s largest religion and the majority faith in the United States (~63% per Pew 2023). Five denominations with 1%+ US population are included here.',
+      'Christianity emerged from Second Temple Judaism in the 1st century CE, centered on the life, death, and resurrection of Jesus of Nazareth. It is the world\'s largest religion and the majority faith in the United States. Five denominational lenses are included here; their population context and the broader Christian total are documented with exact Pew provenance at the point of use.',
     canonSummary:
       'Most Protestant traditions use a 66-book canon (39 OT + 27 NT). The Catholic canon adds 7 deuterocanonical books (73 total). Orthodox canons vary by jurisdiction, generally larger. The LDS tradition adds three additional scriptures to the KJV Bible.',
     interpretiveTraditions: [

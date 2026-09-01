@@ -8,6 +8,7 @@ import { COMPARE_THEMES, FEATURED_THEME_IDS } from '../data/compareThemes'
 import type { CompareTheme } from '../data/compareThemes'
 import { getThemesForPassage } from '../data/themeMapping'
 import ScopeExplainer from '../components/ScopeExplainer'
+import PewProvenance from '../components/PewProvenance'
 import TraditionBadge from '../components/TraditionBadge'
 import FeaturedHadithCard from '../components/FeaturedHadithCard'
 import { useSettings } from '../context/SettingsContext'
@@ -273,11 +274,12 @@ function TraditionDetail({ slug }: { slug: string }) {
           <div className="flex-shrink-0 text-right">
             <div
               className="text-2xl font-sans font-light text-gold"
-              title={`US population share per ${denomination.pewCitation.source}`}
+              title={`${denomination.pewPercent}% of ${denomination.pewCitation.denominator} — ${denomination.pewCitation.sourceCategory}; ${denomination.pewCitation.reportTitle}, ${denomination.pewCitation.table}`}
             >
               {denomination.pewPercent}%
             </div>
-            <div className="text-xs font-sans text-muted">of US adults</div>
+            <div className="text-xs font-sans text-muted">of {denomination.pewCitation.denominator}</div>
+            <PewProvenance citation={denomination.pewCitation} compact className="mt-2 text-left" />
           </div>
         </div>
       </div>
@@ -462,7 +464,7 @@ function TraditionDetail({ slug }: { slug: string }) {
           rel="noopener noreferrer"
           className="text-xs font-sans text-muted hover:text-gold transition-colors no-underline"
         >
-          Population data: {denomination.pewCitation.source}, {denomination.pewCitation.year} &rarr;
+          Population data: {denomination.pewCitation.reportTitle}, {denomination.pewCitation.table} &rarr;
         </a>
         <div className="flex items-center gap-4">
           <Link
@@ -527,7 +529,7 @@ function TraditionGrid() {
           <div className="flex items-baseline gap-3 mb-4">
             <TraditionBadge family={group.family} size="sm" />
             <span className="text-xs font-sans text-muted">
-              ~{group.totalPewPercent}% of US adults
+              {group.totalPewPercent}% of {group.pewCitation.denominator}
             </span>
           </div>
 
@@ -545,7 +547,7 @@ function TraditionGrid() {
                   </h3>
                   <span
                     className="pew-badge flex-shrink-0"
-                    title={`${d.pewPercent}% of US adults identify as ${d.name} (${d.pewCitation.source}, ${d.pewCitation.year})`}
+                    title={`${d.pewPercent}% of ${d.pewCitation.denominator} — ${d.pewCitation.sourceCategory}; ${d.pewCitation.reportTitle}, ${d.pewCitation.table}`}
                   >
                     {d.pewPercent}%
                   </span>
@@ -557,6 +559,17 @@ function TraditionGrid() {
             ))}
           </div>
         </section>
+      ))}
+
+      {TRADITION_GROUPS.map(group => (
+        <PewProvenance
+          key={`${group.family}-population-provenance`}
+          citation={group.pewCitation}
+          relatedCitations={group.denominations.map(d => d.pewCitation)}
+          rollupNote={group.pewRollupNote}
+          compact
+          className="mb-4"
+        />
       ))}
 
       <ScopeExplainer className="mt-4 mb-6" />

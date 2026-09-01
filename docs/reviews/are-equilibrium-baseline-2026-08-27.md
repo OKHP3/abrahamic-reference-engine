@@ -128,3 +128,17 @@ full live-provider release suite, or production direct-route matrix was
 executed in this baseline. The record expires when source metadata, provider
 contracts, deployment configuration, product scope, or any core route changes;
 it must also be revisited before a release that changes the public claims.
+
+## 10. Post-baseline mitigation note
+
+On 2026-08-31, the blocked demographic-provenance claim (CLM-03) was
+remediated in the working tree. User-visible percentages now point to the
+2023-24 U.S. Religious Landscape Study interactive database’s U.S. adults /
+Religious composition table and expose the source category, denominator,
+fieldwork and publication dates, extraction method, compatibility limits, and
+evidence status. The inclusion rule now requires a separately reported
+top-level Abrahamic category at 1% or more of U.S. adults; an unreported group
+is not silently treated as below the threshold. The Christianity total is
+identified as Pew’s direct 62% category rather than a sum of the five lenses
+shown in the app. Deterministic tests fail when required provenance fields are
+missing.

@@ -48,13 +48,21 @@ ordered by dependency and consequence, not by visual polish.
 
 ## Product truth and coverage
 
-### M4. Reconcile demographic and scope provenance
+### M4. Reconcile demographic and scope provenance -- complete (2026-08-31)
 
 - **Depends on:** baseline review
 - **Purpose:** replace the generic Pew landing-page attribution with exact
   report/table, denominator, date, extraction, and compatibility notes.
 - **Acceptance:** every displayed percentage has traceable source metadata and
   the inclusion rule is reproducible.
+- **Evidence:** `src/data/traditions.ts` stores report, table, source category,
+  denominator, fieldwork/publication/retrieval dates, extraction notes,
+  compatibility notes, and evidence status for every displayed percentage.
+  `src/components/PewProvenance.tsx` exposes that metadata at the point of use
+  across the sidebar, scope explainer, tradition cards, and detail view.
+  `tests/api-contracts.test.ts` asserts that every denomination, group, and
+  scope citation remains complete. The 62% Christian total is documented as a
+  direct Pew category rather than a sum of the five displayed lenses.
 
 ### M5. Decide bounded discovery and context modes -- complete (2026-08-27)
 

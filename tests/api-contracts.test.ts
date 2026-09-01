@@ -7,11 +7,43 @@ import {
   LOOKUP_CAPABILITIES,
 } from '../src/api/index.ts'
 import { fetchAyah } from '../src/api/quran.ts'
+import { DENOMINATIONS, PEW_SCOPE_NOTE, TRADITION_GROUPS } from '../src/data/traditions.ts'
 
 const originalFetch = globalThis.fetch
 
 afterEach(() => {
   globalThis.fetch = originalFetch
+})
+
+test('requires complete provenance for every displayed population percentage', () => {
+  const requiredFields = [
+    'source', 'reportTitle', 'table', 'sourceCategory', 'denominator',
+    'fieldworkDate', 'publicationDate', 'retrievedDate', 'extractionNote',
+    'compatibilityNote', 'status', 'url',
+  ] as const
+
+  for (const citation of [
+    ...DENOMINATIONS.map(denomination => denomination.pewCitation),
+    ...TRADITION_GROUPS.map(group => group.pewCitation),
+    PEW_SCOPE_NOTE.citation,
+  ]) {
+    for (const field of requiredFields) {
+      assert.equal(typeof citation[field], 'string', `${field} missing for ${citation.sourceCategory}`)
+      assert.notEqual(citation[field], '', `${field} empty for ${citation.sourceCategory}`)
+    }
+    assert.match(citation.status, /^(confirmed|inferred|rounded)$/)
+  }
+
+  assert.equal(PEW_SCOPE_NOTE.threshold.minimumPercent, 1)
+  assert.match(PEW_SCOPE_NOTE.threshold.rule, /separately reported top-level category/)
+  assert.equal(TRADITION_GROUPS.find(group => group.family === 'christianity')?.totalPewPercent, 62)
+  for (const group of TRADITION_GROUPS) {
+    assert.ok(group.pewRollupNote.length > 0, `rollup note missing for ${group.family}`)
+  }
+  assert.match(
+    TRADITION_GROUPS.find(group => group.family === 'christianity')?.pewRollupNote ?? '',
+    /not be added/
+  )
 })
 
 test('keeps paraphrase discovery and context-depth modes outside the prototype boundary', () => {

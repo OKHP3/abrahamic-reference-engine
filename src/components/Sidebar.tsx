@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { TRADITION_GROUPS, PEW_SCOPE_NOTE } from '../data/traditions'
 import type { TraditionGroup } from '../types'
+import PewProvenance from './PewProvenance'
 
 interface SidebarProps {
   isOpen: boolean
@@ -14,8 +15,8 @@ function TraditionGroupSection({ group, onClose }: { group: TraditionGroup; onCl
         <span className="text-2xs font-sans font-semibold tracking-widest uppercase text-muted">
           {group.label}
         </span>
-        <span className="text-2xs font-sans text-muted" title="US population share (Pew Research Center)">
-          ~{group.totalPewPercent}%
+        <span className="text-2xs font-sans text-muted" aria-label={`${group.label}: ${group.totalPewPercent}% of ${group.pewCitation.denominator}`}>
+          {group.totalPewPercent}%
         </span>
       </div>
 
@@ -32,7 +33,8 @@ function TraditionGroupSection({ group, onClose }: { group: TraditionGroup; onCl
           <span className="truncate">{d.name}</span>
           <span
             className="pew-badge flex-shrink-0 ml-2"
-            title={`${d.pewPercent}% of US adults identify as ${d.name} (${d.pewCitation.source}, ${d.pewCitation.year})`}
+            title={`${d.pewPercent}% of ${d.pewCitation.denominator} — ${d.pewCitation.sourceCategory}; ${d.pewCitation.reportTitle}, ${d.pewCitation.table}`}
+            aria-label={`${d.name}: ${d.pewPercent}% of ${d.pewCitation.denominator}; ${d.pewCitation.sourceCategory} in ${d.pewCitation.reportTitle}`}
           >
             {d.pewPercent}%
           </span>
@@ -94,17 +96,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         <div className="px-1 pt-3 pb-4 border-t border-border-subtle mt-2">
           <p className="text-2xs font-sans text-muted leading-relaxed">
-            Scope: Abrahamic traditions with 1%+ US presence.
+            Scope: Abrahamic categories reported at {PEW_SCOPE_NOTE.threshold.minimumPercent}%+ of {PEW_SCOPE_NOTE.threshold.denominator}.
           </p>
-          <a
-            href={PEW_SCOPE_NOTE.citation.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-2xs font-sans text-gold-muted hover:text-gold transition-colors duration-150 no-underline mt-0.5 block"
-            aria-label="Pew Research Center Religious Landscape Study (opens in new tab)"
-          >
-            Pew Research Center, {PEW_SCOPE_NOTE.citation.year} &rarr;
-          </a>
+          <PewProvenance
+            citation={PEW_SCOPE_NOTE.citation}
+            relatedCitations={TRADITION_GROUPS.flatMap(group => group.denominations.map(d => d.pewCitation))}
+            className="mt-2"
+            compact
+          />
         </div>
       </nav>
 

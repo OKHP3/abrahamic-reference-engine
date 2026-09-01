@@ -149,19 +149,21 @@ The current scope is intentionally narrow.
 
 | Tradition | US Share (Pew) | In scope | Notes |
 |-----------|----------------|----------|-------|
-| Christianity | ~63% | Yes | Includes several denominational lenses |
-| Judaism | ~2% | Yes | Tanakh / Jewish textual reference support |
-| Islam | ~1% | Yes | Qur'an-focused reference support |
-| Hinduism | ~1% | No | Important, but not Abrahamic |
-| Buddhism | ~1% | No | Important, but not Abrahamic |
-| Baha'i | ~0.1% | No | Abrahamic-adjacent, below current threshold |
+| Christianity | 62% | Yes | Direct Pew category; the app shows several denominational lenses |
+| Judaism | 2% | Yes | Direct Pew category; Tanakh / Jewish textual reference support |
+| Islam | 1% | Yes | Direct Pew category; Qur'an-focused reference support |
+| Hinduism | 1% | No | Important, but not Abrahamic; direct Pew category |
+| Buddhism | 1% | No | Important, but not Abrahamic; direct Pew category |
+| Baha'i | Not separately reported | No | Abrahamic-adjacent; not a separately reported category at the current threshold |
 
-Source: [Pew Research Center, Religious Landscape Study](https://www.pewresearch.org/religion/religious-landscape-study/)
+Source: [Pew Research Center, 2023-24 U.S. Religious Landscape Study](https://www.pewresearch.org/religious-landscape-study/region/united-states/), interactive database, U.S. adults → Religious composition → 2023-24. Fieldwork ran July 17, 2023–March 4, 2024; published February 26, 2025. Figures are whole percentages as published and may not sum due to rounding.
 
 A tradition must currently meet both criteria:
 
 1. It belongs to the Abrahamic family of traditions.
-2. It represents approximately 1% or more of the United States population per Pew.
+2. Pew separately reports its top-level category at 1% or more of U.S. adults in that table. The app does not infer that an unreported group is below 1%.
+
+The 62% Christian total is Pew’s direct top-level category, not the sum of the five Christian lenses shown in the app. Pew’s constituent categories are Evangelical Protestant (23%), Mainline Protestant (11%), Historically Black Protestant (5%), Catholic (19%), Latter-day Saint (2%), Orthodox Christian (1%), Jehovah’s Witness (<1%), and Other Christian (1%); whole-percent display and `<1%` source labels mean the displayed components are not arithmetically exact.
 
 This scope may evolve, but expansion should remain explicit rather than accidental.
 
