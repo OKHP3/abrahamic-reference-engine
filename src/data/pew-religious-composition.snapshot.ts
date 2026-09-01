@@ -58,4 +58,70 @@ export const PEW_RLS_SOURCE_SNAPSHOT = {
       displayValue: 1,
     },
   },
+  scopeRows: {
+    christianity: {
+      label: 'Christianity',
+      sourceCategory: 'Christians',
+      displayValue: 62,
+    },
+    judaism: {
+      label: 'Judaism',
+      sourceCategory: 'Jewish',
+      displayValue: 2,
+    },
+    islam: {
+      label: 'Islam',
+      sourceCategory: 'Muslim',
+      displayValue: 1,
+    },
+    hinduism: {
+      label: 'Hinduism',
+      sourceCategory: 'Hindu',
+      displayValue: 1,
+    },
+    buddhism: {
+      label: 'Buddhism',
+      sourceCategory: 'Buddhist',
+      displayValue: 1,
+    },
+    bahai: {
+      label: "Baha'i",
+      sourceCategory: 'Not separately reported',
+      displayValue: 'Not separately reported',
+    },
+  },
+  christianComponents: {
+    evangelical: {
+      sourceCategory: 'Evangelical Protestant',
+      displayValue: 23,
+    },
+    mainline: {
+      sourceCategory: 'Mainline Protestant',
+      displayValue: 11,
+    },
+    historicallyBlack: {
+      sourceCategory: 'Historically Black Protestant',
+      displayValue: 5,
+    },
+    catholic: {
+      sourceCategory: 'Catholic',
+      displayValue: 19,
+    },
+    lds: {
+      sourceCategory: 'Latter-day Saint (Mormon)',
+      displayValue: 2,
+    },
+    orthodox: {
+      sourceCategory: 'Orthodox Christian',
+      displayValue: 1,
+    },
+    jehovahsWitness: {
+      sourceCategory: "Jehovah's Witness",
+      displayValue: '<1',
+    },
+    otherChristian: {
+      sourceCategory: 'Other Christian',
+      displayValue: 1,
+    },
+  },
 } as const

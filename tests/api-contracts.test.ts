@@ -93,6 +93,117 @@ test('keeps displayed Pew values, categories, and table context aligned with the
   )
 })
 
+test('keeps the README scope table and Pew explanation aligned with the source snapshot', () => {
+  const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8')
+  const scopeSection = readme.match(/## Scope\n([\s\S]*?)(?=\n---\n\n## Design principles)/)?.[1]
+  assert.ok(scopeSection, 'README scope section is missing or has moved')
+
+  const tableRows = [...scopeSection.matchAll(
+    /^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*(Yes|No)\s*\|\s*([^|]+?)\s*\|$/gm
+  )].map(([, label, value, inScope, notes]) => ({
+    label: label.trim(),
+    value: value.trim(),
+    inScope: inScope.trim(),
+    notes: notes.trim(),
+  }))
+  const expectedRows = Object.values(PEW_RLS_SOURCE_SNAPSHOT.scopeRows)
+
+  assert.equal(
+    tableRows.length,
+    expectedRows.length,
+    `README scope tradition count drift: found ${tableRows.length}, expected ${expectedRows.length}`
+  )
+  for (const expected of expectedRows) {
+    const row = tableRows.find(candidate => candidate.label === expected.label)
+    assert.ok(row, `README scope tradition is missing: ${expected.label}`)
+    const expectedValue =
+      typeof expected.displayValue === 'number'
+        ? `${expected.displayValue}%`
+        : expected.displayValue
+    assert.equal(row.value, expectedValue, `README scope value drift for ${expected.label}`)
+    assert.match(
+      row.notes,
+      expected.sourceCategory === 'Not separately reported'
+        ? /not a separately reported category/i
+        : new RegExp(
+            `direct Pew category \\("${escapeRegExp(expected.sourceCategory)}"\\)`,
+            'i'
+          ),
+      `README scope category context drift for ${expected.label} (${expected.sourceCategory})`
+    )
+    assert.equal(
+      row.inScope,
+      TRADITION_GROUPS.some(group => group.label === expected.label) ? 'Yes' : 'No',
+      `README scope status drift for ${expected.label}`
+    )
+  }
+
+  for (const row of tableRows) {
+    assert.ok(
+      expectedRows.some(expected => expected.label === row.label),
+      `README scope tradition is not in the source snapshot: ${row.label}`
+    )
+  }
+
+  const christianTotal = PEW_RLS_SOURCE_SNAPSHOT.groups.christianity.displayValue
+  assert.match(
+    scopeSection,
+    new RegExp(
+      `The ${christianTotal}% Christian total is Pew[’']s direct top-level category`
+    ),
+    `README Christian total drift for Christianity (${christianTotal}%)`
+  )
+
+  const componentExplanation = scopeSection.match(
+    /Pew[’']s constituent categories are ([\s\S]*?); whole-percent display/
+  )?.[1]
+  assert.ok(componentExplanation, 'README Christian component explanation is missing')
+  const actualComponents = [...componentExplanation.matchAll(
+    /(?:^|, and |, |and )([^,]+?)\s+\((<1|\d+)%\)/g
+  )].map(([, sourceCategory, displayValue]) => ({
+    sourceCategory: sourceCategory.trim(),
+    displayValue,
+  }))
+  const expectedComponents = Object.values(PEW_RLS_SOURCE_SNAPSHOT.christianComponents)
+
+  assert.equal(
+    actualComponents.length,
+    expectedComponents.length,
+    `README Christian component count drift: found ${actualComponents.length}, expected ${expectedComponents.length}`
+  )
+  for (const expected of expectedComponents) {
+    const component = actualComponents.find(
+      candidate => candidate.sourceCategory === expected.sourceCategory
+    )
+    assert.ok(
+      component,
+      `README Christian component category drift: missing ${expected.sourceCategory}`
+    )
+    assert.equal(
+      component.displayValue,
+      String(expected.displayValue),
+      `README Christian component value drift for ${expected.sourceCategory}`
+    )
+  }
+
+  const sourceContext = scopeSection.match(/^Source:.*$/m)?.[0]
+  assert.ok(sourceContext, 'README Pew source context is missing')
+  for (const [context, expected] of [
+    ['source', PEW_RLS_SOURCE_SNAPSHOT.source],
+    ['report', PEW_RLS_SOURCE_SNAPSHOT.reportTitle],
+    ['table', PEW_RLS_SOURCE_SNAPSHOT.table],
+    ['denominator', PEW_RLS_SOURCE_SNAPSHOT.denominator],
+    ['fieldwork', `Fieldwork ran ${PEW_RLS_SOURCE_SNAPSHOT.fieldworkDate}`],
+    ['publication', `published ${PEW_RLS_SOURCE_SNAPSHOT.publicationDate}`],
+  ]) {
+    assert.match(
+      sourceContext,
+      new RegExp(escapeRegExp(expected)),
+      `README Pew ${context} context drift: expected "${expected}"`
+    )
+  }
+})
+
 test('keeps paraphrase discovery and context-depth modes outside the prototype boundary', () => {
   assert.deepEqual(LOOKUP_CAPABILITIES, {
     exactReferenceLookup: true,
@@ -120,6 +231,10 @@ test('keeps paraphrase discovery and context-depth modes outside the prototype b
   assert.match(readme, /does\s+not offer fuzzy or paraphrase search/)
   assert.match(readme, /none\/brief\/\s*scholarly context-depth modes/)
 })
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
 
 function mockFetch(
   response: unknown,
