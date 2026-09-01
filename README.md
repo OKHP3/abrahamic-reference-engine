@@ -72,10 +72,15 @@ Supported data pathways:
 - Quran.com and AlQuran.cloud for Qur'an references;
 - structured local metadata for translations, traditions, themes, and comparison logic.
 
-**Lookup boundary:** The public prototype accepts exact references only. It does
-not offer fuzzy or paraphrase search, candidate suggestions, or none/brief/
-scholarly context-depth modes. A failed exact lookup is not converted into a
-guess. Use **Cross-Tradition Compare** for the separate, pre-seeded theme set.
+**Lookup boundary:** The public prototype accepts exact references and also
+offers a bounded phrase search over the checked-in quotations used by the
+comparison dataset. Phrase matching is literal, case-insensitive, and
+contiguous; results show the exact reference, quoted source text, translation,
+and source link. No-match and multiple-candidate states are explicit. It does
+not offer fuzzy or paraphrase search, full-canon/provider-wide search,
+candidate ranking, or none/brief/scholarly context-depth modes. A failed exact
+lookup is not converted into a guess. Use **Cross-Tradition Compare** for the
+separate, pre-seeded theme set.
 
 ### 3. Compare themes across traditions
 

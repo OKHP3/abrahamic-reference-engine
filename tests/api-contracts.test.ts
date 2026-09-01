@@ -2,9 +2,11 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { afterEach, test } from 'node:test'
 import {
+  discoverPhrase,
   fetchPassage,
   isLikelyValidRef,
   LOOKUP_CAPABILITIES,
+  PHRASE_DISCOVERY_POLICY,
 } from '../src/api/index.ts'
 import { fetchAyah } from '../src/api/quran.ts'
 import { DENOMINATIONS, PEW_SCOPE_NOTE, TRADITION_GROUPS } from '../src/data/traditions.ts'
@@ -207,6 +209,7 @@ test('keeps the README scope table and Pew explanation aligned with the source s
 test('keeps paraphrase discovery and context-depth modes outside the prototype boundary', () => {
   assert.deepEqual(LOOKUP_CAPABILITIES, {
     exactReferenceLookup: true,
+    phraseDiscovery: true,
     paraphraseSearch: false,
     contextModes: false,
     seededThemeComparisons: true,
@@ -227,9 +230,40 @@ test('keeps paraphrase discovery and context-depth modes outside the prototype b
   assert.match(lookupPage, /not paraphrase matches or generated commentary/)
   assert.match(comparePage, /quoted from the labeled translation and linked source/)
   assert.match(comparePage, /ARE editorial commentary, not source text/)
-  assert.match(readme, /accepts exact references only/)
+  assert.match(readme, /accepts exact references and also\s+offers a bounded phrase search/)
   assert.match(readme, /does\s+not offer fuzzy or paraphrase search/)
   assert.match(readme, /none\/brief\/\s*scholarly context-depth modes/)
+})
+
+test('phrase discovery is deterministic, literal, and explicit about ambiguity', () => {
+  assert.match(PHRASE_DISCOVERY_POLICY.corpus, /checked-in static quotations/)
+  assert.match(PHRASE_DISCOVERY_POLICY.corpus, /without editorial ellipsis truncation/)
+  assert.match(PHRASE_DISCOVERY_POLICY.matching, /literal contiguous phrase/)
+  assert.match(PHRASE_DISCOVERY_POLICY.excludes, /No paraphrase/)
+
+  const noMatch = discoverPhrase('a phrase that is not in the source corpus')
+  assert.equal(noMatch.state, 'no-match')
+  assert.equal(noMatch.ambiguity, 'none')
+  assert.deepEqual(noMatch.candidates, [])
+
+  const oneMatch = discoverPhrase('In the beginning God created')
+  assert.equal(oneMatch.state, 'one-match')
+  assert.equal(oneMatch.ambiguity, 'none')
+  assert.equal(oneMatch.candidates.length, 1)
+  assert.equal(oneMatch.candidates[0].reference, 'Genesis 1:1')
+  assert.match(oneMatch.candidates[0].sourceUrl, /^https:\/\/www\.sefaria\.org\//)
+  assert.match(oneMatch.candidates[0].quotedText, /In the beginning God created/)
+
+  const multipleCandidates = discoverPhrase('mercy')
+  assert.equal(multipleCandidates.state, 'multiple-candidates')
+  assert.equal(multipleCandidates.ambiguity, 'ambiguous')
+  assert.ok(multipleCandidates.candidates.length > 1)
+  for (const candidate of multipleCandidates.candidates) {
+    assert.ok(candidate.reference.length > 0)
+    assert.ok(candidate.sourceUrl.startsWith('https://'))
+    assert.ok(candidate.quotedText.length > 0)
+    assert.equal('bridgingNote' in candidate, false)
+  }
 })
 
 function escapeRegExp(value: string): string {

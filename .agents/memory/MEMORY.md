@@ -5,3 +5,4 @@
 - [Responsive accessibility checks](responsive-accessibility-checks.md) -- transformed mobile drawers need inert keyboard isolation; emulate reduced motion explicitly in Playwright
 - [Async live-region announcements](async-live-region-announcements.md) -- preserve aggregate loading messages while concurrent requests settle independently
 - [Pew documentation sync](pew-documentation-sync.md) -- keep public scope figures and category context checked against the offline source snapshot
+- [Phrase discovery boundary](phrase-discovery-boundary.md) -- keep phrase matching literal, inspectable, and separate from paraphrase or editorial interpretation

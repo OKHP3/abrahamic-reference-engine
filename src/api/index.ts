@@ -21,6 +21,16 @@ export {
   LdsApiUnavailableError,
   LDS_UNAVAILABLE_MSG,
 } from './nephi'
+export {
+  discoverPhrase,
+  PHRASE_DISCOVERY_POLICY,
+  PHRASE_SOURCE_CORPUS,
+} from '../data/phraseDiscovery'
+export type {
+  PhraseDiscoveryCandidate,
+  PhraseDiscoveryResult,
+  PhraseDiscoveryState,
+} from '../data/phraseDiscovery'
 
 /**
  * Public product boundary for passage discovery and context.
@@ -31,6 +41,7 @@ export {
  */
 export const LOOKUP_CAPABILITIES = {
   exactReferenceLookup: true,
+  phraseDiscovery: true,
   paraphraseSearch: false,
   contextModes: false,
   seededThemeComparisons: true,

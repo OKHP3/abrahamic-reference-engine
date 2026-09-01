@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import {
+  discoverPhrase,
   fetchPassage,
   fetchNephiPassage,
   isLdsBibleRef,
@@ -8,6 +9,7 @@ import {
   LdsApiUnavailableError,
   LOOKUP_CAPABILITIES,
 } from '../api'
+import type { PhraseDiscoveryCandidate, PhraseDiscoveryResult } from '../api'
 import { fetchHadithBatch, HADITH_COLLECTION_SIZES } from '../api/hadith'
 import { TRANSLATIONS_BY_FAMILY } from '../data/translations'
 import { ORTHODOX_GAP_BOOKS_DATA } from '../data/orthodoxGapTexts'
@@ -20,7 +22,13 @@ import TraditionBadge from '../components/TraditionBadge'
 import ScopeExplainer from '../components/ScopeExplainer'
 import { useSettings } from '../context/SettingsContext'
 import { getChristianDenominationSlug } from '../settings'
-import type { Passage, Hadith, TraditionFamily, ApiStatus, HadithCollection } from '../types'
+import type {
+  Passage,
+  Hadith,
+  TraditionFamily,
+  ApiStatus,
+  HadithCollection,
+} from '../types'
 
 type ChristianDenomination = 'catholic' | 'protestant' | 'lds' | 'orthodox' | null
 
@@ -195,6 +203,8 @@ export default function VerseLookup() {
 
   const initialTradition = (searchParams.get('tradition') as TraditionFamily | null) ?? 'judaism'
   const initialRef = searchParams.get('ref') ?? ''
+  const initialPhrase = searchParams.get('phrase') ?? ''
+  const initialPhraseResult = initialPhrase ? discoverPhrase(initialPhrase) : null
   const rawDenom = searchParams.get('denomination')
   const initialDenom: ChristianDenomination =
     rawDenom === 'catholic' ? 'catholic'
@@ -234,6 +244,8 @@ export default function VerseLookup() {
   const [hadithCollection, setHadithCollection] = useState<HadithCollection>('bukhari')
   const [fetchedRef, setFetchedRef] = useState('')
   const [fetchedTradition, setFetchedTradition] = useState<TraditionFamily>('judaism')
+  const [phraseQuery, setPhraseQuery] = useState(initialPhrase)
+  const [phraseResult, setPhraseResult] = useState<PhraseDiscoveryResult | null>(initialPhraseResult)
   const [copied, setCopied] = useState(false)
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fetchRequestIdRef = useRef(0)
@@ -265,8 +277,9 @@ export default function VerseLookup() {
     const params: Record<string, string> = { tradition }
     if (reference) params.ref = reference
     if (denomination) params.denomination = denomination
+    if (phraseResult?.query) params.phrase = phraseResult.query
     setSearchParams(params, { replace: true })
-  }, [tradition, reference, denomination])
+  }, [tradition, reference, denomination, phraseResult?.query])
 
   const doFetch = useCallback(
     async (
@@ -413,6 +426,27 @@ export default function VerseLookup() {
     doFetch(tradition, reference, translationId, denomination)
   }
 
+  function handlePhraseSearch(e: React.FormEvent) {
+    e.preventDefault()
+    setPhraseResult(discoverPhrase(phraseQuery))
+  }
+
+  function handlePhraseCandidate(candidate: PhraseDiscoveryCandidate) {
+    fetchRequestIdRef.current += 1
+    hadithRequestIdRef.current += 1
+    setTradition(candidate.tradition)
+    setDenomination(null)
+    setReference(candidate.reference)
+    setTranslationId(candidate.translationId)
+    const params: Record<string, string> = {
+      tradition: candidate.tradition,
+      ref: candidate.reference,
+    }
+    if (phraseResult?.query) params.phrase = phraseResult.query
+    setSearchParams(params)
+    doFetch(candidate.tradition, candidate.reference, candidate.translationId, null)
+  }
+
   function handleTraditionChange(next: TraditionFamily) {
     fetchRequestIdRef.current += 1
     hadithRequestIdRef.current += 1
@@ -527,6 +561,135 @@ export default function VerseLookup() {
           Text is fetched live from free public APIs -- no account required.
         </p>
       </div>
+
+      <section
+        className="p-5 border border-border-mid rounded-lg bg-bg-elevated mb-6"
+        aria-labelledby="phrase-discovery-heading"
+      >
+        <h2
+          id="phrase-discovery-heading"
+          className="text-xs font-sans font-bold tracking-widest uppercase text-gold mb-2"
+        >
+          Find a source phrase
+        </h2>
+        <p className="text-sm text-ink leading-relaxed mb-3">
+          Search the checked-in quotations used by the comparison dataset. Matching is
+          literal and case-insensitive -- this does not infer paraphrases or search a
+          complete canon.
+        </p>
+        <form onSubmit={handlePhraseSearch} className="flex gap-3 flex-col sm:flex-row">
+          <div className="flex-1 min-w-0">
+            <label
+              htmlFor="phrase-query"
+              className="text-xs font-sans font-bold tracking-widest uppercase text-muted mb-2 block"
+            >
+              Phrase
+            </label>
+            <input
+              id="phrase-query"
+              type="text"
+              value={phraseQuery}
+              onChange={e => setPhraseQuery(e.target.value)}
+              placeholder="e.g. In the beginning God created"
+              className="w-full bg-bg-base border border-border-mid rounded px-3 py-2 text-sm font-sans text-parchment placeholder-muted focus:outline-none focus:border-gold-muted transition-colors"
+              aria-describedby="phrase-query-hint"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <p id="phrase-query-hint" className="text-2xs text-muted mt-1">
+              Exact words in order; punctuation and word boundaries are respected.
+            </p>
+          </div>
+          <div className="sm:w-40 flex items-end">
+            <button
+              type="submit"
+              disabled={!phraseQuery.trim()}
+              className="w-full px-4 py-2 text-sm font-sans font-semibold text-bg-base bg-gold rounded hover:bg-gold-light disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
+            >
+              Search quotations
+            </button>
+          </div>
+        </form>
+
+        {phraseResult && (
+          <div
+            className="mt-5 pt-4 border-t border-border-subtle"
+            aria-live="polite"
+            data-testid="phrase-discovery-results"
+          >
+            <div className="flex items-baseline justify-between gap-3 mb-2">
+              <h3 className="text-xs font-sans font-bold tracking-widest uppercase text-muted">
+                {phraseResult.state === 'no-match'
+                  ? 'No source match'
+                  : phraseResult.state === 'one-match'
+                  ? 'One source match'
+                  : `${phraseResult.candidates.length} source candidates`}
+              </h3>
+              <span className="text-2xs font-sans text-muted">
+                Ambiguity: {phraseResult.ambiguity === 'ambiguous' ? 'multiple candidates' : 'none'}
+              </span>
+            </div>
+            {phraseResult.state === 'no-match' ? (
+              <p className="text-sm text-ink leading-relaxed">
+                No exact phrase was found in this bounded source corpus. No reference was
+                inferred.
+              </p>
+            ) : (
+              <>
+                <p className="text-sm text-ink leading-relaxed mb-3">
+                  These are source-grounded candidates for{' '}
+                  <span className="font-mono text-parchment">{phraseResult.query}</span>.
+                  {phraseResult.state === 'multiple-candidates'
+                    ? ' Choose an exact reference; the search does not rank or interpret them.'
+                    : ' The quotation and reference are shown separately from any editorial material.'}
+                </p>
+                <div className="space-y-3">
+                  {phraseResult.candidates.map(candidate => (
+                    <article
+                      key={`${candidate.tradition}:${candidate.reference}:${candidate.translationId}`}
+                      className="p-4 border border-border-subtle rounded bg-bg-base"
+                    >
+                      <header className="flex items-start justify-between gap-3 mb-2">
+                        <div>
+                          <TraditionBadge family={candidate.tradition} size="sm" className="mb-2" />
+                          <h4 className="text-sm font-sans font-semibold text-parchment">
+                            {candidate.displayReference}
+                          </h4>
+                          <p className="text-2xs font-sans text-muted mt-0.5">
+                            {candidate.translationName}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handlePhraseCandidate(candidate)}
+                          className="px-3 py-1.5 text-2xs font-sans font-semibold text-gold-muted border border-border-subtle rounded hover:text-gold hover:border-gold transition-all duration-150 flex-shrink-0"
+                        >
+                          Use exact reference
+                        </button>
+                      </header>
+                      <p className="text-2xs font-sans text-muted uppercase tracking-widest mb-1">
+                        Quoted source text
+                      </p>
+                      <blockquote className="text-sm font-serif text-parchment leading-relaxed border-l-2 border-border-mid pl-3 mb-3">
+                        {candidate.quotedText}
+                      </blockquote>
+                      <a
+                        href={candidate.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-2xs font-sans text-gold-muted hover:text-gold transition-colors no-underline"
+                        aria-label={`Open ${candidate.displayReference} on source website`}
+                      >
+                        Open source &rarr;
+                      </a>
+                    </article>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </section>
 
       <div className="p-5 border border-border-mid rounded-lg bg-bg-elevated mb-6">
         <form onSubmit={handleSubmit} noValidate aria-busy={status === 'loading'}>
