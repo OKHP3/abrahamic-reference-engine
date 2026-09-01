@@ -113,6 +113,7 @@ test.describe('route matrix and refresh safety', () => {
     for (const [path, heading] of routes) {
       await page.goto(path)
       await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await expect(page.getByTestId('route-announcement')).toHaveText(`${heading} page`)
       await page.reload()
       await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
       await expect(page.locator('body')).toContainText(heading)
@@ -250,10 +251,13 @@ test.describe('deterministic lookup states', () => {
     await page.getByLabel('Reference').fill('john 3:16')
     await page.getByRole('button', { name: 'Look up passage' }).click()
     await expect(page.getByText('Fetching passage from API...')).toBeVisible()
+    await expect(page.getByTestId('lookup-announcement')).toContainText('Loading Christianity passage')
     releaseFirstRequest?.()
     await expect(page.getByRole('alert')).toContainText('bible-api.com error 503')
+    await expect(page.getByTestId('lookup-announcement')).toContainText('Christianity passage could not be loaded')
     await page.getByRole('button', { name: 'Try again' }).click()
     await expect(page.getByText('Retry succeeded passage.')).toBeVisible()
+    await expect(page.getByTestId('lookup-announcement')).toContainText('Christianity passage loaded')
 
     await page.getByRole('button', { name: 'Copy link' }).click()
     await expect(page.getByRole('button', { name: 'Copied!' })).toBeVisible()
@@ -318,10 +322,13 @@ test.describe('deterministic compare and observance states', () => {
     await page.goto('/compare')
     await page.getByRole('button', { name: 'Refresh all passages from live APIs' }).click()
     await expect(page.getByText('Fetching Christianity passage...')).toBeVisible()
+    await expect(page.getByTestId('compare-announcement')).toContainText('Loading Christianity, Islam, and Judaism')
     releaseFirstRequest?.()
     await expect(page.getByRole('alert')).toContainText('bible-api.com error 503')
+    await expect(page.getByTestId('compare-announcement')).toContainText('Christianity passage could not be loaded')
     await page.getByRole('button', { name: 'Refresh Christianity passage from live API' }).click()
     await expect(page.getByText('Christian retry passage.')).toBeVisible()
+    await expect(page.getByTestId('compare-announcement')).toContainText('Christianity passage loaded')
 
     await page.getByRole('button', { name: 'Copy shareable link to this theme comparison' }).click()
     await expect(
@@ -341,8 +348,9 @@ test.describe('deterministic compare and observance states', () => {
       await json(route, { code: 200, status: 'OK', data: [] })
     })
     await page.goto('/observances')
-    await expect(page.getByText(/Loading (Jewish and Islamic|Jewish|Islamic) holidays/)).toBeVisible()
+    await expect(page.getByTestId('observances-announcement')).toContainText('Loading')
     await expect(page.getByText('No events found for the selected filters.')).toBeVisible()
+    await expect(page.getByTestId('observances-announcement')).toContainText('Loaded')
   })
 
   test('shows calendar provider errors while preserving local Christian dates', async ({ page }) => {
@@ -353,6 +361,8 @@ test.describe('deterministic compare and observance states', () => {
     await page.goto('/observances')
     await expect(page.getByText('Could not load Jewish holidays. Check your connection.')).toBeVisible()
     await expect(page.getByText('Could not load Islamic holidays. Check your connection.')).toBeVisible()
+    await expect(page.getByRole('alert')).toContainText('Could not load Jewish holidays')
+    await expect(page.getByRole('alert')).toContainText('Could not load Islamic holidays')
     const currentMonth = await page.evaluate(() => new Date().getMonth())
     for (let month = currentMonth; month < 11; month += 1) {
       await page.getByRole('button', { name: 'Next month' }).click()

@@ -3,3 +3,4 @@
 - [Sefaria response shape](sefaria-response-shape.md) -- verse requests can return full chapter arrays with inline footnotes; normalize before display
 - [Chromium browser tests](chromium-browser-tests.md) -- Playwright needs explicit Chromium runtime libraries in the Replit Nix environment
 - [Responsive accessibility checks](responsive-accessibility-checks.md) -- transformed mobile drawers need inert keyboard isolation; emulate reduced motion explicitly in Playwright
+- [Async live-region announcements](async-live-region-announcements.md) -- preserve aggregate loading messages while concurrent requests settle independently

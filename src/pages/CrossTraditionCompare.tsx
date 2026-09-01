@@ -182,6 +182,7 @@ export default function CrossTraditionCompare() {
   const [panels, setPanels] = useState<Record<TraditionFamily, PanelState>>(
     buildInitialPanels(activeTheme)
   )
+  const [comparisonAnnouncement, setComparisonAnnouncement] = useState('')
   const panelRequestIdsRef = useRef<Record<TraditionFamily, number>>({
     judaism: 0,
     christianity: 0,
@@ -196,6 +197,7 @@ export default function CrossTraditionCompare() {
     setSearchParams({ theme: id })
     const theme = COMPARE_THEMES.find(t => t.id === id)!
     setPanels(buildInitialPanels(theme))
+    setComparisonAnnouncement(`Selected comparison theme: ${theme.title}.`)
   }
 
   useEffect(() => {
@@ -214,7 +216,11 @@ export default function CrossTraditionCompare() {
     }).catch(() => {})
   }
 
-  async function refreshPanel(family: TraditionFamily) {
+  async function refreshPanel(
+    family: TraditionFamily,
+    announceLoading = true,
+    announceSuccess = true,
+  ) {
     const p = activeTheme.passages[family]
     const requestId = ++panelRequestIdsRef.current[family]
     const isCurrentRequest = () => panelRequestIdsRef.current[family] === requestId
@@ -222,6 +228,9 @@ export default function CrossTraditionCompare() {
       ...prev,
       [family]: { ...prev[family], status: 'loading', error: null },
     }))
+    if (announceLoading) {
+      setComparisonAnnouncement(`Loading ${FAMILY_LABELS[family]} passage from the live API.`)
+    }
     try {
       const xlationId = family === 'christianity' ? 'kjv'
         : family === 'judaism' ? 'sefaria-en'
@@ -236,6 +245,9 @@ export default function CrossTraditionCompare() {
         ...prev,
         [family]: { ...prev[family], status: 'success', passage: result, error: null },
       }))
+      if (announceSuccess) {
+        setComparisonAnnouncement(`${FAMILY_LABELS[family]} passage loaded from the live API.`)
+      }
     } catch (err) {
       if (!isCurrentRequest()) return
       setPanels(prev => ({
@@ -246,15 +258,30 @@ export default function CrossTraditionCompare() {
           error: err instanceof Error ? err.message : 'Fetch failed',
         },
       }))
+      setComparisonAnnouncement(
+        `${FAMILY_LABELS[family]} passage could not be loaded. ${
+          err instanceof Error ? err.message : 'Fetch failed.'
+        }`,
+      )
     }
   }
 
   async function refreshAll() {
-    await Promise.all(FAMILIES.map(f => refreshPanel(f)))
+    setComparisonAnnouncement('Loading Christianity, Islam, and Judaism passages from the live APIs.')
+    await Promise.all(FAMILIES.map(f => refreshPanel(f, false, false)))
   }
 
   return (
     <div>
+      <div
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        data-testid="compare-announcement"
+      >
+        {comparisonAnnouncement}
+      </div>
       <div className="mb-6">
         <h1 className="text-2xl font-serif font-light text-gold mb-2">
           Cross-Tradition Compare

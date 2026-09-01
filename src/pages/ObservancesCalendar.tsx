@@ -182,9 +182,26 @@ export default function ObservancesCalendar() {
     loadState.judaism === 'loading' && 'Jewish',
     loadState.islam === 'loading' && 'Islamic',
   ].filter(Boolean).join(' and ')
+  const hasLoaded = loadState.judaism === 'done' || loadState.judaism === 'error'
+    || loadState.islam === 'done' || loadState.islam === 'error'
+  const hasProviderErrors = Boolean(errors.judaism || errors.islam)
+  const observanceAnnouncement = isLoading
+    ? `Loading ${loadingTraditions} holidays for ${year}.`
+    : hasLoaded
+    ? `${hasProviderErrors ? 'Loaded available' : 'Loaded'} observances for ${year}. ${MONTH_NAMES[viewMonth]} has ${filteredMonthEvents.length} event${filteredMonthEvents.length !== 1 ? 's' : ''}.`
+    : ''
 
   return (
     <div className="flex flex-col gap-5 pb-12">
+      <div
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        data-testid="observances-announcement"
+      >
+        {observanceAnnouncement}
+      </div>
       {/* Controls: year stepper + tradition filters + year download */}
       <ObservanceControls
         year={year}
@@ -206,7 +223,7 @@ export default function ObservancesCalendar() {
 
       {/* Inline errors */}
       {(errors.judaism || errors.islam) && (
-        <div className="space-y-1">
+        <div className="space-y-1" role="alert" aria-live="assertive" aria-atomic="true">
           {errors.judaism && (
             <p className="text-xs text-dimmed flex items-center gap-1.5">
               <span aria-hidden="true">&#9888;</span> {errors.judaism}

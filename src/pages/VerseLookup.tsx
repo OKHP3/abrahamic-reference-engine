@@ -481,9 +481,43 @@ export default function VerseLookup() {
   const isLds = tradition === 'christianity' && denomination === 'lds'
   const currentExamples = isLds ? LDS_EXAMPLES : TRADITION_EXAMPLES[tradition]
   const currentPlaceholder = isLds ? LDS_PLACEHOLDER : TRADITION_PLACEHOLDER[tradition]
+  const lookupAnnouncement = (() => {
+    let passageMessage = ''
+    if (status === 'loading') {
+      passageMessage = `Loading ${TRADITION_LABELS[tradition]} passage for ${reference.trim() || 'the requested reference'}.`
+    } else if (status === 'success' && passage) {
+      passageMessage = `${TRADITION_LABELS[fetchedTradition]} passage loaded: ${passage.displayReference}.`
+    } else if (status === 'error') {
+      passageMessage = isLdsFallback
+        ? `${TRADITION_LABELS[tradition]} passage could not be loaded. ${error ?? 'The LDS Standard Works service is unavailable.'}`
+        : canonGapBook
+        ? `${canonGapBook.name} needs a chapter and verse before it can be displayed.`
+        : `${TRADITION_LABELS[tradition]} passage could not be loaded. ${error ?? 'Enter a complete source reference.'}`
+    }
+
+    const hadithMessage =
+      hadithStatus === 'loading'
+        ? ' Loading related hadith.'
+        : hadithStatus === 'success'
+        ? ' Related hadith loaded.'
+        : hadithStatus === 'error'
+        ? ` Related hadith could not be loaded. ${hadithError ?? ''}`
+        : ''
+
+    return `${passageMessage}${hadithMessage}`.trim()
+  })()
 
   return (
     <div>
+      <div
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        data-testid="lookup-announcement"
+      >
+        {lookupAnnouncement}
+      </div>
       <div className="mb-6">
         <h1 className="text-2xl font-serif font-light text-gold mb-2">
           Verse Lookup
@@ -674,7 +708,7 @@ export default function VerseLookup() {
       </div>
 
       {status === 'loading' && (
-        <div className="py-6 flex justify-center" aria-live="polite">
+        <div className="py-6 flex justify-center">
           <LoadingSpinner label="Fetching passage from API..." size="md" />
         </div>
       )}
@@ -734,7 +768,7 @@ export default function VerseLookup() {
       )}
 
       {status === 'success' && passage && (
-        <div className="mb-6" aria-live="polite">
+        <div className="mb-6">
           <VerseCard passage={passage} showBadge showAttribution />
           <div className="mt-3 flex justify-end">
             <button
