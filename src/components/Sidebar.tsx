@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import { TRADITION_GROUPS, PEW_SCOPE_NOTE } from '../data/traditions'
 import type { TraditionGroup } from '../types'
@@ -6,6 +7,7 @@ import PewProvenance from './PewProvenance'
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
+  onCloseRestoreFocus?: () => void
 }
 
 function TraditionGroupSection({ group, onClose }: { group: TraditionGroup; onClose: () => void }) {
@@ -44,9 +46,31 @@ function TraditionGroupSection({ group, onClose }: { group: TraditionGroup; onCl
   )
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, onCloseRestoreFocus }: SidebarProps) {
+  const [isMobile, setIsMobile] = useState(false)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)')
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches)
+    updateIsMobile()
+    mediaQuery.addEventListener('change', updateIsMobile)
+    return () => mediaQuery.removeEventListener('change', updateIsMobile)
+  }, [])
+
+  useEffect(() => {
+    if (isOpen) closeButtonRef.current?.focus()
+  }, [isOpen])
+
+  const handleClose = useCallback(() => {
+    onClose()
+    onCloseRestoreFocus?.()
+  }, [onClose, onCloseRestoreFocus])
+
   return (
     <aside
+      aria-hidden={isMobile && !isOpen ? true : undefined}
+      inert={isMobile && !isOpen ? true : undefined}
       className={[
         'w-72 bg-bg-elevated border-r border-border-subtle flex flex-col',
         'fixed top-0 bottom-0 left-0 z-30 overflow-y-auto',
@@ -57,7 +81,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       aria-label="Tradition navigation"
     >
       <div className="px-5 py-4 border-b border-border-subtle flex-shrink-0 flex items-center justify-between">
-        <NavLink to="/browse" className="flex items-center gap-3 no-underline group" onClick={onClose}>
+          <NavLink to="/browse" className="flex items-center gap-3 no-underline group" onClick={handleClose}>
           <img
             src={`${import.meta.env.BASE_URL}android-chrome-192x192.png`}
             alt=""
@@ -77,8 +101,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </NavLink>
 
         <button
+          ref={closeButtonRef}
           className="md:hidden p-1 text-muted hover:text-parchment transition-colors"
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Close navigation"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -90,7 +115,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <nav className="flex-1 pt-4 px-3 flex flex-col" aria-label="Traditions">
         <div className="flex-1">
           {TRADITION_GROUPS.map(group => (
-            <TraditionGroupSection key={group.family} group={group} onClose={onClose} />
+            <TraditionGroupSection key={group.family} group={group} onClose={handleClose} />
           ))}
         </div>
 
@@ -114,7 +139,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
           <NavLink
             to="/skills"
-            onClick={onClose}
+            onClick={handleClose}
             className={({ isActive }) =>
               `text-2xs font-sans transition-colors duration-150 no-underline block leading-relaxed ${isActive ? 'text-gold' : 'text-muted hover:text-gold'}`
             }
@@ -123,7 +148,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </NavLink>
           <NavLink
             to="/origin"
-            onClick={onClose}
+            onClick={handleClose}
             className={({ isActive }) =>
               `text-2xs font-sans transition-colors duration-150 no-underline block leading-relaxed mt-1 ${isActive ? 'text-gold' : 'text-muted hover:text-gold'}`
             }

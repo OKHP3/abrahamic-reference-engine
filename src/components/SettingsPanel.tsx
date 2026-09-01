@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type KeyboardEvent } from 'react'
 import { useSettings } from '../context/SettingsContext'
 import {
   DENOMINATION_LABELS,
@@ -43,18 +43,45 @@ export { GearIcon }
 export default function SettingsPanel({ onClose }: SettingsPanelProps) {
   const { settings, setDenomination } = useSettings()
   const panelRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const returnFocusRef = useRef<HTMLElement | null>(
+    document.activeElement instanceof HTMLElement ? document.activeElement : null,
+  )
 
   useEffect(() => {
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', handleKey)
-    return () => document.removeEventListener('keydown', handleKey)
-  }, [onClose])
-
-  useEffect(() => {
-    panelRef.current?.focus()
+    closeButtonRef.current?.focus()
   }, [])
+
+  function closePanel() {
+    onClose()
+    returnFocusRef.current?.focus()
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      closePanel()
+      return
+    }
+
+    if (e.key !== 'Tab' || !panelRef.current) return
+    const focusable = Array.from(
+      panelRef.current.querySelectorAll<HTMLElement>(
+        'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter(element => !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true')
+    if (focusable.length === 0) return
+
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
 
   const currentDenom = settings.denomination
   const mapping = currentDenom ? DENOMINATION_TRANSLATION_MAP[currentDenom] : null
@@ -65,6 +92,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Settings"
+      onKeyDown={handleKeyDown}
     >
       <div
         className="fixed inset-0 bg-black/60"
@@ -74,7 +102,6 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
 
       <div
         ref={panelRef}
-        tabIndex={-1}
         className="relative z-10 w-full max-w-sm h-full bg-bg-elevated border-l border-border-subtle overflow-y-auto flex flex-col focus:outline-none"
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle flex-shrink-0">
@@ -82,7 +109,8 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
             Settings
           </h2>
           <button
-            onClick={onClose}
+            ref={closeButtonRef}
+            onClick={closePanel}
             className="p-1 text-muted hover:text-parchment transition-colors"
             aria-label="Close settings"
           >

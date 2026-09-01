@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, type RefObject } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useSettings } from '../context/SettingsContext'
@@ -7,6 +7,7 @@ import SettingsPanel, { GearIcon } from './SettingsPanel'
 interface ModeNavProps {
   onMenuClick: () => void
   sidebarOpen?: boolean
+  menuButtonRef?: RefObject<HTMLButtonElement | null>
 }
 
 const MODES = [
@@ -55,10 +56,11 @@ const THEME_META = {
   dark:   { icon: <MoonIcon />,   label: 'Dark',   next: 'System' },
 } as const
 
-export default function ModeNav({ onMenuClick, sidebarOpen = false }: ModeNavProps) {
+export default function ModeNav({ onMenuClick, sidebarOpen = false, menuButtonRef }: ModeNavProps) {
   const { mode, cycle } = useTheme()
   const { settings } = useSettings()
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const fallbackMenuButtonRef = useRef<HTMLButtonElement>(null)
 
   const hasDenomination = settings.denomination !== null
   const { icon, label, next } = THEME_META[mode]
@@ -67,6 +69,7 @@ export default function ModeNav({ onMenuClick, sidebarOpen = false }: ModeNavPro
     <>
       <header className="border-b border-border-subtle bg-bg-elevated flex-shrink-0 flex items-stretch">
         <button
+          ref={menuButtonRef ?? fallbackMenuButtonRef}
           className="md:hidden flex-shrink-0 px-4 text-muted hover:text-parchment transition-colors border-r border-border-subtle"
           onClick={onMenuClick}
           aria-label="Open navigation"

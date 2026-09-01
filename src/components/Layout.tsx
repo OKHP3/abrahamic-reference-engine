@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import ModeNav from './ModeNav'
@@ -8,9 +8,13 @@ import { usePageTracking } from '../hooks/usePageTracking'
 export default function Layout() {
   usePageTracking()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   const openSidebar = useCallback(() => setSidebarOpen(true), [])
   const closeSidebar = useCallback(() => setSidebarOpen(false), [])
+  const restoreMenuFocus = useCallback(() => {
+    requestAnimationFrame(() => menuButtonRef.current?.focus())
+  }, [])
 
   return (
     <div className="flex min-h-screen bg-bg-base">
@@ -22,10 +26,18 @@ export default function Layout() {
         />
       )}
 
-      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={closeSidebar}
+        onCloseRestoreFocus={restoreMenuFocus}
+      />
 
       <div className="flex flex-col flex-1 min-w-0 md:ml-72">
-        <ModeNav onMenuClick={openSidebar} sidebarOpen={sidebarOpen} />
+        <ModeNav
+          onMenuClick={openSidebar}
+          sidebarOpen={sidebarOpen}
+          menuButtonRef={menuButtonRef}
+        />
         <main className="flex-1 px-4 py-6 sm:px-6 md:px-8 w-full max-w-4xl">
           <Outlet />
         </main>

@@ -24,6 +24,15 @@ const hadithCollection = {
   hadiths: [{ hadithnumber: 206, text: 'Hadith response' }],
 }
 
+const primaryRoutes = [
+  ['/browse', 'Browse Traditions'],
+  ['/lookup', 'Verse Lookup'],
+  ['/compare', 'Cross-Tradition Compare'],
+  ['/observances', 'Observances'],
+  ['/skills', 'Agent Skills'],
+  ['/origin', 'Origin Archive'],
+] as const
+
 const aladhanDay = (year: string, month: string) => ({
   gregorian: {
     date: `01-${month.padStart(2, '0')}-${year}`,
@@ -141,6 +150,83 @@ test.describe('route matrix and refresh safety', () => {
       documentWidth: document.documentElement.scrollWidth,
     }))
     expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.viewport + 1)
+  })
+})
+
+test.describe('keyboard, focus, zoom, and motion accessibility', () => {
+  test.use({ reducedMotion: 'reduce' })
+
+  test('keeps keyboard focus visible on every primary route at 200% zoom', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    for (const [path, heading] of primaryRoutes) {
+      await page.goto(path)
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await page.evaluate(() => {
+        document.documentElement.style.zoom = '200%'
+      })
+      expect(await page.evaluate(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true)
+      await expect.poll(() => page.evaluate(() => document.documentElement.style.zoom)).toBe('200%')
+
+      const focusableCount = await page.locator(
+        'a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])',
+      ).count()
+      const tabsToCheck = Math.min(focusableCount, 12)
+      expect(tabsToCheck).toBeGreaterThan(0)
+
+      for (let tab = 0; tab < tabsToCheck; tab += 1) {
+        await page.keyboard.press('Tab')
+        const focused = page.locator(':focus-visible')
+        await expect(focused).toHaveCount(1)
+        await focused.scrollIntoViewIfNeeded()
+        await expect(focused).toBeVisible()
+        const focusStyle = await focused.evaluate(element => {
+          const style = window.getComputedStyle(element)
+          return { outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth }
+        })
+        expect(focusStyle.outlineStyle).not.toBe('none')
+        expect(focusStyle.outlineWidth).not.toBe('0px')
+      }
+    }
+  })
+
+  test('opens, uses, and closes settings without a pointer', async ({ page }) => {
+    await page.goto('/browse')
+    const settingsButton = page.getByRole('button', { name: 'Open settings' })
+    await settingsButton.focus()
+    await page.keyboard.press('Enter')
+
+    const dialog = page.getByRole('dialog', { name: 'Settings' })
+    await expect(dialog).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Close settings' })).toBeFocused()
+    await page.getByRole('button', { name: 'Catholic' }).focus()
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('button', { name: 'Catholic' })).toHaveAttribute('aria-pressed', 'true')
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeHidden()
+    await expect(settingsButton).toBeFocused()
+  })
+
+  test('opens, uses, and closes mobile navigation without a pointer', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto('/browse')
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    await openButton.focus()
+    await page.keyboard.press('Enter')
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const closeButton = page.getByRole('button', { name: 'Close navigation' })
+    await expect(closeButton).toBeFocused()
+
+    await sidebar.getByRole('link', { name: /Catholic/ }).first().focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/browse\/catholic$/)
+
+    await openButton.focus()
+    await page.keyboard.press('Enter')
+    await expect(closeButton).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(sidebar).toBeHidden()
+    await expect(openButton).toBeFocused()
   })
 })
 
