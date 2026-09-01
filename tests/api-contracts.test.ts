@@ -8,6 +8,7 @@ import {
 } from '../src/api/index.ts'
 import { fetchAyah } from '../src/api/quran.ts'
 import { DENOMINATIONS, PEW_SCOPE_NOTE, TRADITION_GROUPS } from '../src/data/traditions.ts'
+import { PEW_RLS_SOURCE_SNAPSHOT } from '../src/data/pew-religious-composition.snapshot.ts'
 
 const originalFetch = globalThis.fetch
 
@@ -43,6 +44,52 @@ test('requires complete provenance for every displayed population percentage', (
   assert.match(
     TRADITION_GROUPS.find(group => group.family === 'christianity')?.pewRollupNote ?? '',
     /not be added/
+  )
+})
+
+test('keeps displayed Pew values, categories, and table context aligned with the source snapshot', () => {
+  const snapshot = PEW_RLS_SOURCE_SNAPSHOT
+  const citations = [
+    ...DENOMINATIONS.map(denomination => denomination.pewCitation),
+    ...TRADITION_GROUPS.map(group => group.pewCitation),
+    PEW_SCOPE_NOTE.citation,
+  ]
+
+  for (const citation of citations) {
+    assert.equal(citation.source, snapshot.source, `source drift for ${citation.sourceCategory}`)
+    assert.equal(citation.year, snapshot.year, `year drift for ${citation.sourceCategory}`)
+    assert.equal(citation.url, snapshot.url, `URL drift for ${citation.sourceCategory}`)
+    assert.equal(citation.reportTitle, snapshot.reportTitle, `report drift for ${citation.sourceCategory}`)
+    assert.equal(citation.table, snapshot.table, `table drift for ${citation.sourceCategory}`)
+    assert.equal(citation.denominator, snapshot.denominator, `denominator drift for ${citation.sourceCategory}`)
+    assert.equal(citation.fieldworkDate, snapshot.fieldworkDate, `fieldwork drift for ${citation.sourceCategory}`)
+    assert.equal(citation.publicationDate, snapshot.publicationDate, `publication drift for ${citation.sourceCategory}`)
+    assert.equal(citation.retrievedDate, snapshot.retrievedDate, `retrieved-date drift for ${citation.sourceCategory}`)
+  }
+
+  for (const [id, expected] of Object.entries(snapshot.denominations)) {
+    const denomination = DENOMINATIONS.find(candidate => candidate.id === id)
+    assert.ok(denomination, `snapshot denomination ${id} is missing from traditions.ts`)
+    assert.equal(denomination.pewPercent, expected.displayValue, `value drift for ${id}`)
+    assert.equal(denomination.pewCitation.sourceCategory, expected.sourceCategory, `category drift for ${id}`)
+  }
+
+  for (const [family, expected] of Object.entries(snapshot.groups)) {
+    const group = TRADITION_GROUPS.find(candidate => candidate.family === family)
+    assert.ok(group, `snapshot group ${family} is missing from traditions.ts`)
+    assert.equal(group.totalPewPercent, expected.displayValue, `value drift for ${family}`)
+    assert.equal(group.pewCitation.sourceCategory, expected.sourceCategory, `category drift for ${family}`)
+  }
+
+  assert.deepEqual(
+    new Set(DENOMINATIONS.map(denomination => denomination.id)),
+    new Set(Object.keys(snapshot.denominations)),
+    'denomination set drift between traditions.ts and the source snapshot'
+  )
+  assert.deepEqual(
+    new Set(TRADITION_GROUPS.map(group => group.family)),
+    new Set(Object.keys(snapshot.groups)),
+    'tradition-group set drift between traditions.ts and the source snapshot'
   )
 })
 

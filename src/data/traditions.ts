@@ -1,12 +1,13 @@
 import type { PewCitation, Denomination, TraditionGroup } from '../types'
+import { PEW_RLS_SOURCE_SNAPSHOT } from './pew-religious-composition.snapshot'
 
-const PEW_RLS_URL = 'https://www.pewresearch.org/religious-landscape-study/region/united-states/'
-const PEW_RLS_REPORT = '2023-24 U.S. Religious Landscape Study'
-const PEW_RLS_TABLE = 'Interactive database → U.S. adults → Religious composition → 2023-24'
-const PEW_RLS_DENOMINATOR = 'U.S. adults'
-const PEW_RLS_FIELDWORK = 'July 17, 2023–March 4, 2024'
-const PEW_RLS_PUBLICATION = 'February 26, 2025'
-const PEW_RLS_RETRIEVED = 'August 31, 2026'
+const PEW_RLS_URL = PEW_RLS_SOURCE_SNAPSHOT.url
+const PEW_RLS_REPORT = PEW_RLS_SOURCE_SNAPSHOT.reportTitle
+const PEW_RLS_TABLE = PEW_RLS_SOURCE_SNAPSHOT.table
+const PEW_RLS_DENOMINATOR = PEW_RLS_SOURCE_SNAPSHOT.denominator
+const PEW_RLS_FIELDWORK = PEW_RLS_SOURCE_SNAPSHOT.fieldworkDate
+const PEW_RLS_PUBLICATION = PEW_RLS_SOURCE_SNAPSHOT.publicationDate
+const PEW_RLS_RETRIEVED = PEW_RLS_SOURCE_SNAPSHOT.retrievedDate
 
 function pewCitation(
   sourceCategory: string,
@@ -16,7 +17,7 @@ function pewCitation(
 ): PewCitation {
   return {
     source: 'Pew Research Center',
-    year: 2025,
+    year: PEW_RLS_SOURCE_SNAPSHOT.year,
     url: PEW_RLS_URL,
     reportTitle: PEW_RLS_REPORT,
     table: PEW_RLS_TABLE,

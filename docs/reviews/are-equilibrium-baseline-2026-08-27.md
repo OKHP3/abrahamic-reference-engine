@@ -142,3 +142,12 @@ is not silently treated as below the threshold. The Christianity total is
 identified as Pew’s direct 62% category rather than a sum of the five lenses
 shown in the app. Deterministic tests fail when required provenance fields are
 missing.
+
+On 2026-09-01, the cited table’s category labels and whole-percent display
+values were frozen in a checked-in source snapshot. The deterministic contract
+suite now compares every displayed denomination and tradition-group value and
+category against that snapshot, and checks that all displayed citations retain
+the snapshot’s report, table, denominator, source URL, and provenance dates.
+Intentional source changes should update
+`src/data/pew-religious-composition.snapshot.ts` and the source-backed notes
+together.
