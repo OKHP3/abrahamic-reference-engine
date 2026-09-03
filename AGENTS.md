@@ -269,10 +269,10 @@ These rules are the methodological foundation of ARE. They apply to every agent,
 
 - **No tradition is ranked above another.** Every tradition is presented as equally valid and worthy of respect.
 - **Strict scope: Abrahamic lineage + 1% US population.** Both criteria must be met. Either alone is insufficient.
-- **Three traditions in scope:** Judaism (~2% US), Christianity (~63% US), Islam (~1% US).
-- **Explicitly excluded:** Hinduism (not Abrahamic), Buddhism (not Abrahamic), Wicca (not Abrahamic), Baha'i (Abrahamic but <1% US), Druze (Abrahamic but <1% US), Sikhism (not Abrahamic). Exclusion is a methodological boundary, not a judgment of worth.
-- **Proportional representation.** Content depth and volume reflect US Pew share. Christianity gets more entries by count because it is ~63% US. Every entry has identical visual dignity.
-- **Pew citation visible in UI.** The scope decisions are data-driven. The UI must surface the Pew URL: https://www.pewresearch.org/religion/religious-landscape-study/
+- **Three traditions in scope:** Judaism (2% of U.S. adults), Christianity (62% of U.S. adults), Islam (1% of U.S. adults).
+- **Explicitly excluded:** Hinduism (not Abrahamic), Buddhism (not Abrahamic), Wicca (not Abrahamic), Baha'i (Abrahamic but not separately reported in the cited table), Druze (Abrahamic but not separately reported in the cited table), Sikhism (not Abrahamic). Exclusion is a methodological boundary, not a judgment of worth.
+- **Proportional representation.** Content depth and volume reflect the verified U.S. adult Pew shares. Christianity gets more entries by count because it is 62% of U.S. adults. Every entry has identical visual dignity.
+- **Pew citation visible in UI.** The scope decisions are data-driven. The UI must surface the Pew URL: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 - **English-only, US English.** Primary audience is English-speaking American citizens -- including secular and unaffiliated users seeking cultural literacy.
 - **No API costs.** All external APIs must be free and anonymous.
 - **MIT license throughout.**
@@ -280,24 +280,24 @@ These rules are the methodological foundation of ARE. They apply to every agent,
 - **This is a reference tool, not a source of spiritual or moral authority.** Never ranks beliefs, proselytizes, or declares a doctrine correct.
 - **Phase 2 is deferred, not excluded.** Hinduism and Buddhism are out of scope for Phase 1 but worth revisiting if scope expands beyond Abrahamic lineage.
 
-### US Religious Demographics (Pew Research Center, Religious Landscape Study)
+### US Religious Demographics (Pew Research Center, 2023-24 U.S. Religious Landscape Study)
 
-Source: https://www.pewresearch.org/religion/religious-landscape-study/
+Source: https://www.pewresearch.org/religious-landscape-study/region/united-states/
+Report: 2023-24 U.S. Religious Landscape Study. Table: Interactive database → U.S. adults → Religious composition → 2023-24. Fieldwork ran July 17, 2023–March 4, 2024; published February 26, 2025. Denominator: U.S. adults.
 
 | Tradition | US Share | In scope | Notes |
 |---|---|---|---|
-| Christianity (total) | ~63% | YES | Subdivided by US denomination |
-| -- Evangelical Protestant | ~25% | YES | |
-| -- Catholic | ~20% | YES | |
-| -- Mainline Protestant | ~16% | YES | |
-| -- LDS / Restorationist | ~2% | YES | |
-| -- Orthodox Christian | ~1% | YES | |
-| Judaism | ~2% | YES | |
-| Islam | ~1% | YES | |
-| Hinduism | ~1% | NO | Not Abrahamic |
-| Buddhism | ~1% | NO | Not Abrahamic |
-| Baha'i | ~0.1% | NO | Abrahamic but below 1% threshold |
-| Unaffiliated / Secular | ~26% | Context only | Not a scriptural tradition |
+| Christianity (total) | 62% | YES | Direct Pew category ("Christians"); subdivided by the source categories below |
+| -- Evangelical Protestant | 23% | YES | Direct Pew category; one of the app's Christian lenses |
+| -- Catholic | 19% | YES | Direct Pew category; one of the app's Christian lenses |
+| -- Mainline Protestant | 11% | YES | Direct Pew category; one of the app's Christian lenses |
+| -- LDS / Restorationist | 2% | YES | Pew category ("Latter-day Saint (Mormon)"); one of the app's Christian lenses |
+| -- Orthodox Christian | 1% | YES | Direct Pew category; one of the app's Christian lenses |
+| Judaism | 2% | YES | Direct Pew category ("Jewish") |
+| Islam | 1% | YES | Direct Pew category ("Muslim") |
+| Hinduism | 1% | NO | Not Abrahamic; direct Pew category ("Hindu") |
+| Buddhism | 1% | NO | Not Abrahamic; direct Pew category ("Buddhist") |
+| Baha'i | Not separately reported | NO | Abrahamic, but not a separately reported category at the cited threshold |
 
 ---
 
@@ -330,7 +330,7 @@ The API gap register lives at `.agents/skills/okhp3-tradition-reference/knowledg
 - **The "Why these three?" / Pew explainer is mandatory in the UI** -- always present
 - **Tone:** solemn, scholarly, neutral -- librarian/archivist register, not charismatic or devotional
 - **ROY principle:** understanding produced / explanation invested -- verbosity must earn its space
-- **Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+- **Pew URL:** https://www.pewresearch.org/religious-landscape-study/region/united-states/
 
 ---
 

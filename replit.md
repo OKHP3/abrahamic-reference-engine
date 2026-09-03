@@ -44,7 +44,7 @@ Run this before releasing any change that touches `src/api/`.
 ## Current State (repository audit: 2026-07-13)
 
 - SPA complete -- four primary modes are implemented
-- TraditionBrowser: browse Judaism, Christianity (5 denominations), Islam with verse cards and Pew explainer
+- TraditionBrowser: browse Judaism, Christianity (5 denominations), Islam with verse cards and Pew explainer (2023-24 U.S. Religious Landscape Study: Christianity 62%, Judaism 2%, Islam 1% of U.S. adults; source: https://www.pewresearch.org/religious-landscape-study/region/united-states/; snapshot: `src/data/pew-religious-composition.snapshot.ts`)
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
@@ -201,6 +201,7 @@ Dependabot.
 | `src/main.tsx` | Entry point |
 | `src/index.css` | Tailwind directives + custom color tokens (gold, parchment, bg-base, bg-elevated) |
 | `src/data/traditions.ts` | Static tradition + denomination data |
+| `src/data/pew-religious-composition.snapshot.ts` | Checked-in Pew source snapshot for public demographic figures and provenance |
 | `src/data/compareThemes.ts` | 20 pre-seeded cross-tradition themes |
 | `src/data/translations.ts` | Translation ID map for bible-api.com and Quran.com |
 | `src/api/` | Fetch functions: sefaria.ts, bible.ts, quran.ts, hadith.ts |

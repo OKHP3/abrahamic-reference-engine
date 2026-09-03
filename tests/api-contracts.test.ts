@@ -206,6 +206,81 @@ test('keeps the README scope table and Pew explanation aligned with the source s
   }
 })
 
+test('keeps collaborator-facing demographic summaries aligned with the source snapshot', () => {
+  const snapshot = PEW_RLS_SOURCE_SNAPSHOT
+  const governanceDocs = [
+    {
+      name: 'AGENTS.md',
+      content: readFileSync(new URL('../AGENTS.md', import.meta.url), 'utf8'),
+      expectedGroups: true,
+      expectedScopeRows: true,
+    },
+    {
+      name: 'replit.md',
+      content: readFileSync(new URL('../replit.md', import.meta.url), 'utf8'),
+      expectedGroups: true,
+      expectedScopeRows: false,
+    },
+  ]
+
+  for (const document of governanceDocs) {
+    assert.match(
+      document.content,
+      new RegExp(escapeRegExp(snapshot.url)),
+      `${document.name} is missing the current Pew source URL`
+    )
+    assert.match(
+      document.content,
+      new RegExp(escapeRegExp(snapshot.reportTitle)),
+      `${document.name} is missing the current Pew report title`
+    )
+    assert.match(
+      document.content,
+      new RegExp(escapeRegExp(snapshot.denominator)),
+      `${document.name} is missing the Pew denominator`
+    )
+    assert.doesNotMatch(
+      document.content,
+      /~(?:63|25|20|16|26|0\.1)%/,
+      `${document.name} contains an obsolete approximate demographic figure`
+    )
+    assert.doesNotMatch(
+      document.content,
+      /pewresearch\.org\/religion\/religious-landscape-study\//,
+      `${document.name} contains the obsolete Pew source URL`
+    )
+
+    if (document.expectedGroups) {
+      for (const expected of Object.values(snapshot.groups)) {
+        assert.match(
+          document.content,
+          new RegExp(`${expected.displayValue}%`),
+          `${document.name} is missing the verified ${expected.sourceCategory} value`
+        )
+      }
+    }
+
+    if (document.expectedScopeRows) {
+      for (const expected of Object.values(snapshot.scopeRows)) {
+        const expectedValue =
+          typeof expected.displayValue === 'number'
+            ? `${expected.displayValue}%`
+            : expected.displayValue
+        assert.match(
+          document.content,
+          new RegExp(escapeRegExp(expected.label)),
+          `${document.name} is missing the ${expected.label} scope row`
+        )
+        assert.match(
+          document.content,
+          new RegExp(escapeRegExp(expectedValue)),
+          `${document.name} is missing the ${expected.label} value`
+        )
+      }
+    }
+  }
+})
+
 test('keeps paraphrase discovery and context-depth modes outside the prototype boundary', () => {
   assert.deepEqual(LOOKUP_CAPABILITIES, {
     exactReferenceLookup: true,
