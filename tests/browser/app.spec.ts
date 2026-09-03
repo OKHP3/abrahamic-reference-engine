@@ -232,6 +232,51 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
 })
 
 test.describe('deterministic lookup states', () => {
+  test('keeps phrase discovery states visible and preserves source links after choosing a candidate', async ({ page }) => {
+    await page.route('https://www.sefaria.org/**', route => json(route, {
+      ref: 'Genesis 1:1',
+      heRef: 'בראשית א:א',
+      text: 'Sefaria fixture passage.',
+      he: 'בראשית',
+      book: 'Genesis',
+      categories: ['Tanakh'],
+      type: 'Tanakh',
+      sections: [1, 1],
+      toSections: [1, 1],
+    }))
+
+    await page.goto('/lookup')
+    const phraseInput = page.getByRole('textbox', { name: 'Phrase' })
+    const searchButton = page.getByRole('button', { name: 'Search quotations' })
+    const results = page.getByTestId('phrase-discovery-results')
+
+    await phraseInput.fill('zzzz phrase not present')
+    await searchButton.click()
+    await expect(results.getByRole('heading', { name: 'No source match' })).toBeVisible()
+
+    await phraseInput.fill('In the beginning God created')
+    await searchButton.click()
+    await expect(results.getByRole('heading', { name: 'One source match' })).toBeVisible()
+    await expect(results).toContainText('Genesis 1:1')
+
+    await phraseInput.fill('In the beginning')
+    await searchButton.click()
+    await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
+    await expect(results).toContainText('Ambiguity: multiple candidates')
+
+    const genesisCandidate = results.locator('article').filter({ hasText: 'Genesis 1:1' }).first()
+    await genesisCandidate.getByRole('button', { name: 'Use exact reference' }).click()
+
+    await expect(page.getByLabel('Reference')).toHaveValue('Genesis 1:1')
+    await expect(page.getByRole('article', { name: 'Verse: Genesis 1:1' })).toContainText('Sefaria fixture passage.')
+    const genesisSourceLinks = page.getByRole('link', { name: 'Open Genesis 1:1 on source website' })
+    await expect(genesisSourceLinks).toHaveCount(2)
+    await expect(genesisSourceLinks.first()).toHaveAttribute(
+      'href',
+      'https://www.sefaria.org/Genesis%201%3A1?lang=bi',
+    )
+  })
+
   test('shows loading, error, retry, and copy-link success', async ({ page }) => {
     let attempts = 0
     let releaseFirstRequest: (() => void) | undefined
