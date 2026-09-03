@@ -13,11 +13,16 @@ The `gitPush({})` callback returns `PUSH_REJECTED` even when the local branch is
 git push "https://x-access-token:${GITHUB_PAT}@github.com/OKHP3/abrahamic-reference-engine.git" main
 ```
 
-If there is genuine divergence (remote has commits local doesn't), rebase first:
+If there is genuine divergence (remote has commits local doesn't), preserve both
+histories by merging the refreshed remote main into local main first:
 
 ```bash
-git pull --rebase origin main
+git fetch --prune origin
+git merge --no-ff origin/main
 git push "https://x-access-token:${GITHUB_PAT}@github.com/OKHP3/abrahamic-reference-engine.git" main
 ```
 
-Note: `git pull --rebase` from the shell requires a clean working tree. Stash unstaged changes first if needed. Also: always commit file edits with `git add … && git commit` before pushing — `gitPush()` only pushes existing commits, it does not stage or commit.
+Never force-push or discard remote commits. Note: a merge from the shell
+requires a clean working tree. Stash unstaged changes first if needed. Also:
+always commit file edits with `git add … && git commit` before pushing —
+`gitPush()` only pushes existing commits, it does not stage or commit.
