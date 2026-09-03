@@ -2,8 +2,8 @@
 title: Christianity -- Orthodox Christian
 tradition: christianity
 denomination: orthodox
-us-share: ~1%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 1%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -11,7 +11,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~1% Pew 2023 -- at threshold). Encompasses Eastern Orthodox, Oriental Orthodox, and other traditions in apostolic succession outside Rome.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 1% of U.S. adults in Pew's direct "Orthodox Christian" category in the 2023-24 U.S. Religious Landscape Study -- at the threshold). Encompasses Eastern Orthodox, Oriental Orthodox, and other traditions in apostolic succession outside Rome.
 
 ---
 
@@ -19,7 +19,7 @@ In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~1% P
 
 Eastern Orthodoxy traces unbroken apostolic succession from the original apostles through the seven Ecumenical Councils (325-787 CE). It understands itself as the continuation of the undivided church before the Great Schism of 1054, when the Western (Roman Catholic) and Eastern (Orthodox) churches separated.
 
-US population: ~1% (Pew Research Center Religious Landscape Study, 2023 -- at the minimum threshold)
+US population: 1% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Orthodox Christian" -- at the minimum threshold)
 
 Key US bodies: Greek Orthodox Archdiocese of America, Orthodox Church in America (OCA), Antiochian Orthodox Christian Archdiocese, Russian Orthodox Church Outside Russia (ROCOR)
 

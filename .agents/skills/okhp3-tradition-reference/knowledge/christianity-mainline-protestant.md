@@ -2,8 +2,8 @@
 title: Christianity -- Mainline Protestant
 tradition: christianity
 denomination: mainline-protestant
-us-share: ~16%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 11%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -11,7 +11,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~16% Pew 2023). Encompasses the historic "seven sisters" denominations and their offshoots.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 11% of U.S. adults in Pew's direct "Mainline Protestant" category in the 2023-24 U.S. Religious Landscape Study). Encompasses the historic "seven sisters" denominations and their offshoots.
 
 ---
 
@@ -23,7 +23,7 @@ Mainline Protestantism refers to the historic Protestant denominations that domi
 - Social justice orientation -- racial equity, economic justice, environmental concerns
 - Theological diversity within a common liturgical and institutional tradition
 
-US population: ~16% (Pew Research Center Religious Landscape Study, 2023)
+US population: 11% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Mainline Protestant")
 
 Key denominations: United Methodist Church, Presbyterian Church (USA), Episcopal Church, Evangelical Lutheran Church in America (ELCA), United Church of Christ (UCC), American Baptist Churches USA, Disciples of Christ
 

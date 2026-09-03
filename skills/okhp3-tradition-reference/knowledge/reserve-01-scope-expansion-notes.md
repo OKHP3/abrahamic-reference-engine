@@ -14,13 +14,15 @@ Planning reference for future scope expansion beyond the three current in-scope 
 
 Three traditions meet both qualifying criteria:
 1. Abrahamic lineage -- traceable descent from the Abrahamic scriptural family
-2. 1% or greater US population -- per Pew Research Center Religious Landscape Study (2023)
+2. 1% or greater share of U.S. adults -- per Pew Research Center's 2023-24 U.S. Religious Landscape Study
+
+Source: https://www.pewresearch.org/religious-landscape-study/region/united-states/ (Interactive database -> U.S. adults -> Religious composition -> 2023-24)
 
 | Tradition | US Share | In scope |
 |-----------|----------|----------|
-| Christianity | ~63% | YES |
-| Judaism | ~2% | YES |
-| Islam | ~1% | YES |
+| Christianity | 62% | YES |
+| Judaism | 2% | YES |
+| Islam | 1% | YES |
 
 ---
 
@@ -32,8 +34,8 @@ The following traditions are explicitly deferred for potential future phases, no
 
 | Tradition | US Share | Abrahamic | Reason deferred | Phase 2 path |
 |-----------|----------|-----------|-----------------|--------------|
-| Baha'i | ~0.1% | YES | Below 1% US threshold | Threshold revision required |
-| Druze | <0.1% | YES | Below 1% US threshold | Threshold revision required |
+| Baha'i | Not separately reported | YES | No separate category in the cited table | Threshold revision required |
+| Druze | Not separately reported | YES | No separate category in the cited table | Threshold revision required |
 
 **Baha'i notes:** Baha'i scripture (Kitab-i-Aqdas, Kitab-i-Iqan, Hidden Words) is available in English via the Baha'i Reference Library (bahai.org). No dedicated free anonymous API exists for structured verse lookup; the official site is HTML-only. A custom scraper or static dataset would be required.
 
@@ -45,10 +47,10 @@ These traditions would require dropping the Abrahamic lineage criterion entirely
 
 | Tradition | US Share | Abrahamic | Reason deferred | Primary text | Free API |
 |-----------|----------|-----------|-----------------|--------------|----------|
-| Hinduism | ~1% | NO | Not Abrahamic | Bhagavad Gita, Upanishads | Bhagavad Gita API (bhagavad-gita.org/api) |
-| Buddhism | ~1% | NO | Not Abrahamic | Pali Canon, Dhammapada | SuttaCentral API (suttacentral.net) |
+| Hinduism | 1% | NO | Not Abrahamic | Bhagavad Gita, Upanishads | Bhagavad Gita API (bhagavad-gita.org/api) |
+| Buddhism | 1% | NO | Not Abrahamic | Pali Canon, Dhammapada | SuttaCentral API (suttacentral.net) |
 
-**Hinduism notes:** The Bhagavad Gita API (api.bhagavad-gita.org) provides free, unauthenticated access to Sanskrit and English translations by chapter and verse. SuttaCentral also covers some Hindu-adjacent texts. The Pew 2023 figure of ~1% covers a wide range of Hindu traditions with significant internal diversity; any primer would need to acknowledge that diversity explicitly.
+**Hinduism notes:** The Bhagavad Gita API (api.bhagavad-gita.org) provides free, unauthenticated access to Sanskrit and English translations by chapter and verse. SuttaCentral also covers some Hindu-adjacent texts. The 1% display value in the 2023-24 table covers a wide range of Hindu traditions with significant internal diversity; any primer would need to acknowledge that diversity explicitly.
 
 **Buddhism notes:** SuttaCentral (suttacentral.net/api) provides free, unauthenticated access to the Pali Canon and many other Buddhist texts in multiple languages. Coverage is extensive. The API supports verse and sutta lookup. Key challenge: "Buddhism" at ~1% US encompasses Theravada, Mahayana, Vajrayana, and Zen/Ch'an traditions with substantially different textual canons.
 

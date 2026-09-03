@@ -27,7 +27,7 @@ No tradition's terminology is presented as more primary, original, or authoritat
 | Denomination | A named sub-group within a major religion, sharing distinct theological positions, governance structures, or liturgical practices. |
 | Scripture | Sacred text recognized as authoritative within a tradition. The scope of scripture differs by tradition (see Canon). |
 | Tradition | In ARE, a top-level category: Judaism, Christianity, or Islam. Used neutrally; carries no evaluative weight. |
-| Pew Research Center | US-based nonpartisan research organization; source for US religious demographic data used to determine ARE scope. URL: https://www.pewresearch.org/religion/religious-landscape-study/ |
+| Pew Research Center | US-based nonpartisan research organization; source for US religious demographic data used to determine ARE scope. The cited table is the 2023-24 U.S. Religious Landscape Study, using U.S. adults as its denominator. URL: https://www.pewresearch.org/religious-landscape-study/region/united-states/ |
 
 ---
 

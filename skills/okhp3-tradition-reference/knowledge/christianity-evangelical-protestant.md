@@ -2,8 +2,8 @@
 title: Christianity -- Evangelical Protestant
 tradition: christianity
 denomination: evangelical-protestant
-us-share: ~25%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 23%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -11,7 +11,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~25% Pew 2023). Largest single denomination in the US. Includes Baptist, Pentecostal, non-denominational evangelical, and other born-again Protestant communities.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 23% of U.S. adults in Pew's direct "Evangelical Protestant" category in the 2023-24 U.S. Religious Landscape Study). Largest single denomination in the US. Includes Baptist, Pentecostal, non-denominational evangelical, and other born-again Protestant communities.
 
 ---
 
@@ -23,7 +23,7 @@ Evangelical Protestantism is defined by four core characteristics (Bebbington Qu
 3. **Crucicentrism:** centrality of Christ's atoning death on the cross
 4. **Activism:** the imperative to evangelize and to live faith publicly
 
-US population: ~25% (Pew Research Center Religious Landscape Study, 2023)
+US population: 23% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Evangelical Protestant")
 
 ---
 

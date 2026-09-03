@@ -52,17 +52,17 @@ Two criteria must BOTH be met for a tradition to be in scope:
 
 Failing either criterion excludes the tradition regardless of global significance, historical importance, or US cultural presence.
 
-**Pew Research Center citation:** https://www.pewresearch.org/religion/religious-landscape-study/ (2023)
+**Pew Research Center citation:** https://www.pewresearch.org/religious-landscape-study/region/united-states/ (2023-24 U.S. Religious Landscape Study; published February 26, 2025)
 
 ---
 
 ## In-scope traditions (3 total)
 
-| Tradition | US Share (Pew 2023) | In scope | Abrahamic | Meets 1% |
+| Tradition | US Share (Pew 2023-24) | In scope | Abrahamic | Meets 1% |
 |-----------|---------------------|----------|-----------|----------|
-| Christianity | ~63% | YES | YES | YES |
-| Judaism | ~2% | YES | YES | YES |
-| Islam | ~1% | YES | YES | YES |
+| Christianity | 62% | YES | YES | YES |
+| Judaism | 2% | YES | YES | YES |
+| Islam | 1% | YES | YES | YES |
 
 ---
 
@@ -72,11 +72,11 @@ Failing either criterion excludes the tradition regardless of global significanc
 |-----------|----------|-----------|----------|-----------------|
 | Hinduism | ~1% | NO | YES | Not Abrahamic |
 | Buddhism | ~1% | NO | YES | Not Abrahamic |
-| Sikhism | <0.5% | NO | NO | Not Abrahamic; below 1% |
-| Baha'i | ~0.1% | YES | NO | Abrahamic but below 1% threshold |
-| Druze | <0.1% | YES | NO | Abrahamic but below 1% threshold |
-| Wicca / Paganism | <0.5% | NO | NO | Not Abrahamic; below 1% |
-| Unaffiliated / Secular | ~26% | N/A | N/A | Not a scriptural tradition |
+| Sikhism | Not separately reported | NO | NO | Not Abrahamic; no separate category in the cited table |
+| Baha'i | Not separately reported | YES | NO | Abrahamic; no separate category in the cited table |
+| Druze | Not separately reported | YES | NO | Abrahamic; no separate category in the cited table |
+| Wicca / Paganism | Not separately reported | NO | NO | Not Abrahamic; no separate category in the cited table |
+| Unaffiliated / Secular | Not separately reported | N/A | N/A | Not a scriptural tradition; outside the cited scope rows |
 
 Exclusion is a methodological boundary, not a judgment of worth or spiritual validity.
 
@@ -84,8 +84,8 @@ Exclusion is a methodological boundary, not a judgment of worth or spiritual val
 
 ## Judaism
 
-**US population share:** ~2% (Pew Research Center, 2023)
-**Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+**US population share:** 2% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Jewish")
+**Pew URL:** https://www.pewresearch.org/religious-landscape-study/region/united-states/
 
 ### Canon
 
@@ -142,8 +142,8 @@ Secondary authoritative texts: Talmud Bavli, Talmud Yerushalmi, Midrash Rabbah, 
 
 ## Christianity
 
-**US population share:** ~63% total (Pew Research Center, 2023)
-**Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+**US population share:** 62% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Christians")
+**Pew URL:** https://www.pewresearch.org/religious-landscape-study/region/united-states/
 
 Christianity is subdivided by denomination. Five denominations meet the 1%+ US threshold.
 
@@ -151,15 +151,15 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 
 | Denomination | US Share | Canon | Books | Deuterocanonicals |
 |-------------|----------|-------|-------|-------------------|
-| Evangelical Protestant | ~25% | Protestant | 66 (39 OT + 27 NT) | Excluded |
-| Catholic | ~20% | Catholic | 73 (46 OT + 27 NT) | Included (7 books) |
-| Mainline Protestant | ~16% | Protestant | 66 (39 OT + 27 NT) | Excluded |
-| LDS / Restorationist | ~2% | Standard Works | 66 (KJV) + 3 additional | Excluded from Bible; additional LDS scriptures |
-| Orthodox Christian | ~1% | Orthodox | Varies by jurisdiction (typically 76-78) | Included (broader set) |
+| Evangelical Protestant | 23% | Protestant | 66 (39 OT + 27 NT) | Excluded |
+| Catholic | 19% | Catholic | 73 (46 OT + 27 NT) | Included (7 books) |
+| Mainline Protestant | 11% | Protestant | 66 (39 OT + 27 NT) | Excluded |
+| LDS / Restorationist | 2% | Standard Works | 66 (KJV) + 3 additional | Excluded from Bible; additional LDS scriptures |
+| Orthodox Christian | 1% | Orthodox | Varies by jurisdiction (typically 76-78) | Included (broader set) |
 
 ### Denomination reference
 
-#### Evangelical Protestant (~25% US)
+#### Evangelical Protestant (23% of U.S. adults)
 
 - **Description:** Personal conversion, biblical inerrancy/infallibility, centrality of Christ's atonement, evangelism imperative. Includes Baptist, Pentecostal, non-denominational.
 - **Distinctives:** Born-again experience, sola scriptura, believer's baptism (typically by immersion).
@@ -168,7 +168,7 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 - **Preferred translations:** KJV, ESV (key req.), NIV (key req.), WEB
 - **API translations (free):** `kjv`, `web`, `asv`, `bbe`, `darby`
 
-#### Catholic (~20% US)
+#### Catholic (19% of U.S. adults)
 
 - **Description:** Apostolic succession, Eucharist as central sacrament, Magisterium as teaching authority. Seven sacraments. Largest single denomination worldwide.
 - **Distinctives:** Scripture + Tradition + Magisterium; 73-book canon; veneration of Mary and saints.
@@ -177,7 +177,7 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 - **Preferred translations:** NABRE (key req.), Douay-Rheims, WEB (has deuterocanonicals)
 - **API translations (free):** `web` (includes deuterocanonicals), `kjv` (excludes deuterocanonicals)
 
-#### Mainline Protestant (~16% US)
+#### Mainline Protestant (11% of U.S. adults)
 
 - **Description:** Historic denominations (Methodist, Presbyterian, Lutheran, Episcopal/Anglican, United Church of Christ). Ecumenical, critical-scholarly, social justice oriented.
 - **Distinctives:** Theological diversity; many ordain women and LGBTQ+ clergy; Wesleyan Quadrilateral (Scripture, Tradition, Reason, Experience).
@@ -186,7 +186,7 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 - **Preferred translations:** NRSV (key req.), WEB, KJV
 - **API translations (free):** `kjv`, `web`, `asv`, `bbe`
 
-#### LDS / Restorationist (~2% US)
+#### LDS / Restorationist (2% of U.S. adults)
 
 - **Description:** Restoration movement founded by Joseph Smith. Modern prophetic revelation, pre-mortal existence, eternal family relationships sealed in temples.
 - **Distinctives:** Standard Works (four-volume canon); continuing prophetic succession; temple ordinances.
@@ -210,7 +210,7 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 - No uptime guarantee -- implement graceful fallback when unavailable
 - Official text (no API): `https://www.churchofjesuschrist.org/study/scriptures`
 
-#### Orthodox Christian (~1% US)
+#### Orthodox Christian (1% of U.S. adults)
 
 - **Description:** Eastern Orthodox traces apostolic continuity through seven Ecumenical Councils. Theosis (participation in divine nature) as the goal of Christian life. Highly liturgical.
 - **Distinctives:** Divine Liturgy (John Chrysostom / Basil); icon veneration; Septuagint (LXX) as authoritative OT; broader canon than Protestant.
@@ -259,8 +259,8 @@ Christianity is subdivided by denomination. Five denominations meet the 1%+ US t
 
 ## Islam
 
-**US population share:** ~1% (Pew Research Center, 2023)
-**Pew URL:** https://www.pewresearch.org/religion/religious-landscape-study/
+**US population share:** 1% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Muslim")
+**Pew URL:** https://www.pewresearch.org/religious-landscape-study/region/united-states/
 
 ### Canon
 

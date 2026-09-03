@@ -1,8 +1,8 @@
 ---
 title: Christianity -- Tradition Overview
 tradition: christianity
-us-share: ~63%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 62%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -10,7 +10,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US population threshold (YES, ~63% Pew 2023). Largest single tradition in scope. Five denominations meet the 1% US threshold independently and are documented in separate files.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 62% of U.S. adults in Pew's direct "Christians" category in the 2023-24 U.S. Religious Landscape Study). Largest single tradition in scope. Five denominations meet the 1% threshold independently and are documented in separate files.
 
 ---
 
@@ -18,7 +18,7 @@ In scope per ARE criteria: Abrahamic lineage (YES) + 1% US population threshold 
 
 Christianity centers on the life, teaching, death, and resurrection of Jesus of Nazareth, identified by believers as the Christ (Messiah). It traces its origins to 1st-century Judaism and the apostolic community formed after Jesus's death. It is the largest religion in the United States and the world.
 
-US population: ~63% total (Pew Research Center Religious Landscape Study, 2023)
+US population: 62% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Christians")
 
 ---
 
@@ -48,7 +48,7 @@ See the individual denomination knowledge files for detailed canon and API cover
 
 ## Proportional representation (ARE rule)
 
-Christianity receives the most content entries in ARE by count because it represents ~63% of the US population. Pew share drives depth, not preference or theological ranking. Every tradition receives equal visual and structural dignity in the UI.
+Christianity receives the most content entries in ARE by count because it represents 62% of U.S. adults in the cited Pew category. Pew share drives depth, not preference or theological ranking. Every tradition receives equal visual and structural dignity in the UI.
 
 ---
 

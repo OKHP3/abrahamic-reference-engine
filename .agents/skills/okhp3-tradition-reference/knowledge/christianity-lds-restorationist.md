@@ -2,8 +2,8 @@
 title: Christianity -- LDS / Restorationist
 tradition: christianity
 denomination: lds-restorationist
-us-share: ~2%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 2%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -11,7 +11,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~2% Pew 2023). Covers The Church of Jesus Christ of Latter-day Saints (LDS) and closely related Restorationist bodies.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 2% of U.S. adults in Pew's direct "Latter-day Saint (Mormon)" category in the 2023-24 U.S. Religious Landscape Study). Covers The Church of Jesus Christ of Latter-day Saints (LDS) and closely related Restorationist bodies.
 
 ---
 
@@ -19,7 +19,7 @@ In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~2% P
 
 The LDS Restorationist movement teaches that Christ's original church fell into apostasy after the death of the apostles and was restored through the prophet Joseph Smith in 1830. The restoration brought new scripture, new prophetic leadership, and new doctrinal clarifications -- including teachings not found in the standard Protestant or Catholic creeds.
 
-US population: ~2% (Pew Research Center Religious Landscape Study, 2023)
+US population: 2% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Latter-day Saint (Mormon)")
 
 Key bodies: The Church of Jesus Christ of Latter-day Saints (predominant); Community of Christ (formerly RLDS); other Restorationist splinter groups
 

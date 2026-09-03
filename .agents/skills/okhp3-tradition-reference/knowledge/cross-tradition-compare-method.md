@@ -22,8 +22,9 @@ The goal is **discovery and translation between faiths**, not synthesis, merger,
 
 Three traditions only. Both criteria must be met for inclusion: (1) Abrahamic lineage, (2) 1% or greater US population per Pew Research Center.
 
-- Judaism (~2% US), Christianity (~63% US), Islam (~1% US)
-- Pew citation: https://www.pewresearch.org/religion/religious-landscape-study/
+- Judaism (2% of U.S. adults), Christianity (62% of U.S. adults), Islam (1% of U.S. adults)
+- Pew citation: 2023-24 U.S. Religious Landscape Study, Interactive database -> U.S. adults -> Religious composition -> 2023-24
+- Pew URL: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 
 ---
 
@@ -31,8 +32,8 @@ Three traditions only. Both criteria must be met for inclusion: (1) Abrahamic li
 
 When generating NEW theme entries or expanding the seeded set, the number of examples per tradition should reflect US population share:
 
-- Christianity gets the most examples (5 denominations, ~63% of US)
-- Judaism and Islam get equal representation to each other (~2% and ~1%)
+- Christianity gets the most examples (5 denominations, 62% of U.S. adults)
+- Judaism and Islam get equal representation to each other (2% and 1% of U.S. adults)
 - **Every tradition gets at least one entry in every comparison** -- no tradition is optional
 
 This rule governs **quantity** of content across the full corpus, not visual weight within a single comparison. Each panel receives identical visual and structural dignity regardless of population share.

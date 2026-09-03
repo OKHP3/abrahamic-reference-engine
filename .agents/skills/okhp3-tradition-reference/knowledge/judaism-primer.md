@@ -1,8 +1,8 @@
 ---
 title: Judaism Primer
 tradition: judaism
-us-share: ~2%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 2%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -10,7 +10,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US population threshold (YES, ~2% Pew 2023).
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 2% of U.S. adults in Pew's direct "Jewish" category in the 2023-24 U.S. Religious Landscape Study).
 
 ---
 
@@ -18,7 +18,7 @@ In scope per ARE criteria: Abrahamic lineage (YES) + 1% US population threshold 
 
 Judaism is the oldest of the three in-scope Abrahamic traditions, tracing continuous religious and cultural identity from the covenant at Sinai through the present day. It encompasses a people, a law, a literature, and a living practice -- not reducible to any single one of these alone.
 
-US population: ~2% (Pew Research Center Religious Landscape Study, 2023)
+US population: 2% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Jewish")
 
 ---
 

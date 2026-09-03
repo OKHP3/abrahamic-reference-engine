@@ -2,8 +2,8 @@
 title: Christianity -- Catholic
 tradition: christianity
 denomination: catholic
-us-share: ~20%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 19%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -11,7 +11,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~20% Pew 2023). Largest single denomination worldwide; second largest in the US.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 19% of U.S. adults in Pew's direct "Catholic" category in the 2023-24 U.S. Religious Landscape Study). Largest single denomination worldwide; second largest in the US.
 
 ---
 
@@ -19,7 +19,7 @@ In scope per ARE criteria: Abrahamic lineage (YES) + 1% US threshold (YES, ~20% 
 
 The Catholic Church (Roman Catholic) understands itself as the continuation of the apostolic church founded by Jesus through Peter. Authority flows through apostolic succession -- the unbroken line of bishops from the apostles to the present. The Magisterium (teaching authority of the Pope in union with the bishops) interprets Scripture and Tradition together.
 
-US population: ~20% (Pew Research Center Religious Landscape Study, 2023)
+US population: 19% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Catholic")
 
 ---
 

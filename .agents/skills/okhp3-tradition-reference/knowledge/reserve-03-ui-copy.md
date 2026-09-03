@@ -23,7 +23,7 @@ Verified 2026-06-26 against: `src/components/ModeNav.tsx`, `src/components/Scope
 
 ## Scope explainer
 
-Source: `src/components/ScopeExplainer.tsx` + `src/data/traditions.ts` (PEW_SCOPE_NOTE, PEW_2023)
+Source: `src/components/ScopeExplainer.tsx` + `src/data/traditions.ts` (PEW_SCOPE_NOTE, PEW_RLS_SOURCE_SNAPSHOT)
 
 ### Heading (verbatim -- h2, uppercase tracking-widest)
 
@@ -46,18 +46,20 @@ Traditions reviewed but excluded from scope:
 
 - Hinduism -- Not Abrahamic
 - Buddhism -- Not Abrahamic
-- Baha'i -- Abrahamic, but below 1% US threshold
+- Baha'i -- Abrahamic, but not separately reported in the cited table
 - Sikhism -- Not Abrahamic
-- Druze -- Abrahamic, but below 1% US threshold
+- Druze -- Abrahamic, but not separately reported in the cited table
 
 ### Note (verbatim from PEW_SCOPE_NOTE.note -- italic)
 
 Exclusions are methodological, not judgments of worth. Every tradition listed here is presented with equal respect.
 
-### Citation link (verbatim from PEW_2023)
+### Citation link (verbatim from PEW_RLS_SOURCE_SNAPSHOT)
 
-Source: Pew Research Center, Religious Landscape Study, 2023
-URL: https://www.pewresearch.org/religion/religious-landscape-study/
+Source: Pew Research Center, 2023-24 U.S. Religious Landscape Study
+Table: Interactive database -> U.S. adults -> Religious composition -> 2023-24
+Denominator: U.S. adults
+URL: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 
 ---
 

@@ -8,13 +8,15 @@ status: active-reference
 
 Extended notes on denominational distinctives that exceed what fits in the primary denomination knowledge files. Organized by sub-movement and special category. Agents building denomination-level features, writing comparison content, or answering scope questions should read this file alongside the primary denomination files.
 
+**Demographic source:** Pew Research Center, 2023-24 U.S. Religious Landscape Study, Interactive database -> U.S. adults -> Religious composition -> 2023-24. URL: https://www.pewresearch.org/religious-landscape-study/region/united-states/. Values are whole-percent display values for the named source categories.
+
 ---
 
 ## Non-denominational / Independent Evangelical
 
 Non-denominational churches are the fastest-growing segment of American Christianity. They typically share evangelical theology (Bebbington Quadrilateral) without formal denominational affiliation or oversight structure.
 
-**US population context:** included within the ~25% Evangelical Protestant figure (Pew 2023). No separate Pew category.
+**US population context:** included within the 23% Evangelical Protestant source category in the 2023-24 table. No separate Pew category.
 
 **Key characteristics:**
 - No formal creed beyond Scripture; some use informal statements of faith or a local "What We Believe" page
@@ -33,7 +35,7 @@ Non-denominational churches are the fastest-growing segment of American Christia
 
 Pentecostalism originated in the 1906 Azusa Street Revival in Los Angeles (William J. Seymour). The Charismatic movement (beginning ~1960) brought similar emphases into mainline Protestant and Catholic contexts.
 
-**US population context:** included within the Evangelical Protestant figure (Pew 2023). No separate Pew category at 1%+ threshold in its own right.
+**US population context:** included within the 23% Evangelical Protestant source category in the 2023-24 table. No separate Pew category at the 1% threshold in its own right.
 
 **Key characteristics:**
 - Emphasis on "gifts of the Spirit" (charismata): speaking in tongues (glossolalia), prophecy, divine healing
@@ -73,7 +75,7 @@ A theological tradition within both Evangelical and Mainline Protestantism, emph
 
 The oldest Protestant tradition, founded by Martin Luther's 1517 Reformation in Germany.
 
-**US population context:** included within Mainline Protestant (~16% Pew 2023) for ELCA; some smaller Lutheran bodies lean Evangelical. No separate Pew category.
+**US population context:** included within the 11% Mainline Protestant source category in the 2023-24 table for ELCA; some smaller Lutheran bodies lean Evangelical. No separate Pew category.
 
 **Key distinctives:**
 - **Sola gratia / sola fide / sola scriptura:** salvation by grace alone through faith alone according to Scripture alone -- the Reformation's three pillars
@@ -95,7 +97,7 @@ The oldest Protestant tradition, founded by Martin Luther's 1517 Reformation in 
 
 The largest single Protestant denominational family in the US by total membership, spanning from progressive to deeply conservative.
 
-**US population context:** the majority of Evangelical Protestant figures (~25% Pew 2023) are Baptist or Baptist-adjacent. Southern Baptist Convention alone is the largest Protestant denomination in the US.
+**US population context:** the majority of the 23% Evangelical Protestant source category is Baptist or Baptist-adjacent. Southern Baptist Convention alone is the largest Protestant denomination in the US.
 
 **Key distinctives:**
 - **Believer's baptism by immersion:** baptism is reserved for those who have made a personal profession of faith; infant baptism is not practiced
@@ -116,7 +118,7 @@ The largest single Protestant denominational family in the US by total membershi
 
 Founded by John Wesley in 18th-century England. Methodism is the theological tradition underlying the United Methodist Church (UMC), the largest single mainline Protestant denomination in the US.
 
-**US population context:** included within Mainline Protestant (~16% Pew 2023).
+**US population context:** included within the 11% Mainline Protestant source category in the 2023-24 table.
 
 **Key distinctives:**
 - **Wesleyan Quadrilateral:** Scripture, Tradition, Reason, and Experience as four co-equal sources of theological reflection (though Wesley himself gave Scripture primary authority)
@@ -138,7 +140,7 @@ Founded by John Wesley in 18th-century England. Methodism is the theological tra
 
 The Episcopal Church (TEC) is the American branch of the worldwide Anglican Communion -- the family of churches in communion with the Archbishop of Canterbury.
 
-**US population context:** included within Mainline Protestant (Pew 2023).
+**US population context:** included within the 11% Mainline Protestant source category in the 2023-24 table.
 
 **Key distinctives:**
 - **Via media ("middle way"):** Anglicanism occupies a self-described middle position between Catholic and Reformed traditions -- retaining Catholic liturgy and apostolic succession while affirming Protestant soteriology
@@ -158,7 +160,7 @@ The Episcopal Church (TEC) is the American branch of the worldwide Anglican Comm
 
 Distinct from Eastern (Chalcedonian) Orthodox. The Oriental Orthodox churches rejected the Council of Chalcedon (451 CE) and the Chalcedonian definition of Christ's two natures.
 
-**US population context:** grouped with Orthodox Christian (~1% Pew 2023); no separate Pew category.
+**US population context:** grouped with the 1% Orthodox Christian source category in the 2023-24 table; no separate Pew category.
 
 **Key characteristics:**
 - **Miaphysitism:** Christ has one united nature (divine and human), not two natures as in Chalcedonian Orthodoxy; the "one nature" is the point of theological difference
@@ -177,7 +179,7 @@ Distinct from Eastern (Chalcedonian) Orthodox. The Oriental Orthodox churches re
 
 The second-largest Restorationist body, historically known as the Reorganized Church of Jesus Christ of Latter Day Saints (RLDS).
 
-**US population context:** too small to register separately in Pew data; grouped within LDS / Restorationist (~2%).
+**US population context:** not separately reported; grouped within the 2% Latter-day Saint (Mormon) source category in the 2023-24 table.
 
 **Key distinctions from LDS:**
 - Accepts Joseph Smith's founding narrative but has diverged significantly in theology, governance, and practice since the 19th-century succession crisis
@@ -203,9 +205,9 @@ Jewish believers who accept Jesus (Yeshua) as the Messiah while maintaining Jewi
 
 ## Seventh-day Adventist
 
-**US population context:** below 1% US threshold (Pew 2023); not in ARE scope as a separate category.
+**US population context:** not separately reported in the cited table; not in ARE scope as a separate category.
 
-**Scope status:** OUT OF SCOPE (below 1% US population threshold per Pew 2023). Do not include as a denomination in ARE.
+**Scope status:** OUT OF SCOPE (not a separately reported category in the cited table). Do not include as a denomination in ARE.
 
 **Context note for agents:** Seventh-day Adventist (SDA) is a Restorationist-adjacent tradition with distinctive beliefs including Saturday (seventh-day) Sabbath observance, health reform, investigative judgment doctrine, and the prophetic ministry of Ellen G. White. Its US population is insufficient for the 1% threshold. If a user asks about SDA, confirm scope limits and point to the closest in-scope entry (Evangelical Protestant for shared Protestant theology).
 
@@ -213,9 +215,9 @@ Jewish believers who accept Jesus (Yeshua) as the Messiah while maintaining Jewi
 
 ## Jehovah's Witnesses
 
-**US population context:** below 1% US threshold (Pew 2023); not in ARE scope.
+**US population context:** not separately reported in the cited table; not in ARE scope.
 
-**Scope status:** OUT OF SCOPE (below 1% US population threshold per Pew 2023). Do not include in ARE.
+**Scope status:** OUT OF SCOPE (not a separately reported category in the cited table). Do not include in ARE.
 
 **Context note for agents:** Jehovah's Witnesses use the New World Translation (NWT), a translation produced by the Watch Tower Society and not available via any free API. They reject the Trinity, celebrate no holidays, and do not accept blood transfusions. Their theological distinctives place them outside the doctrinal mainstream of the five in-scope Christian denominations. Confirm scope limits if asked.
 
@@ -225,7 +227,7 @@ Jewish believers who accept Jesus (Yeshua) as the Messiah while maintaining Jewi
 
 The National Baptist Convention, the African Methodist Episcopal (AME) Church, the Church of God in Christ (COGIC), and other historically Black denominations together constitute one of the largest and most distinct expressions of American Christianity.
 
-**US population context:** the Pew Research Center reports Black Protestants as a significant sub-category within the total Evangelical Protestant figure; no independent 1%+ separate category. Included within Evangelical Protestant in ARE.
+**US population context:** the snapshot records Historically Black Protestant at 5% as a constituent Christian category; it is not a separate top-level lens in ARE and should not be added to the 62% Christians total. Included within the app's Evangelical Protestant lens for reference purposes.
 
 **Key characteristics:**
 - The Black Church emerged in the context of American slavery and its aftermath; worship, theology, and community life are inseparable from that history

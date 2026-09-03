@@ -1,8 +1,8 @@
 ---
 title: Islam Primer
 tradition: islam
-us-share: ~1%
-pew-url: https://www.pewresearch.org/religion/religious-landscape-study/
+us-share: 1%
+pew-url: https://www.pewresearch.org/religious-landscape-study/region/united-states/
 status: active-reference
 ---
 
@@ -10,7 +10,7 @@ status: active-reference
 
 ## Scope note
 
-In scope per ARE criteria: Abrahamic lineage (YES) + 1% US population threshold (YES, ~1% Pew 2023 -- at threshold). Islam is the youngest of the three in-scope traditions and the second largest religion in the world.
+In scope per ARE criteria: Abrahamic lineage (YES) + 1% threshold (YES, 1% of U.S. adults in Pew's direct "Muslim" category in the 2023-24 U.S. Religious Landscape Study -- at the threshold). Islam is the youngest of the three in-scope traditions and the second largest religion in the world.
 
 ---
 
@@ -18,7 +18,7 @@ In scope per ARE criteria: Abrahamic lineage (YES) + 1% US population threshold 
 
 Islam (Arabic: submission/peace) is a monotheistic faith founded in 7th-century Arabia through the prophethood of Muhammad ibn Abdullah. Muslims believe Muhammad was the final prophet in a line beginning with Adam and including Ibrahim (Abraham), Musa (Moses), and Isa (Jesus). The Quran is understood as the direct word of God (Allah) as revealed to Muhammad through the angel Jibril (Gabriel).
 
-US population: ~1% (Pew Research Center Religious Landscape Study, 2023 -- at the minimum threshold)
+US population: 1% of U.S. adults (Pew Research Center, 2023-24 U.S. Religious Landscape Study; direct category "Muslim" -- at the minimum threshold)
 
 ---
 
