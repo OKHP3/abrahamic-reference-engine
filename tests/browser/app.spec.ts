@@ -277,6 +277,31 @@ test.describe('deterministic lookup states', () => {
     )
   })
 
+  test('restores phrase candidates and source links from a shared lookup URL after reload', async ({ page }) => {
+    const sharedLookupUrl = '/lookup?tradition=judaism&phrase=In%20the%20beginning'
+    await page.goto(sharedLookupUrl)
+
+    const results = page.getByTestId('phrase-discovery-results')
+    const sourceLinks = results.getByRole('link', { name: /Open .* on source website/ })
+
+    await expect(results).toBeVisible()
+    await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
+    await expect(results).toContainText('Ambiguity: multiple candidates')
+    await expect(sourceLinks).toHaveCount(2)
+
+    await page.reload()
+
+    await expect(page).toHaveURL(/\/lookup\?tradition=judaism&phrase=In\+the\+beginning$/)
+    await expect(results).toBeVisible()
+    await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
+    await expect(results).toContainText('Ambiguity: multiple candidates')
+    await expect(sourceLinks).toHaveCount(2)
+    await expect(sourceLinks.first()).toHaveAttribute(
+      'href',
+      'https://www.sefaria.org/Genesis%201%3A1?lang=bi',
+    )
+  })
+
   test('shows loading, error, retry, and copy-link success', async ({ page }) => {
     let attempts = 0
     let releaseFirstRequest: (() => void) | undefined
