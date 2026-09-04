@@ -371,6 +371,32 @@ test.describe('deterministic lookup states', () => {
     )
   })
 
+  test('GitHub Pages public routes survive direct navigation and hard reload', async ({ page }) => {
+    test.skip(test.info().project.name !== 'pages', 'Production base-path check runs in the Pages project')
+
+    const publicRoutes = [
+      ['/abrahamic-reference-engine/browse', 'Browse Traditions', 'Browse Traditions page'],
+      ['/abrahamic-reference-engine/lookup', 'Verse Lookup', 'Verse Lookup page'],
+      ['/abrahamic-reference-engine/compare', 'Cross-Tradition Compare', 'Cross-Tradition Compare page'],
+      ['/abrahamic-reference-engine/observances', 'Observances', 'Observances page'],
+      ['/abrahamic-reference-engine/skills', 'Agent Skills', 'Agent Skills page'],
+      ['/abrahamic-reference-engine/origin', 'Origin Archive', 'Origin Archive page'],
+      ['/abrahamic-reference-engine/browse/catholic', 'Catholic', 'Tradition details page'],
+    ] as const
+
+    for (const [path, heading, announcement] of publicRoutes) {
+      const initialResponse = await page.goto(path)
+      expect([200, 404]).toContain(initialResponse?.status())
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await expect(page.getByTestId('route-announcement')).toHaveText(announcement)
+
+      const reloadResponse = await page.reload()
+      expect([200, 404]).toContain(reloadResponse?.status())
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await expect(page.getByTestId('route-announcement')).toHaveText(announcement)
+    }
+  })
+
   test('shows loading, error, retry, and copy-link success', async ({ page }) => {
     let attempts = 0
     let releaseFirstRequest: (() => void) | undefined
