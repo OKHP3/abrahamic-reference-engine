@@ -88,7 +88,15 @@ async function mockScriptureProviders(page: Page) {
 test.beforeEach(async ({ page }) => {
   // Any provider request not explicitly fulfilled by a test is a failure-prone
   // abort rather than an accidental live-network dependency.
-  await page.route('https://**/*', route => route.abort())
+  const hostedOrigin = process.env.PLAYWRIGHT_HOSTED === 'true' && process.env.PLAYWRIGHT_BASE_URL
+    ? new URL(process.env.PLAYWRIGHT_BASE_URL).origin
+    : null
+  await page.route('https://**/*', route => {
+    if (hostedOrigin && new URL(route.request().url()).origin === hostedOrigin) {
+      return route.continue()
+    }
+    return route.abort()
+  })
   await page.addInitScript(() => {
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -309,7 +317,8 @@ test.describe('deterministic lookup states', () => {
     // serving the copied 404.html SPA fallback for a URL below the repository base.
     const sharedLookupUrl =
       '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
-    await page.goto(sharedLookupUrl)
+    const initialResponse = await page.goto(sharedLookupUrl)
+    expect([200, 404]).toContain(initialResponse?.status())
 
     const results = page.getByTestId('phrase-discovery-results')
     const sourceLinks = results.getByRole('link', { name: /Open .* on source website/ })
@@ -332,14 +341,30 @@ test.describe('deterministic lookup states', () => {
     await assertPublishedLookupUrl()
     await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
     await expect(results).toContainText('Ambiguity: multiple candidates')
+    const candidateCards = results.locator('article')
+    await expect(candidateCards).toHaveCount(2)
+    await expect(candidateCards.nth(0)).toBeVisible()
+    await expect(candidateCards.nth(1)).toBeVisible()
+    await expect(results).toContainText('Genesis 1:1')
+    await expect(results).toContainText('John 1:1-3')
     await expect(sourceLinks).toHaveCount(2)
+    await expect(sourceLinks.nth(0)).toBeVisible()
+    await expect(sourceLinks.nth(1)).toBeVisible()
 
-    await page.reload()
+    const reloadResponse = await page.reload()
+    expect([200, 404]).toContain(reloadResponse?.status())
 
     await assertPublishedLookupUrl()
     await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
     await expect(results).toContainText('Ambiguity: multiple candidates')
+    await expect(candidateCards).toHaveCount(2)
+    await expect(candidateCards.nth(0)).toBeVisible()
+    await expect(candidateCards.nth(1)).toBeVisible()
+    await expect(results).toContainText('Genesis 1:1')
+    await expect(results).toContainText('John 1:1-3')
     await expect(sourceLinks).toHaveCount(2)
+    await expect(sourceLinks.nth(0)).toBeVisible()
+    await expect(sourceLinks.nth(1)).toBeVisible()
     await expect(sourceLinks.first()).toHaveAttribute(
       'href',
       'https://www.sefaria.org/Genesis%201%3A1?lang=bi',

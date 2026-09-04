@@ -59,3 +59,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Install Chromium for hosted smoke check
+        run: npx playwright install --with-deps chromium
+
+      - name: Run hosted GitHub Pages smoke check
+        run: npm run test:e2e:pages:hosted
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.deployment.outputs.page_url }}

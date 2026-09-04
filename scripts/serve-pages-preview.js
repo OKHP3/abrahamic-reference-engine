@@ -43,13 +43,15 @@ const server = createServer(async (request, response) => {
       return
     }
 
-    const relativePath = requestUrl.pathname.slice(basePath.length) || '/index.html'
-    const requestedPath = resolve(distRoot, `.${relativePath}`)
-    const filePath = isWithinDist(requestedPath) && await isFile(requestedPath)
-      ? requestedPath
-      : fallbackPath
+    const relativePath = requestUrl.pathname.slice(basePath.length)
+    const requestedRelativePath = relativePath === '' || relativePath === '/'
+      ? '/index.html'
+      : relativePath
+    const requestedPath = resolve(distRoot, `.${requestedRelativePath}`)
+    const requestedFileExists = isWithinDist(requestedPath) && await isFile(requestedPath)
+    const filePath = requestedFileExists ? requestedPath : fallbackPath
 
-    response.writeHead(200, {
+    response.writeHead(requestedFileExists ? 200 : 404, {
       'Content-Type': contentTypes[extname(filePath)] ?? 'application/octet-stream',
     })
     createReadStream(filePath).pipe(response)

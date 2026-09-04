@@ -14,7 +14,8 @@
     "test:skill-sync": "node scripts/check-skill-sync.js",
     "test:mercury-dates": "node .agents/skills/okhp3-celestial-data/scripts/validate-mercury-dates.cjs",
     "test:e2e": "playwright test",
-    "test:e2e:pages": "cp dist/index.html dist/404.html && PLAYWRIGHT_PAGES=true playwright test --project=pages --grep \"GitHub Pages shared lookup route\""
+    "test:e2e:pages": "cp dist/index.html dist/404.html && PLAYWRIGHT_PAGES=true playwright test --project=pages --grep \"GitHub Pages shared lookup route\"",
+    "test:e2e:pages:hosted": "PLAYWRIGHT_PAGES=true PLAYWRIGHT_HOSTED=true playwright test --project=pages --grep \"GitHub Pages shared lookup route\""
   },
   "dependencies": {
     "@babel/eslint-parser": "^8.0.1",
