@@ -78,10 +78,10 @@ This skill covers exactly three traditions. Both qualifying criteria must be met
 1. Abrahamic lineage (traceable descent from the Abrahamic scriptural family)
 2. 1% or greater US population per Pew Research Center Religious Landscape Study
 
-**In scope:** Judaism (~2% US), Christianity (~63% US), Islam (~1% US)
-**Out of scope:** Hinduism (not Abrahamic), Buddhism (not Abrahamic), Baha'i (Abrahamic but <1% US), any other tradition not meeting both criteria
+**In scope:** Judaism (2% of U.S. adults), Christianity (62%), Islam (1%)
+**Out of scope:** Hinduism and Buddhism (not Abrahamic); Baha'i (Abrahamic, but not separately reported in the cited table); any other tradition not meeting both criteria
 
-Pew citation: https://www.pewresearch.org/religion/religious-landscape-study/
+Pew citation: https://www.pewresearch.org/religious-landscape-study/region/united-states/ (2023-24 U.S. Religious Landscape Study, "Religious composition" table; published February 26, 2025)
 
 ---
 

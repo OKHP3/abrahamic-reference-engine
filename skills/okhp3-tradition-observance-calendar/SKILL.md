@@ -89,14 +89,14 @@ A holiday is in scope if and only if it meets **both** criteria:
 
 | Tradition | US Share | In Scope |
 |---|---|---|
-| Christianity | ~63% | Yes -- five denominational lenses |
-| Judaism | ~2% | Yes |
-| Islam | ~1% | Yes |
-| Hinduism | ~1% | **No** (not Abrahamic) |
-| Buddhism | ~1% | **No** (not Abrahamic) |
-| Baha'i | ~0.1% | **No** (Abrahamic but below threshold) |
+| Christianity | 62% | Yes -- five denominational lenses |
+| Judaism | 2% | Yes |
+| Islam | 1% | Yes |
+| Hinduism | 1% | **No** (not Abrahamic) |
+| Buddhism | 1% | **No** (not Abrahamic) |
+| Baha'i | Not separately reported | **No** (Abrahamic; no separate category in the cited table) |
 
-Source: Pew Research Center -- https://www.pewresearch.org/religion/religious-landscape-study/
+Source: Pew Research Center -- https://www.pewresearch.org/religious-landscape-study/region/united-states/ (2023-24 U.S. Religious Landscape Study, "Religious composition" table; shares are percentages of U.S. adults; published February 26, 2025)
 
 ---
 

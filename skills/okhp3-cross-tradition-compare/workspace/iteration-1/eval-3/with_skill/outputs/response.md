@@ -73,6 +73,6 @@ function TraditionPanel({ family, passage }) {
 
 ## 4. Proportional Representation Rule
 When expanding the set of themes:
-*   **Christianity**: Provides the most examples (reflecting ~63% US share).
-*   **Judaism & Islam**: Receive equal representation (~2% and ~1% share).
+*   **Christianity**: Provides the most examples (reflecting 62% of U.S. adults in Pew's 2023-24 study).
+*   **Judaism & Islam**: Receive equal representation (2% and 1% of U.S. adults).
 *   **Inclusion**: Every comparison must include at least one entry from all three traditions.

@@ -16,7 +16,7 @@
     {
       "id": 2,
       "prompt": "What's the proportional representation rule for the cross-tradition compare feature? I want to generate new theme entries beyond the 20 that are already seeded.",
-      "expected_output": "Agent explains the proportional representation rule: Christianity gets the most examples (~63% US), Judaism and Islam get equal representation. Every tradition must appear in every comparison. Explains this applies only to generating new entries, not visual weighting.",
+      "expected_output": "Agent explains the proportional representation rule: Christianity gets the most examples (62% of U.S. adults in Pew's 2023-24 study), while Judaism and Islam get equal representation. Every tradition must appear in every comparison. Explains this applies only to generating new entries, not visual weighting.",
       "files": [],
       "expectations": [
         "Response explains the proportional representation rule correctly",

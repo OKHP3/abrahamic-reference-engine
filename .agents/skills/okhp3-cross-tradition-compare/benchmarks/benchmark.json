@@ -45,7 +45,7 @@
       "run_number": 1,
       "result": { "pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": null, "tokens": null, "tool_calls": null, "errors": 0 },
       "expectations": [
-        { "text": "Response explains the proportional representation rule correctly", "passed": true, "evidence": "Christianity ~63%, Judaism/Islam equal, universal inclusion -- correct" },
+        { "text": "Response explains the proportional representation rule correctly", "passed": true, "evidence": "Christianity receives the most examples; Judaism/Islam are equal; universal inclusion -- correct. The historical response used an older approximate Christianity share, so it is not current demographic evidence." },
         { "text": "Response cites US population shares from Pew Research Center", "passed": true, "evidence": "'Based on Pew Research Center data' with percentages cited" },
         { "text": "Response clarifies that visual dignity is equal regardless of population share", "passed": true, "evidence": "'identical visual and structural dignity in the display, regardless of population share'" },
         { "text": "Response explains that all three traditions must always appear in every comparison", "passed": true, "evidence": "'no tradition is optional'" }

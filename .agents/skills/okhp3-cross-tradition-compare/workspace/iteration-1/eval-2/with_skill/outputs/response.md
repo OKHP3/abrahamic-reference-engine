@@ -1,8 +1,8 @@
 According to the **Proportional representation rule** section of the `okhp3-cross-tradition-compare` skill, when generating NEW theme entries or expanding the seeded set beyond the initial 20, the number of examples per tradition should reflect their share of the US population (based on Pew Research Center data).
 
 ### The Rule
-*   **Christianity:** Receives the most examples (reflecting ~63% of the US population, across 5 denominations).
-*   **Judaism and Islam:** Receive equal representation to each other (reflecting ~2% and ~1% of the US population respectively).
+*   **Christianity:** Receives the most examples (reflecting 62% of U.S. adults in Pew's 2023-24 study, across 5 denominational lenses).
+*   **Judaism and Islam:** Receive equal representation to each other (reflecting 2% and 1% of U.S. adults respectively).
 *   **Universal Inclusion:** Every tradition must have at least one entry in every comparison; no tradition is optional.
 
 ### Application

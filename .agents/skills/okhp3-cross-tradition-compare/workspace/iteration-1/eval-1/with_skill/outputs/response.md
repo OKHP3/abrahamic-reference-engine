@@ -39,6 +39,6 @@ While static text is provided for immediate display, you can enhance the user ex
 
 ### 4. Proportional Representation
 When expanding your site with NEW themes beyond the 20 pre-seeded ones, follow the **Proportional Representation Rule**:
-*   **Christianity**: Include multiple examples (e.g., from different denominations) to reflect its ~63% US population share.
-*   **Judaism and Islam**: Include equal representation (~2% and ~1% share respectively).
+*   **Christianity**: Include multiple examples (e.g., from different denominations) to reflect its 62% share of U.S. adults in Pew's 2023-24 study.
+*   **Judaism and Islam**: Include equal representation (2% and 1% of U.S. adults respectively).
 *   **Inclusivity**: Every comparison must include at least one entry from all three traditions.

@@ -21,13 +21,14 @@ Fill all required fields. Leave `liveRef` as `null` if the text is already in `s
 ## Proportional representation rule
 
 When generating a batch of new themes, distribute passage count proportionally
-to US Pew population share -- but every theme must always include all three traditions:
+to U.S. adult shares in Pew's 2023-24 Religious Landscape Study -- but every
+theme must always include all three traditions:
 
-| Tradition | US share (Pew 2014) | Passage weight in batches |
-|-----------|---------------------|--------------------------|
-| Christianity | ~63% | More denominations / passages per batch |
-| Judaism | ~2% | 1 passage per theme |
-| Islam | ~1% | 1 passage per theme |
+| Tradition | U.S. adult share (Pew 2023-24) | Passage weight in batches |
+|-----------|---------------------------------|--------------------------|
+| Christianity | 62% | More denominational lenses / passages per batch |
+| Judaism | 2% | 1 passage per theme |
+| Islam | 1% | 1 passage per theme |
 
 Visual dignity is always equal regardless of population share.
 
