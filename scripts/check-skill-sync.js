@@ -16,6 +16,7 @@ import { join, relative } from 'node:path';
 
 const MIRRORS_DIR = 'skills';
 const CANONICAL_DIR = '.agents/skills';
+const PEW_SNAPSHOT_PATH = 'src/data/pew-religious-composition.snapshot.ts';
 
 function packageFiles(root) {
   const files = [];
@@ -65,6 +66,192 @@ function comparePackages(skillName, mirrorPath, canonicalPath) {
   return true;
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function snapshotString(source, property) {
+  const match = source.match(new RegExp(`\\b${escapeRegExp(property)}:\\s*['"]([^'"]+)['"]`));
+  if (!match) throw new Error(`Could not read ${property} from ${PEW_SNAPSHOT_PATH}`);
+  return match[1];
+}
+
+function snapshotSection(source, sectionName) {
+  const match = source.match(
+    new RegExp(`\\b${escapeRegExp(sectionName)}:\\s*\\{([\\s\\S]*?)\\n  \\},`)
+  );
+  if (!match) throw new Error(`Could not read ${sectionName} from ${PEW_SNAPSHOT_PATH}`);
+  return match[1];
+}
+
+function snapshotRecord(section, recordName) {
+  const match = section.match(
+    new RegExp(`(?:\\b${escapeRegExp(recordName)}|'${escapeRegExp(recordName)}'):\\s*\\{([\\s\\S]*?)\\n    \\},`)
+  );
+  if (!match) throw new Error(`Could not read snapshot record ${recordName}`);
+  return match[1];
+}
+
+function snapshotRecordValue(record, property) {
+  const match = record.match(
+    new RegExp(`\\b${escapeRegExp(property)}:\\s*(?:['"]([^'"]+)['"]|(\\d+))`)
+  );
+  if (!match) throw new Error(`Could not read snapshot record ${property}`);
+  return match[1] ?? Number(match[2]);
+}
+
+function readPewSnapshot() {
+  const source = readFileSync(PEW_SNAPSHOT_PATH, 'utf8');
+  const groups = snapshotSection(source, 'groups');
+  const scopeRows = snapshotSection(source, 'scopeRows');
+
+  const bahai = snapshotRecord(scopeRows, 'bahai');
+  return {
+    source: snapshotString(source, 'source'),
+    url: snapshotString(source, 'url'),
+    reportTitle: snapshotString(source, 'reportTitle'),
+    table: snapshotString(source, 'table'),
+    denominator: snapshotString(source, 'denominator'),
+    publicationDate: snapshotString(source, 'publicationDate'),
+    groups: new Map(
+      ['christianity', 'judaism', 'islam'].map((recordName) => {
+        const record = snapshotRecord(groups, recordName);
+        return [
+          recordName,
+          {
+            sourceCategory: snapshotRecordValue(record, 'sourceCategory'),
+            value: snapshotRecordValue(record, 'displayValue'),
+          },
+        ];
+      })
+    ),
+    bahaiLabel: snapshotRecordValue(bahai, 'label'),
+    bahaiValue: snapshotRecordValue(bahai, 'displayValue'),
+  };
+}
+
+function packageTextFiles(root) {
+  return packageFiles(root)
+    .filter((file) => !file.endsWith('.png') && !file.endsWith('.jpg') && !file.endsWith('.jpeg'))
+    .map((file) => ({
+      file,
+      text: readFileSync(join(root, file), 'utf8'),
+    }));
+}
+
+function lineHasExpectedShare(line, label, expectedValue) {
+  const escapedLabel = escapeRegExp(label);
+  const expected = `${escapeRegExp(String(expectedValue))}%`;
+  return [
+    new RegExp(`\\|\\s*${escapedLabel}\\s*\\|\\s*${expected}`, 'i'),
+    new RegExp(`\\b${escapedLabel}\\b\\s*\\(\\s*${expected}`, 'i'),
+    new RegExp(
+      `\\b${escapedLabel}\\b[^\\n.]{0,100}(?:share|total|population|of\\s+(?:the\\s+)?U\\.S\\.\\s+adults)[^\\n.]{0,40}${expected}`,
+      'i'
+    ),
+    new RegExp(`${expected}[^\\n.]{0,50}\\b${escapedLabel}\\b`, 'i'),
+  ].some((pattern) => pattern.test(line));
+}
+
+function lineHasTopLevelClaim(line, label) {
+  const escapedLabel = escapeRegExp(label);
+  return [
+    new RegExp(`\\|\\s*${escapedLabel}\\s*\\|\\s*~?\\d+(?:\\.\\d+)?%`, 'i'),
+    new RegExp(`\\b${escapedLabel}\\b\\s*\\(\\s*~?\\d+(?:\\.\\d+)?%`, 'i'),
+    new RegExp(
+      `\\b${escapedLabel}\\b[^\\n.]{0,100}(?:share|total|population|of\\s+(?:the\\s+)?U\\.S\\.\\s+adults)[^\\n.]{0,40}~?\\d+(?:\\.\\d+)?%`,
+      'i'
+    ),
+    new RegExp(`~?\\d+(?:\\.\\d+)?%[^\\n.]{0,50}\\b${escapedLabel}\\b`, 'i'),
+  ].some((pattern) => pattern.test(line));
+}
+
+function checkPewDocumentation(skillName, mirrorPath, snapshot) {
+  const files = packageTextFiles(mirrorPath);
+  const allText = files.map(({ text }) => text).join('\n');
+  const hasPewGuidance = /Pew Research Center|Pew citation|population share|Religious composition/i.test(
+    allText
+  );
+
+  if (!hasPewGuidance) return true;
+
+  const failures = [];
+  const requiredContext = [
+    ['source', snapshot.source],
+    ['URL', snapshot.url],
+    ['report title', snapshot.reportTitle],
+    ['table context', 'Religious composition'],
+    ['denominator', snapshot.denominator],
+    ['publication date', `published ${snapshot.publicationDate}`],
+  ];
+
+  for (const [name, expected] of requiredContext) {
+    if (!allText.toLowerCase().includes(expected.toLowerCase())) {
+      failures.push(`missing Pew ${name}: ${expected}`);
+    }
+  }
+
+  for (const [label, expected] of snapshot.groups) {
+    const expectedValue = `${expected.value}%`;
+    const matchingLines = [];
+    const claimLines = [];
+    const labels = [label, expected.sourceCategory];
+
+    for (const { file, text } of files) {
+      for (const [index, line] of text.split(/\r?\n/).entries()) {
+        if (labels.some((candidate) => lineHasExpectedShare(line, candidate, expected.value))) {
+          matchingLines.push({ file, index, line });
+        }
+        if (labels.some((candidate) => lineHasTopLevelClaim(line, candidate))) {
+          claimLines.push({ file, index, line });
+        }
+      }
+    }
+
+    if (matchingLines.length === 0) {
+      failures.push(`missing current ${label} share (${expectedValue})`);
+    }
+
+    for (const { file, index, line } of claimLines) {
+      // A threshold rule may mention 1% without claiming that the tradition's
+      // population share is 1%. It is not a source-value claim to validate.
+      if (/\b(?:threshold|at least|or greater)\b/i.test(line) && !/of\s+(?:the\s+)?U\.S\.\s+adults/i.test(line)) {
+        continue;
+      }
+
+      const values = [...line.matchAll(/(~?\d+(?:\.\d+)?)%/g)].map((match) => match[1]);
+      if (!values.includes(String(expected.value))) {
+        failures.push(
+          `${file}:${index + 1} ${label} share is ${values.join(', ') || 'missing'}; expected ${expectedValue}`
+        );
+      }
+    }
+  }
+
+  for (const { file, text } of files) {
+    for (const [index, line] of text.split(/\r?\n/).entries()) {
+      if (
+        new RegExp(`${escapeRegExp(snapshot.bahaiLabel)}[^\\n%]*%|%[^\\n]*${escapeRegExp(snapshot.bahaiLabel)}`, 'i').test(
+          line
+        )
+      ) {
+        failures.push(
+          `${file}:${index + 1} ${snapshot.bahaiLabel} has an unsupported percentage; expected ${snapshot.bahaiValue}`
+        );
+      }
+    }
+  }
+
+  if (failures.length) {
+    console.error(`PEW DRIFT ${skillName}`);
+    for (const failure of failures) console.error(`         ${failure}`);
+    return false;
+  }
+
+  console.log(`PEW OK   ${skillName}`);
+  return true;
+}
+
 // Collect skill names that exist in the mirrors directory (skip non-directory entries)
 const mirrorEntries = readdirSync(MIRRORS_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
@@ -72,6 +259,7 @@ const mirrorEntries = readdirSync(MIRRORS_DIR, { withFileTypes: true })
 
 let failures = 0;
 let checked = 0;
+const pewSnapshot = readPewSnapshot();
 
 for (const skillName of mirrorEntries) {
   const mirrorPath = join(MIRRORS_DIR, skillName, 'SKILL.md');
@@ -90,7 +278,9 @@ for (const skillName of mirrorEntries) {
     continue;
   }
 
-  if (!comparePackages(skillName, join(MIRRORS_DIR, skillName), join(CANONICAL_DIR, skillName))) failures++;
+  const packagePath = join(MIRRORS_DIR, skillName);
+  if (!comparePackages(skillName, packagePath, join(CANONICAL_DIR, skillName))) failures++;
+  if (!checkPewDocumentation(skillName, packagePath, pewSnapshot)) failures++;
   checked++;
 }
 
