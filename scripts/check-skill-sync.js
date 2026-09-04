@@ -102,20 +102,16 @@ function snapshotRecordValue(record, property) {
 
 function readPewSnapshot() {
   const source = readFileSync(PEW_SNAPSHOT_PATH, 'utf8');
+  const denominations = snapshotSection(source, 'denominations');
   const groups = snapshotSection(source, 'groups');
   const scopeRows = snapshotSection(source, 'scopeRows');
+  const christianComponents = snapshotSection(source, 'christianComponents');
 
   const bahai = snapshotRecord(scopeRows, 'bahai');
-  return {
-    source: snapshotString(source, 'source'),
-    url: snapshotString(source, 'url'),
-    reportTitle: snapshotString(source, 'reportTitle'),
-    table: snapshotString(source, 'table'),
-    denominator: snapshotString(source, 'denominator'),
-    publicationDate: snapshotString(source, 'publicationDate'),
-    groups: new Map(
-      ['christianity', 'judaism', 'islam'].map((recordName) => {
-        const record = snapshotRecord(groups, recordName);
+  const readRecords = (section, recordNames) =>
+    new Map(
+      recordNames.map((recordName) => {
+        const record = snapshotRecord(section, recordName);
         return [
           recordName,
           {
@@ -124,7 +120,35 @@ function readPewSnapshot() {
           },
         ];
       })
-    ),
+    );
+
+  return {
+    source: snapshotString(source, 'source'),
+    url: snapshotString(source, 'url'),
+    reportTitle: snapshotString(source, 'reportTitle'),
+    table: snapshotString(source, 'table'),
+    denominator: snapshotString(source, 'denominator'),
+    publicationDate: snapshotString(source, 'publicationDate'),
+    denominations: readRecords(denominations, [
+      'christianity-evangelical',
+      'christianity-catholic',
+      'christianity-mainline',
+      'christianity-lds',
+      'christianity-orthodox',
+      'judaism',
+      'islam',
+    ]),
+    groups: readRecords(groups, ['christianity', 'judaism', 'islam']),
+    christianComponents: readRecords(christianComponents, [
+      'evangelical',
+      'mainline',
+      'historicallyBlack',
+      'catholic',
+      'lds',
+      'orthodox',
+      'jehovahsWitness',
+      'otherChristian',
+    ]),
     bahaiLabel: snapshotRecordValue(bahai, 'label'),
     bahaiValue: snapshotRecordValue(bahai, 'displayValue'),
   };
@@ -166,6 +190,170 @@ function lineHasTopLevelClaim(line, label) {
   ].some((pattern) => pattern.test(line));
 }
 
+function expectedPewValue(value) {
+  return `${value}%`;
+}
+
+function lineContainsPewValue(line, value) {
+  const expected = escapeRegExp(expectedPewValue(value));
+  return new RegExp(`(?:^|[\\s(])${expected}(?:\\s|$|[),.;])`, 'i').test(line);
+}
+
+function sourceCategoryClaims(snapshot) {
+  const claims = new Map();
+  for (const records of [snapshot.denominations, snapshot.groups, snapshot.christianComponents]) {
+    for (const [recordName, record] of records) {
+      const existing = claims.get(record.sourceCategory);
+      if (existing && String(existing.value) !== String(record.value)) {
+        throw new Error(
+          `Conflicting Pew values for source category ${record.sourceCategory}: ` +
+          `${existing.value} and ${record.value}`
+        );
+      }
+      claims.set(record.sourceCategory, { recordName, value: record.value });
+    }
+  }
+  return claims;
+}
+
+const DENOMINATION_FILES = {
+  'christianity-evangelical': 'knowledge/christianity-evangelical-protestant.md',
+  'christianity-catholic': 'knowledge/christianity-catholic.md',
+  'christianity-mainline': 'knowledge/christianity-mainline-protestant.md',
+  'christianity-lds': 'knowledge/christianity-lds-restorationist.md',
+  'christianity-orthodox': 'knowledge/christianity-orthodox.md',
+};
+
+const CHRISTIAN_COMPONENT_CLAIMS = {
+  historicallyBlack: {
+    file: 'knowledge/reserve-04-denominational-distinctives-extended.md',
+    marker: /\*\*US population context:\*\*.*constituent Christian category/i,
+  },
+};
+
+function checkDenominationFrontmatter(mirrorPath, files, snapshot, failures) {
+  const filesByName = new Map(files.map((entry) => [entry.file, entry]));
+
+  for (const [recordName, file] of Object.entries(DENOMINATION_FILES)) {
+    const record = snapshot.denominations.get(recordName);
+    const entry = filesByName.get(file);
+    const packageFile = join(mirrorPath, file);
+
+    if (!entry) {
+      failures.push(`${packageFile} missing published denomination claim ${recordName}`);
+      continue;
+    }
+
+    const shareMatch = entry.text.match(/^us-share:\s*(\S+)\s*$/im);
+    const actualShare = shareMatch?.[1] ?? 'missing';
+    if (actualShare !== expectedPewValue(record.value)) {
+      const line = shareMatch ? entry.text.slice(0, shareMatch.index).split(/\r?\n/).length : 1;
+      failures.push(
+        `${packageFile}:${line} ${recordName} denomination share is ${actualShare}; ` +
+        `expected ${expectedPewValue(record.value)} for source category "${record.sourceCategory}"`
+      );
+    }
+
+    if (!entry.text.toLowerCase().includes(String(record.sourceCategory).toLowerCase())) {
+      failures.push(
+        `${packageFile} ${recordName} denomination source category wording is missing; ` +
+        `expected "${record.sourceCategory}"`
+      );
+    }
+  }
+}
+
+function checkChristianComponentClaims(mirrorPath, files, snapshot, failures) {
+  const filesByName = new Map(files.map((entry) => [entry.file, entry]));
+
+  for (const [recordName, config] of Object.entries(CHRISTIAN_COMPONENT_CLAIMS)) {
+    const record = snapshot.christianComponents.get(recordName);
+    const entry = filesByName.get(config.file);
+    const packageFile = join(mirrorPath, config.file);
+
+    if (!entry) {
+      failures.push(`${packageFile} missing published Christian-component claim ${recordName}`);
+      continue;
+    }
+
+    const claimLines = entry.text
+      .split(/\r?\n/)
+      .map((line, index) => ({ line, index }))
+      .filter(({ line }) => config.marker.test(line));
+
+    if (claimLines.length === 0) {
+      failures.push(
+        `${packageFile} missing published Christian-component claim ${recordName}; ` +
+        `expected source category "${record.sourceCategory}" at ${expectedPewValue(record.value)}`
+      );
+      continue;
+    }
+
+    for (const { line, index } of claimLines) {
+      if (!line.toLowerCase().includes(String(record.sourceCategory).toLowerCase())) {
+        failures.push(
+          `${packageFile}:${index + 1} ${recordName} Christian-component source category wording ` +
+          `is stale; expected "${record.sourceCategory}"`
+        );
+      }
+      if (!lineContainsPewValue(line, record.value)) {
+        failures.push(
+          `${packageFile}:${index + 1} ${recordName} Christian-component share is stale; ` +
+          `expected ${expectedPewValue(record.value)} for source category "${record.sourceCategory}"`
+        );
+      }
+    }
+  }
+}
+
+function lineHasCategoryPercentageClaim(line, category) {
+  const escapedCategory = escapeRegExp(category);
+  const percentage = '(?:<1|\\d+(?:\\.\\d+)?)%';
+  const categoryBoundary = `(?<![A-Za-z0-9])${escapedCategory}(?![A-Za-z0-9])`;
+  return [
+    new RegExp(`${categoryBoundary}[^\\n]{0,40}${percentage}`, 'i'),
+    new RegExp(`${percentage}[^\\n]{0,40}${categoryBoundary}`, 'i'),
+  ].some((pattern) => pattern.test(line));
+}
+
+function checkPewCategoryClaims(mirrorPath, files, snapshot, failures) {
+  const claims = sourceCategoryClaims(snapshot);
+  const sourceCategories = [...claims.keys()];
+
+  for (const { file, text } of files) {
+    for (const [index, line] of text.split(/\r?\n/).entries()) {
+      if (!/%/.test(line)) continue;
+
+      const directCategory = line.match(/\bdirect\s+category\s+["']([^"']+)["']/i)?.[1];
+      const mentionsSourceCategory = /\b(?:direct\s+category|source\s+category)\b/i.test(line);
+      const matchingCategories = directCategory
+        ? sourceCategories.filter(
+            (category) => category.toLowerCase() === directCategory.toLowerCase()
+          )
+        : sourceCategories.filter((category) => lineHasCategoryPercentageClaim(line, category));
+
+      if (mentionsSourceCategory && matchingCategories.length === 0) {
+        failures.push(
+          `${join(mirrorPath, file)}:${index + 1} ` +
+          `Pew source-category claim uses unrecognized wording: ${line.trim()}`
+        );
+        continue;
+      }
+
+      for (const category of matchingCategories) {
+        const claim = claims.get(category);
+        if (!lineContainsPewValue(line, claim.value)) {
+          failures.push(
+            `${join(mirrorPath, file)}:${index + 1} ` +
+            `Pew claim for source category "${category}" is stale; ` +
+            `expected ${expectedPewValue(claim.value)}`
+          );
+        }
+      }
+    }
+  }
+}
+
 function checkPewDocumentation(skillName, mirrorPath, snapshot) {
   const files = packageTextFiles(mirrorPath);
   const allText = files.map(({ text }) => text).join('\n');
@@ -189,6 +377,12 @@ function checkPewDocumentation(skillName, mirrorPath, snapshot) {
     if (!allText.toLowerCase().includes(expected.toLowerCase())) {
       failures.push(`missing Pew ${name}: ${expected}`);
     }
+  }
+
+  if (skillName === 'okhp3-tradition-reference') {
+    checkDenominationFrontmatter(mirrorPath, files, snapshot, failures);
+    checkChristianComponentClaims(mirrorPath, files, snapshot, failures);
+    checkPewCategoryClaims(mirrorPath, files, snapshot, failures);
   }
 
   for (const [label, expected] of snapshot.groups) {
