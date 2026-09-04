@@ -335,7 +335,7 @@ Use `translationId` values as the integer in the Quran.com `translations` query 
 | Tradition | US% | API | Base URL | Ref format | Default translation |
 |-----------|-----|-----|----------|-----------|---------------------|
 | Judaism | 2% | Sefaria | `sefaria.org/api/texts` | `Genesis 1:1` | Sefaria English |
-| Christianity | 63% | bible-api.com | `bible-api.com` | `john 3:16` | KJV |
+| Christianity | 62% | bible-api.com | `bible-api.com` | `john 3:16` | KJV |
 | Islam | 1% | Quran.com v4 | `api.quran.com/api/v4` | `2:255` | Sahih International (ID 20) |
 
 ---

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { afterEach, test } from 'node:test'
 import {
   discoverPhrase,
@@ -278,6 +278,255 @@ test('keeps collaborator-facing demographic summaries aligned with the source sn
         )
       }
     }
+  }
+})
+
+test('keeps published tradition-reference demographic claims aligned with the source snapshot', () => {
+  const snapshot = PEW_RLS_SOURCE_SNAPSHOT
+  const canonicalKnowledgeRoot = '../.agents/skills/okhp3-tradition-reference/knowledge/'
+  const publicationKnowledgeRoot = '../skills/okhp3-tradition-reference/knowledge/'
+  const canonicalKnowledgeUrl = new URL(canonicalKnowledgeRoot, import.meta.url)
+  const pewDocuments = readdirSync(canonicalKnowledgeUrl)
+    .filter(fileName => fileName.endsWith('.md'))
+    .map(fileName => ({
+      fileName,
+      canonical: readFileSync(new URL(fileName, canonicalKnowledgeUrl), 'utf8'),
+    }))
+    .filter(document => /Pew|Religious Landscape/i.test(document.canonical))
+
+  assert.deepEqual(
+    pewDocuments.map(document => document.fileName).sort(),
+    [
+      'christianity-catholic.md',
+      'christianity-evangelical-protestant.md',
+      'christianity-lds-restorationist.md',
+      'christianity-mainline-protestant.md',
+      'christianity-orthodox.md',
+      'christianity-overview.md',
+      'cross-tradition-compare-method.md',
+      'islam-primer.md',
+      'judaism-primer.md',
+      'neutral-glossary.md',
+      'reserve-01-scope-expansion-notes.md',
+      'reserve-03-ui-copy.md',
+      'reserve-04-denominational-distinctives-extended.md',
+    ],
+    'Pew-bearing tradition-reference knowledge inventory changed; classify the new or removed document'
+  )
+
+  const documents = new Map(
+    pewDocuments.map(document => {
+      const publication = readFileSync(
+        new URL(`${publicationKnowledgeRoot}${document.fileName}`, import.meta.url),
+        'utf8'
+      )
+      assert.equal(
+        publication,
+        document.canonical,
+        `${document.fileName}: canonical and publication copies differ`
+      )
+      assert.match(
+        document.canonical,
+        new RegExp(escapeRegExp(snapshot.url)),
+        `${document.fileName}: source URL drift for demographic claims`
+      )
+      assert.match(
+        document.canonical,
+        new RegExp(escapeRegExp(snapshot.reportTitle)),
+        `${document.fileName}: report-date drift for demographic claims`
+      )
+      return [document.fileName, document.canonical]
+    })
+  )
+
+  const skillFileName = 'SKILL.md'
+  const canonicalSkill = readFileSync(
+    new URL('../.agents/skills/okhp3-tradition-reference/SKILL.md', import.meta.url),
+    'utf8'
+  )
+  const publicationSkill = readFileSync(
+    new URL('../skills/okhp3-tradition-reference/SKILL.md', import.meta.url),
+    'utf8'
+  )
+  assert.equal(
+    publicationSkill,
+    canonicalSkill,
+    `${skillFileName}: canonical and publication copies differ`
+  )
+  assert.match(
+    canonicalSkill,
+    new RegExp(
+      `^\\*\\*Pew Research Center citation:\\*\\* ${escapeRegExp(snapshot.url)} ` +
+      `\\(${escapeRegExp(snapshot.reportTitle)}; published ${escapeRegExp(snapshot.publicationDate)}\\)$`,
+      'm'
+    ),
+    `${skillFileName}: source URL, report date, or publication date drift`
+  )
+  assert.match(
+    canonicalSkill,
+    new RegExp(`^2\\. \\*\\*${PEW_SCOPE_NOTE.threshold.minimumPercent}% or greater US population\\*\\* -- per Pew Research Center Religious Landscape Study$`, 'm'),
+    `${skillFileName}: scope threshold drift`
+  )
+
+  const skillTraditionLabels = {
+    christianity: 'Christianity',
+    judaism: 'Judaism',
+    islam: 'Islam',
+  } as const
+  const skillQuickLookupProviders = {
+    christianity: 'bible-api.com',
+    judaism: 'Sefaria',
+    islam: 'Quran.com v4',
+  } as const
+  for (const [family, claim] of Object.entries(snapshot.groups)) {
+    const label = skillTraditionLabels[family as keyof typeof skillTraditionLabels]
+    const quickLookupProvider =
+      skillQuickLookupProviders[family as keyof typeof skillQuickLookupProviders]
+    assert.match(
+      canonicalSkill,
+      new RegExp(`^\\| ${label} \\| ${claim.displayValue}% \\| YES \\| YES \\| YES \\|$`, 'm'),
+      `${skillFileName}: scope-table value association drift for ${claim.sourceCategory}`
+    )
+    assert.match(
+      canonicalSkill,
+      new RegExp(`^\\| ${label} \\| ${claim.displayValue}% \\| ${escapeRegExp(quickLookupProvider)} \\|`, 'm'),
+      `${skillFileName}: Quick lookup value association drift for ${claim.sourceCategory}`
+    )
+    assert.match(
+      canonicalSkill,
+      new RegExp(
+        `^\\*\\*US population share:\\*\\* ${claim.displayValue}% of U\\.S\\. adults ` +
+        `\\(Pew Research Center, ${escapeRegExp(snapshot.reportTitle)}; direct category "${escapeRegExp(claim.sourceCategory)}"\\)$`,
+        'm'
+      ),
+      `${skillFileName}: displayed value/category association drift for ${claim.sourceCategory}`
+    )
+  }
+
+  const skillDenominationLabels = {
+    'christianity-evangelical': 'Evangelical Protestant',
+    'christianity-catholic': 'Catholic',
+    'christianity-mainline': 'Mainline Protestant',
+    'christianity-lds': 'LDS / Restorationist',
+    'christianity-orthodox': 'Orthodox Christian',
+  } as const
+  for (const [id, label] of Object.entries(skillDenominationLabels)) {
+    const claim = snapshot.denominations[id as keyof typeof snapshot.denominations]
+    assert.match(
+      canonicalSkill,
+      new RegExp(`^\\| ${escapeRegExp(label)} \\| ${claim.displayValue}% \\|`, 'm'),
+      `${skillFileName}: denomination-table value association drift for ${claim.sourceCategory}`
+    )
+    assert.match(
+      canonicalSkill,
+      new RegExp(`^#### ${escapeRegExp(label)} \\(${claim.displayValue}% of U\\.S\\. adults\\)$`, 'm'),
+      `${skillFileName}: denomination-heading value association drift for ${claim.sourceCategory}`
+    )
+  }
+
+  const primaryClaims = [
+    ['christianity-overview.md', snapshot.groups.christianity],
+    ['christianity-evangelical-protestant.md', snapshot.denominations['christianity-evangelical']],
+    ['christianity-catholic.md', snapshot.denominations['christianity-catholic']],
+    ['christianity-mainline-protestant.md', snapshot.denominations['christianity-mainline']],
+    ['christianity-lds-restorationist.md', snapshot.denominations['christianity-lds']],
+    ['christianity-orthodox.md', snapshot.denominations['christianity-orthodox']],
+    ['judaism-primer.md', snapshot.denominations.judaism],
+    ['islam-primer.md', snapshot.denominations.islam],
+  ] as const
+
+  for (const [fileName, claim] of primaryClaims) {
+    const document = documents.get(fileName)
+    assert.ok(document, `${fileName}: missing from Pew-bearing knowledge inventory`)
+
+    assert.match(
+      document,
+      new RegExp(`^us-share:\\s*${claim.displayValue}%$`, 'm'),
+      `${fileName}: displayed value drift for ${claim.sourceCategory}`
+    )
+    assert.match(
+      document,
+      new RegExp(`^pew-url:\\s*${escapeRegExp(snapshot.url)}$`, 'm'),
+      `${fileName}: source URL drift for ${claim.sourceCategory}`
+    )
+    assert.match(
+      document,
+      new RegExp(
+        `^US population: ${claim.displayValue}% of U\\.S\\. adults .*direct category ["“]${escapeRegExp(claim.sourceCategory)}["”].*$`,
+        'im'
+      ),
+      `${fileName}: displayed value/category association drift for ${claim.sourceCategory}`
+    )
+  }
+
+  const scopeNotes = documents.get('reserve-01-scope-expansion-notes.md')
+  assert.ok(scopeNotes, 'reserve-01-scope-expansion-notes.md: missing from Pew-bearing knowledge inventory')
+  for (const claim of Object.values(snapshot.scopeRows)) {
+    const displayValue =
+      typeof claim.displayValue === 'number'
+        ? `${claim.displayValue}%`
+        : claim.displayValue
+    assert.match(
+      scopeNotes,
+      new RegExp(`^\\| ${escapeRegExp(claim.label)} \\| ${escapeRegExp(displayValue)} \\|`, 'm'),
+      `reserve-01-scope-expansion-notes.md: displayed value association drift for ${claim.sourceCategory}`
+    )
+  }
+
+  const extendedNotes = documents.get('reserve-04-denominational-distinctives-extended.md')
+  assert.ok(extendedNotes, 'reserve-04-denominational-distinctives-extended.md: missing from Pew-bearing knowledge inventory')
+  for (const claim of [
+    snapshot.denominations['christianity-evangelical'],
+    snapshot.denominations['christianity-mainline'],
+    snapshot.denominations['christianity-lds'],
+    snapshot.denominations['christianity-orthodox'],
+  ]) {
+    assert.match(
+      extendedNotes,
+      new RegExp(`${claim.displayValue}% ${escapeRegExp(claim.sourceCategory)} source category`),
+      `reserve-04-denominational-distinctives-extended.md: displayed value association drift for ${claim.sourceCategory}`
+    )
+  }
+  const historicallyBlack = snapshot.christianComponents.historicallyBlack
+  assert.match(
+    extendedNotes,
+    new RegExp(
+      `${escapeRegExp(historicallyBlack.sourceCategory)} at ${historicallyBlack.displayValue}% as a constituent Christian category`
+    ),
+    `reserve-04-denominational-distinctives-extended.md: displayed value association drift for ${historicallyBlack.sourceCategory}`
+  )
+
+  const compareMethod = documents.get('cross-tradition-compare-method.md')
+  assert.ok(compareMethod, 'cross-tradition-compare-method.md: missing from Pew-bearing knowledge inventory')
+  assert.match(
+    compareMethod,
+    new RegExp(
+      `^- Judaism \\(${snapshot.groups.judaism.displayValue}% of U\\.S\\. adults\\), ` +
+      `Christianity \\(${snapshot.groups.christianity.displayValue}% of U\\.S\\. adults\\), ` +
+      `Islam \\(${snapshot.groups.islam.displayValue}% of U\\.S\\. adults\\)$`,
+      'm'
+    ),
+    'cross-tradition-compare-method.md: tradition/value association drift'
+  )
+
+  const uiCopy = documents.get('reserve-03-ui-copy.md')
+  assert.ok(uiCopy, 'reserve-03-ui-copy.md: missing from Pew-bearing knowledge inventory')
+  assert.match(
+    uiCopy,
+    new RegExp(`^2\\. ${PEW_SCOPE_NOTE.threshold.minimumPercent}% or more of the US population \\(Pew Research Center Religious Landscape Study\\)$`, 'm'),
+    'reserve-03-ui-copy.md: scope threshold drift'
+  )
+  for (const [label, expected] of [
+    ['source', `Source: ${snapshot.source}, ${snapshot.reportTitle}`],
+    ['table', `Table: ${snapshot.table.replaceAll('→', '->')}`],
+    ['denominator', `Denominator: ${snapshot.denominator}`],
+    ['URL', `URL: ${snapshot.url}`],
+  ]) {
+    assert.match(
+      uiCopy,
+      new RegExp(`^${escapeRegExp(expected)}$`, 'm'),
+      `reserve-03-ui-copy.md: ${label} claim drift`
+    )
   }
 })
 
