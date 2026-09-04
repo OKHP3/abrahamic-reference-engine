@@ -302,6 +302,50 @@ test.describe('deterministic lookup states', () => {
     )
   })
 
+  test('GitHub Pages shared lookup route survives direct navigation and hard reload', async ({ page }) => {
+    test.skip(test.info().project.name !== 'pages', 'Production base-path check runs in the Pages project')
+
+    // This runs against the production build. Direct navigation models GitHub Pages
+    // serving the copied 404.html SPA fallback for a URL below the repository base.
+    const sharedLookupUrl =
+      '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
+    await page.goto(sharedLookupUrl)
+
+    const results = page.getByTestId('phrase-discovery-results')
+    const sourceLinks = results.getByRole('link', { name: /Open .* on source website/ })
+
+    const assertPublishedLookupUrl = async () => {
+      await expect.poll(() => page.evaluate(() => {
+        const url = new URL(window.location.href)
+        return {
+          pathname: url.pathname,
+          tradition: url.searchParams.get('tradition'),
+          phrase: url.searchParams.get('phrase'),
+        }
+      })).toEqual({
+        pathname: '/abrahamic-reference-engine/lookup',
+        tradition: 'judaism',
+        phrase: 'In the beginning',
+      })
+    }
+
+    await assertPublishedLookupUrl()
+    await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
+    await expect(results).toContainText('Ambiguity: multiple candidates')
+    await expect(sourceLinks).toHaveCount(2)
+
+    await page.reload()
+
+    await assertPublishedLookupUrl()
+    await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
+    await expect(results).toContainText('Ambiguity: multiple candidates')
+    await expect(sourceLinks).toHaveCount(2)
+    await expect(sourceLinks.first()).toHaveAttribute(
+      'href',
+      'https://www.sefaria.org/Genesis%201%3A1?lang=bi',
+    )
+  })
+
   test('shows loading, error, retry, and copy-link success', async ({ page }) => {
     let attempts = 0
     let releaseFirstRequest: (() => void) | undefined
