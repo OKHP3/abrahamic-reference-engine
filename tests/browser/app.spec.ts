@@ -384,7 +384,12 @@ test.describe('deterministic lookup states', () => {
       ['/abrahamic-reference-engine/browse/catholic', 'Catholic', 'Tradition details page'],
     ] as const
 
-    for (const [path, heading, announcement] of publicRoutes) {
+    const routeVariants = publicRoutes.flatMap(([path, heading, announcement]) => [
+      [path, heading, announcement],
+      [`${path}/`, heading, announcement],
+    ] as const)
+
+    for (const [path, heading, announcement] of routeVariants) {
       const initialResponse = await page.goto(path)
       expect([200, 404]).toContain(initialResponse?.status())
       await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
