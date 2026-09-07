@@ -419,6 +419,35 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await expectClosedNavigation('/browse/islam', 'Islam')
   })
 
+  test('does not add mobile drawer toggles to browser history', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const overlay = page.locator('div.fixed.inset-0[aria-hidden="true"]')
+
+    await page.getByRole('link', { name: 'Find a passage' }).click()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/lookup`)
+
+    for (let toggle = 0; toggle < 3; toggle += 1) {
+      await openButton.click()
+      await expect(sidebar).toBeVisible()
+      await page.getByRole('button', { name: 'Close navigation' }).click()
+      await expect(sidebar).toBeHidden()
+      await expect(overlay).toHaveCount(0)
+      await expect(openButton).toBeFocused()
+    }
+
+    await page.goBack()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse`)
+    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+    await expect(sidebar).toBeHidden()
+    await expect(overlay).toHaveCount(0)
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+    await expect(openButton).toBeFocused()
+  })
+
   test('keeps the mobile drawer closed through multi-step browser history', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)
