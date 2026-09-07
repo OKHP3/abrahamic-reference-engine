@@ -173,6 +173,8 @@ test.describe('route matrix and refresh safety', () => {
       ['/origin', 'Origin Archive'],
     ] as const
 
+    const isPagesProject = test.info().project.name === 'pages'
+
     for (const [path, heading] of routes) {
       await page.goto(path)
       await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
@@ -218,7 +220,7 @@ test.describe('route matrix and refresh safety', () => {
         }
 
         if (target.kind === 'asset') {
-          const response = await page.request.get(target.url.toString())
+        const response = await page.goto(target.url.toString())
           if (!response.ok()) {
             failures.push(`${sourcePath} -> ${href} (HTTP ${response.status()})`)
           }
@@ -396,7 +398,8 @@ test.describe('deterministic lookup states', () => {
   })
 
   test('restores phrase candidates and source links from a shared lookup URL after reload', async ({ page }) => {
-    const sharedLookupUrl = '/lookup?tradition=judaism&phrase=In%20the%20beginning'
+    const sharedLookupUrl =
+      '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
     await page.goto(sharedLookupUrl)
 
     const results = page.getByTestId('phrase-discovery-results')
@@ -427,7 +430,7 @@ test.describe('deterministic lookup states', () => {
     // serving the copied 404.html SPA fallback for a URL below the repository base.
     const sharedLookupUrl =
       '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
-    const initialResponse = await page.goto(sharedLookupUrl)
+      const initialResponse = await page.goto(path)
     expect([200, 404]).toContain(initialResponse?.status())
 
     const results = page.getByTestId('phrase-discovery-results')
@@ -461,7 +464,7 @@ test.describe('deterministic lookup states', () => {
     await expect(sourceLinks.nth(0)).toBeVisible()
     await expect(sourceLinks.nth(1)).toBeVisible()
 
-    const reloadResponse = await page.reload()
+      const reloadResponse = await page.reload()
     expect([200, 404]).toContain(reloadResponse?.status())
 
     await assertPublishedLookupUrl()
@@ -540,7 +543,7 @@ test.describe('deterministic lookup states', () => {
 
   test('does not let an older response replace a newer lookup', async ({ page }) => {
     let firstRequestResolve: (() => void) | undefined
-    const firstRequestFinished = new Promise<void>(resolve => { firstRequestResolve = resolve })
+    const firstRequestFinished = new Promise<void>(resolve => { releaseFirstRequest = resolve })
     await page.route('https://bible-api.com/**', async route => {
       if (route.request().url().toLowerCase().includes('john%203%3a16')) {
         await firstRequestFinished
@@ -645,3 +648,16 @@ test.describe('deterministic compare and observance states', () => {
     await expect(page.locator('button[title="Christmas"]:visible').last()).toBeVisible()
   })
 })
+
+    const basePath = isPagesProject ? '/abrahamic-reference-engine' : ''
+
+    const navigationCases = [
+      { source: '/browse', link: 'Lookup', target: '/lookup', heading: 'Verse Lookup' },
+      { source: '/lookup', link: 'Compare', target: '/compare', heading: 'Cross-Tradition Compare' },
+      { source: '/compare', link: 'Observances', target: '/observances', heading: 'Observances' },
+      { source: '/observances', link: 'Browse', target: '/browse', heading: 'Browse Traditions' },
+      { source: '/skills', link: /Origin archive/, target: '/origin', heading: 'Origin Archive' },
+      { source: '/origin', link: /Skill library/, target: '/skills', heading: 'Agent Skills' },
+    ] as const
+
+      const link = page.getByRole('link', { name: navigationCase.link }).first()
