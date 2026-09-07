@@ -33,6 +33,61 @@ const primaryRoutes = [
   ['/origin', 'Origin Archive'],
 ] as const
 
+const pagesBasePath = process.env.PLAYWRIGHT_PAGES === 'true'
+  ? '/abrahamic-reference-engine'
+  : ''
+
+function classifySameOriginLink(href: string, currentUrl: string) {
+  const target = new URL(href, currentUrl)
+  const current = new URL(currentUrl)
+
+  if (target.origin !== current.origin) return null
+
+  if (pagesBasePath && target.pathname !== pagesBasePath && !target.pathname.startsWith(`${pagesBasePath}/`)) {
+    return {
+      kind: 'invalid-base',
+      url: target,
+      routePath: target.pathname,
+    } as const
+  }
+
+  const routePath = pagesBasePath
+    ? target.pathname.slice(pagesBasePath.length) || '/'
+    : target.pathname
+
+  if (
+    routePath === '/'
+    || routePath === '/browse'
+    || routePath.startsWith('/browse/')
+    || routePath === '/lookup'
+    || routePath === '/compare'
+    || routePath === '/observances'
+    || routePath === '/skills'
+    || routePath === '/origin'
+  ) {
+    return {
+      kind: 'route',
+      url: target,
+      routePath,
+      expectedPath: routePath === '/' ? '/browse' : routePath,
+    } as const
+  }
+
+  if (routePath.startsWith('/origin/')) {
+    return {
+      kind: 'asset',
+      url: target,
+      routePath,
+    } as const
+  }
+
+  return {
+    kind: 'invalid-route',
+    url: target,
+    routePath,
+  } as const
+}
+
 const aladhanDay = (year: string, month: string) => ({
   gregorian: {
     date: `01-${month.padStart(2, '0')}-${year}`,
@@ -135,6 +190,61 @@ test.describe('route matrix and refresh safety', () => {
     await page.goto('/not-a-real-route')
     await expect(page).toHaveURL(/\/browse$/)
     await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+  })
+
+  test('validates every rendered same-origin navigation link', async ({ page }) => {
+    const checkedLinks = new Set<string>()
+    const failures: string[] = []
+
+    for (const [sourcePath, heading] of primaryRoutes) {
+      await page.goto(sourcePath)
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+
+      const hrefs = await page.locator('a[href]').evaluateAll(anchors =>
+        [...new Set(anchors.map(anchor => anchor.getAttribute('href')).filter((href): href is string => Boolean(href)))]
+      )
+
+      for (const href of hrefs) {
+        const target = classifySameOriginLink(href, page.url())
+        if (!target) continue
+
+        const key = target.url.toString()
+        if (checkedLinks.has(key)) continue
+        checkedLinks.add(key)
+
+        if (target.kind === 'invalid-base' || target.kind === 'invalid-route') {
+          failures.push(`${sourcePath} -> ${href} (${target.kind}: ${target.routePath})`)
+          continue
+        }
+
+        if (target.kind === 'asset') {
+          const response = await page.request.get(target.url.toString())
+          if (!response.ok()) {
+            failures.push(`${sourcePath} -> ${href} (HTTP ${response.status()})`)
+          }
+          continue
+        }
+
+        const response = await page.goto(target.url.toString())
+        if (response && ![200, 404].includes(response.status())) {
+          failures.push(`${sourcePath} -> ${href} (HTTP ${response.status()})`)
+          continue
+        }
+
+        const actualUrl = new URL(page.url())
+        const actualPath = pagesBasePath
+          ? actualUrl.pathname.slice(pagesBasePath.length) || '/'
+          : actualUrl.pathname
+        const actualLocation = `${actualPath}${actualUrl.search}`
+        const expectedLocation = `${target.expectedPath}${target.url.search}`
+
+        if (actualLocation !== expectedLocation) {
+          failures.push(`${sourcePath} -> ${href} (landed at ${actualLocation})`)
+        }
+      }
+    }
+
+    expect(failures, `Broken same-origin links:\n${failures.join('\n')}`).toEqual([])
   })
 
   test('opens, persists, and closes settings from the navigation', async ({ page }) => {
