@@ -464,6 +464,42 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await page.goForward()
     await assertDrawerClosed('/browse/islam', 'Islam')
   })
+
+  test('keeps the mobile drawer closed when history crosses utility pages', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const overlay = page.locator('div.fixed.inset-0[aria-hidden="true"]')
+    const assertDestination = async (path: string, heading: string) => {
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${path}`)
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await expect(sidebar).toBeHidden()
+      await expect(overlay).toHaveCount(0)
+      await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+      await expect(openButton).toBeFocused()
+    }
+
+    const utilityPages = [
+      { name: /Skill library/, path: '/skills', heading: 'Agent Skills' },
+      { name: /Origin archive/, path: '/origin', heading: 'Origin Archive' },
+    ] as const
+
+    for (const utilityPage of utilityPages) {
+      await page.goto(`${pagesBasePath}/browse`)
+      await openButton.click()
+      await expect(sidebar).toBeVisible()
+      await sidebar.getByRole('link', { name: utilityPage.name }).first().click()
+      await assertDestination(utilityPage.path, utilityPage.heading)
+
+      await page.goBack()
+      await assertDestination('/browse', 'Browse Traditions')
+
+      await page.goForward()
+      await assertDestination(utilityPage.path, utilityPage.heading)
+    }
+  })
 })
 
 test.describe('deterministic lookup states', () => {
