@@ -661,73 +661,67 @@ test.describe('deterministic compare and observance states', () => {
 })
 
 test.describe('internal navigation links', () => {
-  test('follows representative tradition detail links under each base path', async ({ page }) => {
+  test('follows every tradition detail link under each base path', async ({ page }) => {
+    test.setTimeout(120_000)
     const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
     const detailPages = [
-      { source: '/browse/catholic', heading: 'Catholic' },
-      { source: '/browse/islam', heading: 'Islam' },
+      { source: '/browse/evangelical-protestant', heading: 'Evangelical Protestant', family: 'christianity' },
+      { source: '/browse/catholic', heading: 'Catholic', family: 'christianity' },
+      { source: '/browse/mainline-protestant', heading: 'Mainline Protestant', family: 'christianity' },
+      { source: '/browse/lds-restorationist', heading: 'LDS / Restorationist', family: 'christianity' },
+      { source: '/browse/orthodox', heading: 'Orthodox Christian', family: 'christianity' },
+      { source: '/browse/judaism', heading: 'Judaism', family: 'judaism' },
+      { source: '/browse/islam', heading: 'Islam', family: 'islam' },
     ] as const
-    const navigationCases = [
+
+    const utilityNavigationCases = [
       {
-        source: '/browse/catholic',
-        detailHeading: 'Catholic',
-        link: /Look up /,
-        target: '/lookup',
-        href: /\/lookup\?/,
-        heading: 'Verse Lookup',
-      },
-      {
-        source: '/browse/catholic',
-        detailHeading: 'Catholic',
         link: /See cross-tradition comparisons/,
         target: '/compare',
         href: '/compare',
         heading: 'Cross-Tradition Compare',
       },
       {
-        source: '/browse/catholic',
-        detailHeading: 'Catholic',
         link: /Skill Library/,
         target: '/skills',
         href: '/skills',
         heading: 'Agent Skills',
       },
       {
-        source: '/browse/catholic',
-        detailHeading: 'Catholic',
         link: 'Religious holiday calendar',
         target: '/observances',
         href: '/observances',
         heading: 'Observances',
       },
-      {
-        source: '/browse/islam',
-        detailHeading: 'Islam',
-        link: /Look up /,
-        target: '/lookup',
-        href: /\/lookup\?/,
-        heading: 'Verse Lookup',
-      },
     ] as const
 
     for (const detailPage of detailPages) {
-      await page.goto(`${basePath}${detailPage.source}`)
+      const detailUrl = `${basePath}${detailPage.source}`
+
+      await page.goto(detailUrl)
       await expect(page.getByRole('heading', { name: detailPage.heading, exact: true })).toBeVisible()
-    }
 
-    for (const navigationCase of navigationCases) {
-      await page.goto(`${basePath}${navigationCase.source}`)
-      await expect(page.getByRole('heading', { name: navigationCase.detailHeading, exact: true })).toBeVisible()
+      const passageLink = page.getByRole('link', { name: /Look up / }).first()
+      const passageHref = await passageLink.getAttribute('href')
+      expect(passageHref).not.toBeNull()
+      const passageUrl = new URL(passageHref!, page.url())
+      expect(passageUrl.pathname).toBe(`${basePath}/lookup`)
+      expect(passageUrl.searchParams.get('tradition')).toBe(detailPage.family)
+      await passageLink.click()
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/lookup`)
+      await expect(page.getByRole('heading', { name: 'Verse Lookup', exact: true })).toBeVisible()
 
-      const link = page.getByRole('link', { name: navigationCase.link }).first()
-      const expectedHref = typeof navigationCase.href === 'string'
-        ? `${basePath}${navigationCase.href}`
-        : new RegExp(`^${basePath}${navigationCase.href.source}`)
-      await expect(link).toHaveAttribute('href', expectedHref)
-      await link.click()
+      for (const navigationCase of utilityNavigationCases) {
+        await page.goto(detailUrl)
+        await expect(page.getByRole('heading', { name: detailPage.heading, exact: true })).toBeVisible()
 
-      await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}${navigationCase.target}`)
-      await expect(page.getByRole('heading', { name: navigationCase.heading, exact: true })).toBeVisible()
+        const link = page.getByRole('link', { name: navigationCase.link }).last()
+        await expect(link).toHaveAttribute('href', `${basePath}${navigationCase.href}`)
+        await link.click()
+
+        await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}${navigationCase.target}`)
+        await expect(page.getByRole('heading', { name: navigationCase.heading, exact: true })).toBeVisible()
+      }
     }
   })
 })
