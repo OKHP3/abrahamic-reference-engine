@@ -192,6 +192,22 @@ test.describe('route matrix and refresh safety', () => {
     await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
   })
 
+  test('GitHub Pages and local routes recover from an unknown tradition detail URL', async ({ page }) => {
+    const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
+    const unknownTraditionPath = `${basePath}/browse/not-a-real-tradition`
+
+    const initialResponse = await page.goto(unknownTraditionPath)
+    expect([200, 404]).toContain(initialResponse?.status())
+    await expect(page.getByText('Tradition not found.')).toBeVisible()
+
+    const returnLink = page.getByRole('link', { name: 'Return to Browse', exact: true })
+    await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
+    await returnLink.click()
+
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/browse`)
+    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+  })
+
   test('validates every rendered same-origin navigation link', async ({ page }) => {
     const checkedLinks = new Set<string>()
     const failures: string[] = []
