@@ -173,8 +173,6 @@ test.describe('route matrix and refresh safety', () => {
       ['/origin', 'Origin Archive'],
     ] as const
 
-    const isPagesProject = test.info().project.name === 'pages'
-
     for (const [path, heading] of routes) {
       await page.goto(path)
       await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
@@ -220,7 +218,7 @@ test.describe('route matrix and refresh safety', () => {
         }
 
         if (target.kind === 'asset') {
-        const response = await page.goto(target.url.toString())
+          const response = await page.request.get(target.url.toString())
           if (!response.ok()) {
             failures.push(`${sourcePath} -> ${href} (HTTP ${response.status()})`)
           }
@@ -399,7 +397,9 @@ test.describe('deterministic lookup states', () => {
 
   test('restores phrase candidates and source links from a shared lookup URL after reload', async ({ page }) => {
     const sharedLookupUrl =
-      '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
+      test.info().project.name === 'pages'
+        ? '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
+        : '/lookup?tradition=judaism&phrase=In%20the%20beginning'
     await page.goto(sharedLookupUrl)
 
     const results = page.getByTestId('phrase-discovery-results')
@@ -430,7 +430,7 @@ test.describe('deterministic lookup states', () => {
     // serving the copied 404.html SPA fallback for a URL below the repository base.
     const sharedLookupUrl =
       '/abrahamic-reference-engine/lookup?tradition=judaism&phrase=In%20the%20beginning'
-      const initialResponse = await page.goto(path)
+    const initialResponse = await page.goto(sharedLookupUrl)
     expect([200, 404]).toContain(initialResponse?.status())
 
     const results = page.getByTestId('phrase-discovery-results')
@@ -464,7 +464,7 @@ test.describe('deterministic lookup states', () => {
     await expect(sourceLinks.nth(0)).toBeVisible()
     await expect(sourceLinks.nth(1)).toBeVisible()
 
-      const reloadResponse = await page.reload()
+    const reloadResponse = await page.reload()
     expect([200, 404]).toContain(reloadResponse?.status())
 
     await assertPublishedLookupUrl()
@@ -543,7 +543,7 @@ test.describe('deterministic lookup states', () => {
 
   test('does not let an older response replace a newer lookup', async ({ page }) => {
     let firstRequestResolve: (() => void) | undefined
-    const firstRequestFinished = new Promise<void>(resolve => { releaseFirstRequest = resolve })
+    const firstRequestFinished = new Promise<void>(resolve => { firstRequestResolve = resolve })
     await page.route('https://bible-api.com/**', async route => {
       if (route.request().url().toLowerCase().includes('john%203%3a16')) {
         await firstRequestFinished
@@ -649,15 +649,74 @@ test.describe('deterministic compare and observance states', () => {
   })
 })
 
-    const basePath = isPagesProject ? '/abrahamic-reference-engine' : ''
-
+test.describe('internal navigation links', () => {
+  test('follows representative tradition detail links under each base path', async ({ page }) => {
+    const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
+    const detailPages = [
+      { source: '/browse/catholic', heading: 'Catholic' },
+      { source: '/browse/islam', heading: 'Islam' },
+    ] as const
     const navigationCases = [
-      { source: '/browse', link: 'Lookup', target: '/lookup', heading: 'Verse Lookup' },
-      { source: '/lookup', link: 'Compare', target: '/compare', heading: 'Cross-Tradition Compare' },
-      { source: '/compare', link: 'Observances', target: '/observances', heading: 'Observances' },
-      { source: '/observances', link: 'Browse', target: '/browse', heading: 'Browse Traditions' },
-      { source: '/skills', link: /Origin archive/, target: '/origin', heading: 'Origin Archive' },
-      { source: '/origin', link: /Skill library/, target: '/skills', heading: 'Agent Skills' },
+      {
+        source: '/browse/catholic',
+        detailHeading: 'Catholic',
+        link: /Look up /,
+        target: '/lookup',
+        href: /\/lookup\?/,
+        heading: 'Verse Lookup',
+      },
+      {
+        source: '/browse/catholic',
+        detailHeading: 'Catholic',
+        link: /See cross-tradition comparisons/,
+        target: '/compare',
+        href: '/compare',
+        heading: 'Cross-Tradition Compare',
+      },
+      {
+        source: '/browse/catholic',
+        detailHeading: 'Catholic',
+        link: /Skill Library/,
+        target: '/skills',
+        href: '/skills',
+        heading: 'Agent Skills',
+      },
+      {
+        source: '/browse/catholic',
+        detailHeading: 'Catholic',
+        link: 'Religious holiday calendar',
+        target: '/observances',
+        href: '/observances',
+        heading: 'Observances',
+      },
+      {
+        source: '/browse/islam',
+        detailHeading: 'Islam',
+        link: /Look up /,
+        target: '/lookup',
+        href: /\/lookup\?/,
+        heading: 'Verse Lookup',
+      },
     ] as const
 
+    for (const detailPage of detailPages) {
+      await page.goto(`${basePath}${detailPage.source}`)
+      await expect(page.getByRole('heading', { name: detailPage.heading, exact: true })).toBeVisible()
+    }
+
+    for (const navigationCase of navigationCases) {
+      await page.goto(`${basePath}${navigationCase.source}`)
+      await expect(page.getByRole('heading', { name: navigationCase.detailHeading, exact: true })).toBeVisible()
+
       const link = page.getByRole('link', { name: navigationCase.link }).first()
+      const expectedHref = typeof navigationCase.href === 'string'
+        ? `${basePath}${navigationCase.href}`
+        : new RegExp(`^${basePath}${navigationCase.href.source}`)
+      await expect(link).toHaveAttribute('href', expectedHref)
+      await link.click()
+
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}${navigationCase.target}`)
+      await expect(page.getByRole('heading', { name: navigationCase.heading, exact: true })).toBeVisible()
+    }
+  })
+})
