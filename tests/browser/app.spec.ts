@@ -384,34 +384,39 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     const openButton = page.getByRole('button', { name: 'Open navigation' })
     const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
     const overlay = page.locator('div.fixed.inset-0[aria-hidden="true"]')
+    const expectClosedNavigation = async (path: string, heading: string) => {
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${path}`)
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await expect(sidebar).toBeHidden()
+      await expect(overlay).toHaveCount(0)
+      await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+      await expect(openButton).toBeFocused()
+    }
 
     await openButton.click()
     await expect(sidebar).toBeVisible()
 
     const catholicLink = sidebar.getByRole('link', { name: /Catholic/ }).first()
     await catholicLink.click()
-    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse/catholic`)
-    await expect(page.getByRole('heading', { name: 'Catholic', exact: true })).toBeVisible()
-    await expect(sidebar).toBeHidden()
-    await expect(overlay).toHaveCount(0)
-    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
-    await expect(openButton).toBeFocused()
+    await expectClosedNavigation('/browse/catholic', 'Catholic')
+
+    await openButton.click()
+    await expect(sidebar).toBeVisible()
+    const islamLink = sidebar.getByRole('link', { name: /^Islam/ }).first()
+    await islamLink.click()
+    await expectClosedNavigation('/browse/islam', 'Islam')
 
     await page.goBack()
-    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse`)
-    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
-    await expect(sidebar).toBeHidden()
-    await expect(overlay).toHaveCount(0)
-    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
-    await expect(openButton).toBeFocused()
+    await expectClosedNavigation('/browse/catholic', 'Catholic')
+
+    await page.goBack()
+    await expectClosedNavigation('/browse', 'Browse Traditions')
 
     await page.goForward()
-    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse/catholic`)
-    await expect(page.getByRole('heading', { name: 'Catholic', exact: true })).toBeVisible()
-    await expect(sidebar).toBeHidden()
-    await expect(overlay).toHaveCount(0)
-    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
-    await expect(openButton).toBeFocused()
+    await expectClosedNavigation('/browse/catholic', 'Catholic')
+
+    await page.goForward()
+    await expectClosedNavigation('/browse/islam', 'Islam')
   })
 
   test('keeps the mobile drawer closed through multi-step browser history', async ({ page }) => {
