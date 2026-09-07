@@ -6,6 +6,7 @@ import AppFooter from './AppFooter'
 import { usePageTracking } from '../hooks/usePageTracking'
 
 function getRouteAnnouncement(pathname: string): string {
+  pathname = pathname.replace(/\/+$/, '')
   if (pathname === '/browse') return 'Browse Traditions page'
   if (pathname.startsWith('/browse/')) return 'Tradition details page'
   if (pathname === '/lookup') return 'Verse Lookup page'
