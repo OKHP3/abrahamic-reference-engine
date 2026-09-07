@@ -38,6 +38,11 @@ export default defineConfig({
           name: 'pages',
           use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } },
         },
+        {
+          name: 'pages-mobile',
+          grep: /mobile navigation/,
+          use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } },
+        },
       ]
     : [
         {

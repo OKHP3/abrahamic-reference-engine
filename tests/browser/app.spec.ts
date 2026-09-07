@@ -327,7 +327,7 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
 
   test('opens, uses, and closes mobile navigation without a pointer', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
-    await page.goto('/browse')
+    await page.goto(`${pagesBasePath}/browse`)
 
     const openButton = page.getByRole('button', { name: 'Open navigation' })
     await openButton.focus()
@@ -336,13 +336,24 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     const closeButton = page.getByRole('button', { name: 'Close navigation' })
     await expect(closeButton).toBeFocused()
 
-    await sidebar.getByRole('link', { name: /Catholic/ }).first().focus()
-    await page.keyboard.press('Enter')
-    await expect(page).toHaveURL(/\/browse\/catholic$/)
+    const destinations = [
+      { name: 'Catholic', path: '/browse/catholic', heading: 'Catholic' },
+      { name: 'Islam', path: '/browse/islam', heading: 'Islam' },
+    ] as const
 
-    await openButton.focus()
-    await page.keyboard.press('Enter')
-    await expect(closeButton).toBeFocused()
+    for (const destination of destinations) {
+      const link = sidebar.getByRole('link', { name: new RegExp(destination.name) }).first()
+      await expect(link).toHaveAttribute('href', `${pagesBasePath}${destination.path}`)
+      await link.focus()
+      await page.keyboard.press('Enter')
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${destination.path}`)
+      await expect(page.getByRole('heading', { name: destination.heading, exact: true })).toBeVisible()
+
+      await openButton.focus()
+      await page.keyboard.press('Enter')
+      await expect(closeButton).toBeFocused()
+    }
+
     await page.keyboard.press('Enter')
     await expect(sidebar).toBeHidden()
     await expect(openButton).toBeFocused()
