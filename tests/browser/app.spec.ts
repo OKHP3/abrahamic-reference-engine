@@ -355,6 +355,8 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     const destinations = [
       { name: 'Catholic', path: '/browse/catholic', heading: 'Catholic' },
       { name: 'Islam', path: '/browse/islam', heading: 'Islam' },
+      { name: 'Skill library', path: '/skills', heading: 'Agent Skills' },
+      { name: 'Origin archive', path: '/origin', heading: 'Origin Archive' },
     ] as const
 
     for (const destination of destinations) {
