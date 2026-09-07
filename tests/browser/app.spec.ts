@@ -376,6 +376,43 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await expect(sidebar).toBeHidden()
     await expect(openButton).toBeFocused()
   })
+
+  test('preserves mobile navigation state across browser history', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const overlay = page.locator('div.fixed.inset-0[aria-hidden="true"]')
+
+    await openButton.click()
+    await expect(sidebar).toBeVisible()
+
+    const catholicLink = sidebar.getByRole('link', { name: /Catholic/ }).first()
+    await catholicLink.click()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse/catholic`)
+    await expect(page.getByRole('heading', { name: 'Catholic', exact: true })).toBeVisible()
+    await expect(sidebar).toBeHidden()
+    await expect(overlay).toHaveCount(0)
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+    await expect(openButton).toBeFocused()
+
+    await page.goBack()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse`)
+    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+    await expect(sidebar).toBeHidden()
+    await expect(overlay).toHaveCount(0)
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+    await expect(openButton).toBeFocused()
+
+    await page.goForward()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse/catholic`)
+    await expect(page.getByRole('heading', { name: 'Catholic', exact: true })).toBeVisible()
+    await expect(sidebar).toBeHidden()
+    await expect(overlay).toHaveCount(0)
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+    await expect(openButton).toBeFocused()
+  })
 })
 
 test.describe('deterministic lookup states', () => {
