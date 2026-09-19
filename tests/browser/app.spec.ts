@@ -203,6 +203,14 @@ test.describe('route matrix and refresh safety', () => {
 
     const returnLink = page.getByRole('link', { name: 'Return to Browse', exact: true })
     await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
+
+    const reloadResponse = await page.reload()
+    expect([200, 404]).toContain(reloadResponse?.status())
+    await expect.poll(() => new URL(page.url()).pathname).toBe(unknownTraditionPath)
+    await expect(page.getByText('Tradition not found.')).toBeVisible()
+    await expect(returnLink).toBeVisible()
+    await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
+
     await returnLink.click()
 
     await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/browse`)
