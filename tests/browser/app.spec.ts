@@ -199,15 +199,23 @@ test.describe('route matrix and refresh safety', () => {
 
     const initialResponse = await page.goto(unknownTraditionPath)
     expect([200, 404]).toContain(initialResponse?.status())
-    await expect(page.getByText('Tradition not found.')).toBeVisible()
+    const notFoundHeading = page.getByRole('heading', { name: 'Tradition not found', level: 1 })
+    const recoveryRegion = page.getByRole('region', { name: 'Recovery options' })
+    await expect(notFoundHeading).toBeVisible()
+    await expect(recoveryRegion).toContainText('The requested tradition is not available.')
 
-    const returnLink = page.getByRole('link', { name: 'Return to Browse', exact: true })
+    const returnLink = recoveryRegion.getByRole('link', { name: 'Return to Browse', exact: true })
     await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
+    expect(await notFoundHeading.evaluate(
+      (heading, link) => Boolean(heading.compareDocumentPosition(link as Node) & Node.DOCUMENT_POSITION_FOLLOWING),
+      await returnLink.elementHandle(),
+    )).toBe(true)
 
     const reloadResponse = await page.reload()
     expect([200, 404]).toContain(reloadResponse?.status())
     await expect.poll(() => new URL(page.url()).pathname).toBe(unknownTraditionPath)
-    await expect(page.getByText('Tradition not found.')).toBeVisible()
+    await expect(notFoundHeading).toBeVisible()
+    await expect(recoveryRegion).toBeVisible()
     await expect(returnLink).toBeVisible()
     await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
 

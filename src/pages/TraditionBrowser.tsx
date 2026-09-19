@@ -226,12 +226,31 @@ function TraditionDetail({ slug }: { slug: string }) {
 
   if (!denomination) {
     return (
-      <div className="text-muted text-sm mt-8">
-        Tradition not found.{' '}
-        <Link to="/browse" className="text-gold hover:text-gold-light">
-          Return to Browse
-        </Link>
-      </div>
+      <article aria-labelledby="tradition-not-found-heading" className="mt-8">
+        <h1
+          id="tradition-not-found-heading"
+          className="text-2xl font-serif font-light text-gold mb-3"
+        >
+          Tradition not found
+        </h1>
+        <section
+          aria-labelledby="tradition-recovery-heading"
+          className="p-5 border border-border-subtle rounded-lg bg-bg-elevated"
+        >
+          <h2
+            id="tradition-recovery-heading"
+            className="text-xs font-sans font-bold tracking-widest uppercase text-gold mb-3"
+          >
+            Recovery options
+          </h2>
+          <p className="text-muted text-sm">
+            The requested tradition is not available.{' '}
+            <Link to="/browse" className="text-gold hover:text-gold-light">
+              Return to Browse
+            </Link>
+          </p>
+        </section>
+      </article>
     )
   }
 
