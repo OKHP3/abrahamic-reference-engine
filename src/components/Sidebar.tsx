@@ -72,7 +72,7 @@ export default function Sidebar({ isOpen, onClose, onCloseRestoreFocus }: Sideba
       aria-hidden={isMobile && !isOpen ? true : undefined}
       inert={isMobile && !isOpen ? true : undefined}
       className={[
-        'w-72 bg-bg-elevated border-r border-border-subtle flex flex-col',
+        'w-72 max-w-full bg-bg-elevated border-r border-border-subtle flex flex-col',
         'fixed top-0 bottom-0 left-0 z-30 overflow-y-auto',
         'transition-transform duration-200 ease-in-out',
         'md:translate-x-0',

@@ -418,6 +418,52 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     }
   })
 
+  test('keeps mobile drawer utility links reachable at 200% zoom', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+    await page.evaluate(() => {
+      document.documentElement.style.zoom = '200%'
+    })
+    await expect.poll(() => page.evaluate(() => document.documentElement.style.zoom)).toBe('200%')
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const utilityPages = [
+      { name: /Skill library/, path: '/skills', heading: 'Agent Skills' },
+      { name: /Origin archive/, path: '/origin', heading: 'Origin Archive' },
+    ] as const
+
+    for (const utilityPage of utilityPages) {
+      await openButton.click()
+      await expect(sidebar).toBeVisible()
+
+      const dimensions = await sidebar.evaluate(element => ({
+        visibleWidth: element.clientWidth,
+        contentWidth: element.scrollWidth,
+      }))
+      expect(dimensions.contentWidth).toBeLessThanOrEqual(dimensions.visibleWidth + 1)
+
+      const link = sidebar.getByRole('link', { name: utilityPage.name }).first()
+      await link.scrollIntoViewIfNeeded()
+      await link.focus()
+      await expect(link).toBeFocused()
+      await expect(link).toBeInViewport()
+
+      const linkBox = await link.boundingBox()
+      const viewport = page.viewportSize()
+      expect(linkBox).not.toBeNull()
+      expect(viewport).not.toBeNull()
+      expect(linkBox!.x).toBeGreaterThanOrEqual(0)
+      expect(linkBox!.x + linkBox!.width).toBeLessThanOrEqual(viewport!.width)
+      expect(linkBox!.y).toBeGreaterThanOrEqual(0)
+      expect(linkBox!.y + linkBox!.height).toBeLessThanOrEqual(viewport!.height)
+
+      await page.keyboard.press('Enter')
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${utilityPage.path}`)
+      await expect(page.getByRole('heading', { name: utilityPage.heading, exact: true })).toBeVisible()
+    }
+  })
+
   test('preserves mobile navigation state across browser history', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)
