@@ -1,5 +1,5 @@
-import { useRef, useState, type RefObject } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useEffect, useRef, useState, type RefObject } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useSettings } from '../context/SettingsContext'
 import SettingsPanel, { GearIcon } from './SettingsPanel'
@@ -59,8 +59,21 @@ const THEME_META = {
 export default function ModeNav({ onMenuClick, sidebarOpen = false, menuButtonRef }: ModeNavProps) {
   const { mode, cycle } = useTheme()
   const { settings } = useSettings()
+  const location = useLocation()
   const [settingsOpen, setSettingsOpen] = useState(false)
   const fallbackMenuButtonRef = useRef<HTMLButtonElement>(null)
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
+  const previousPathnameRef = useRef(location.pathname)
+
+  useEffect(() => {
+    if (previousPathnameRef.current === location.pathname) return
+
+    previousPathnameRef.current = location.pathname
+    if (settingsOpen) {
+      setSettingsOpen(false)
+      requestAnimationFrame(() => settingsButtonRef.current?.focus())
+    }
+  }, [location.pathname, settingsOpen])
 
   const hasDenomination = settings.denomination !== null
   const { icon, label, next } = THEME_META[mode]
@@ -97,6 +110,7 @@ export default function ModeNav({ onMenuClick, sidebarOpen = false, menuButtonRe
 
         <div className="flex-shrink-0 flex items-center gap-1 px-3 border-l border-border-subtle">
           <button
+            ref={settingsButtonRef}
             className={[
               'relative p-1.5 rounded transition-colors',
               hasDenomination

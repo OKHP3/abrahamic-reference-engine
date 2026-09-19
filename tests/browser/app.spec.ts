@@ -358,6 +358,46 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await expect(settingsButton).toBeFocused()
   })
 
+  test('keeps settings closed when browser history crosses primary pages', async ({ page }) => {
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const settingsButton = page.getByRole('button', { name: 'Open settings' })
+    const dialog = page.getByRole('dialog', { name: 'Settings' })
+    const settingsOverlay = page.locator('[role="dialog"][aria-label="Settings"] > div[aria-hidden="true"]')
+    const assertClosedDestination = async (path: string, heading: string) => {
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${path}`)
+      await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
+      await expect(dialog).toHaveCount(0)
+      await expect(settingsOverlay).toHaveCount(0)
+      await expect(settingsButton).toBeFocused()
+    }
+
+    await settingsButton.click()
+    await page.getByRole('button', { name: 'Catholic' }).click()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toHaveCount(0)
+    await expect(settingsButton).toBeFocused()
+
+    await page.getByRole('link', { name: 'Side-by-side themes' }).click()
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+    await page.getByRole('link', { name: 'Religious holiday calendar' }).click()
+    await expect(page.getByRole('heading', { name: 'Observances', exact: true })).toBeVisible()
+
+    await settingsButton.click()
+    await expect(dialog).toBeVisible()
+    await page.goBack()
+    await assertClosedDestination('/compare', 'Cross-Tradition Compare')
+
+    await page.goBack()
+    await assertClosedDestination('/browse', 'Browse Traditions')
+
+    await page.goForward()
+    await assertClosedDestination('/compare', 'Cross-Tradition Compare')
+
+    await page.goForward()
+    await assertClosedDestination('/observances', 'Observances')
+  })
+
   test('opens, uses, and closes mobile navigation without a pointer', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)
