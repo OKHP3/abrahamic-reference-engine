@@ -29,6 +29,10 @@ export default function Layout() {
   const restoreMenuFocus = useCallback(() => {
     requestAnimationFrame(() => menuButtonRef.current?.focus())
   }, [])
+  const closeSidebarAndRestoreFocus = useCallback(() => {
+    closeSidebar()
+    restoreMenuFocus()
+  }, [closeSidebar, restoreMenuFocus])
 
   useEffect(() => {
     setRouteAnnouncement(getRouteAnnouncement(location.pathname))
@@ -40,7 +44,7 @@ export default function Layout() {
         <div
           className="fixed inset-0 z-20 bg-black/60 md:hidden"
           aria-hidden="true"
-          onClick={closeSidebar}
+          onClick={closeSidebarAndRestoreFocus}
         />
       )}
 

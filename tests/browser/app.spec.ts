@@ -458,6 +458,39 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     }
   })
 
+  test('returns focus after dismissing mobile navigation through the overlay', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const overlay = page.locator('div.fixed.inset-0[aria-hidden="true"]')
+    const dismissThroughOverlay = async () => {
+      await openButton.click()
+      await expect(sidebar).toBeVisible()
+      await expect(overlay).toHaveCount(1)
+
+      await overlay.click({ position: { x: 380, y: 400 } })
+
+      await expect(overlay).toHaveCount(0)
+      await expect(sidebar).toBeHidden()
+      await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+      await expect(openButton).toBeFocused()
+    }
+
+    await dismissThroughOverlay()
+
+    await page.getByRole('link', { name: 'Find a passage' }).click()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/lookup`)
+    await expect(page.getByRole('heading', { name: 'Verse Lookup', exact: true })).toBeVisible()
+    await dismissThroughOverlay()
+
+    await page.getByRole('link', { name: 'Side-by-side themes' }).click()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/compare`)
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+    await dismissThroughOverlay()
+  })
+
   test('keeps mobile drawer utility links reachable at 200% zoom', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)
