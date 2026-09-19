@@ -458,6 +458,43 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     }
   })
 
+  test('resets mobile navigation after crossing the desktop breakpoint', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const overlay = page.locator('div.fixed.inset-0[aria-hidden="true"]')
+
+    await openButton.click()
+    await expect(sidebar).toBeVisible()
+    await expect(overlay).toHaveCount(1)
+    await expect(page.getByRole('button', { name: 'Close navigation' })).toBeFocused()
+
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await expect(overlay).toHaveCount(0)
+    await expect(sidebar).toBeVisible()
+    await expect(openButton).toBeHidden()
+    await expect(page.locator('button[aria-label="Close navigation"]')).not.toBeFocused()
+
+    await page.setViewportSize({ width: 390, height: 844 })
+    await expect(sidebar).toBeHidden()
+    await expect(overlay).toHaveCount(0)
+    await expect(openButton).toBeVisible()
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+
+    await openButton.click()
+    await expect(sidebar).toBeVisible()
+    await sidebar.getByRole('link', { name: /Catholic/ }).first().click()
+
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/browse/catholic`)
+    await expect(page.getByRole('heading', { name: 'Catholic', exact: true })).toBeVisible()
+    await expect(sidebar).toBeHidden()
+    await expect(overlay).toHaveCount(0)
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+    await expect(openButton).toBeFocused()
+  })
+
   test('returns focus after dismissing mobile navigation through the overlay', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)

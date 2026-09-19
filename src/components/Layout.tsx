@@ -38,6 +38,23 @@ export default function Layout() {
     setRouteAnnouncement(getRouteAnnouncement(location.pathname))
   }, [location.pathname])
 
+  useEffect(() => {
+    const desktopBreakpoint = window.matchMedia('(min-width: 768px)')
+    const closeMobileSidebar = () => {
+      if (!desktopBreakpoint.matches) return
+
+      if (document.activeElement instanceof HTMLElement
+        && document.activeElement.closest('[aria-label="Tradition navigation"]')) {
+        document.activeElement.blur()
+      }
+      setSidebarOpen(false)
+    }
+
+    closeMobileSidebar()
+    desktopBreakpoint.addEventListener('change', closeMobileSidebar)
+    return () => desktopBreakpoint.removeEventListener('change', closeMobileSidebar)
+  }, [])
+
   return (
     <div className="flex min-h-screen bg-bg-base">
       {sidebarOpen && (
