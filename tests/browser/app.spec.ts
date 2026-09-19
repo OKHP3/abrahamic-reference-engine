@@ -742,6 +742,63 @@ test.describe('deterministic lookup states', () => {
     )
   })
 
+  test('restores shared lookup state when browser history crosses a primary route', async ({ page }) => {
+    const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
+    const results = page.getByTestId('phrase-discovery-results')
+    const judaismButton = page.getByRole('button', { name: 'Judaism', exact: true })
+    const sourceLinks = results.getByRole('link', { name: /Open .* on source website/ })
+
+    const expectSharedLookupState = async () => {
+      await expect.poll(() => {
+        const url = new URL(page.url())
+        return {
+          pathname: url.pathname,
+          tradition: url.searchParams.get('tradition'),
+          phrase: url.searchParams.get('phrase'),
+        }
+      }).toEqual({
+        pathname: `${basePath}/lookup`,
+        tradition: 'judaism',
+        phrase: 'In the beginning',
+      })
+      await expect(page.getByRole('heading', { name: 'Verse Lookup', exact: true })).toBeVisible()
+      await expect(judaismButton).toHaveAttribute('aria-pressed', 'true')
+      await expect(page.getByRole('textbox', { name: 'Phrase' })).toHaveValue('In the beginning')
+      await expect(results.getByRole('heading', { name: '2 source candidates' })).toBeVisible()
+      await expect(results).toContainText('Ambiguity: multiple candidates')
+      await expect(sourceLinks).toHaveCount(2)
+      await expect(sourceLinks.first()).toHaveAttribute(
+        'href',
+        'https://www.sefaria.org/Genesis%201%3A1?lang=bi',
+      )
+    }
+
+    await page.goto(`${basePath}/browse`)
+    await page.getByRole('link', { name: 'Find a passage' }).click()
+    await expect(page.getByRole('heading', { name: 'Verse Lookup', exact: true })).toBeVisible()
+    await page.getByRole('textbox', { name: 'Phrase' }).fill('In the beginning')
+    await page.getByRole('button', { name: 'Search quotations' }).click()
+    await expectSharedLookupState()
+
+    await page.getByRole('link', { name: 'Side-by-side themes' }).click()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/compare`)
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+
+    await page.goBack()
+    await expectSharedLookupState()
+
+    await page.goBack()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/browse`)
+    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+
+    await page.goForward()
+    await expectSharedLookupState()
+
+    await page.goForward()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/compare`)
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+  })
+
   test('GitHub Pages shared lookup route survives direct navigation and hard reload', async ({ page }) => {
     test.skip(test.info().project.name !== 'pages', 'Production base-path check runs in the Pages project')
 
