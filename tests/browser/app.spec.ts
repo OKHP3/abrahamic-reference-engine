@@ -726,7 +726,13 @@ test.describe('deterministic lookup states', () => {
       ['/abrahamic-reference-engine/observances', 'Observances', 'Observances page'],
       ['/abrahamic-reference-engine/skills', 'Agent Skills', 'Agent Skills page'],
       ['/abrahamic-reference-engine/origin', 'Origin Archive', 'Origin Archive page'],
+      ['/abrahamic-reference-engine/browse/evangelical-protestant', 'Evangelical Protestant', 'Tradition details page'],
       ['/abrahamic-reference-engine/browse/catholic', 'Catholic', 'Tradition details page'],
+      ['/abrahamic-reference-engine/browse/mainline-protestant', 'Mainline Protestant', 'Tradition details page'],
+      ['/abrahamic-reference-engine/browse/lds-restorationist', 'LDS / Restorationist', 'Tradition details page'],
+      ['/abrahamic-reference-engine/browse/orthodox', 'Orthodox Christian', 'Tradition details page'],
+      ['/abrahamic-reference-engine/browse/judaism', 'Judaism', 'Tradition details page'],
+      ['/abrahamic-reference-engine/browse/islam', 'Islam', 'Tradition details page'],
     ] as const
 
     const routeVariants = publicRoutes.flatMap(([path, heading, announcement]) => [
