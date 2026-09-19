@@ -1,4 +1,5 @@
 import { test, expect, type Page, type Route } from '@playwright/test'
+import { DENOMINATIONS } from '../../src/data/traditions'
 
 const biblePassage = (reference: string, text: string) => ({
   reference,
@@ -896,15 +897,16 @@ test.describe('internal navigation links', () => {
   test('follows every tradition detail link under each base path', async ({ page }) => {
     test.setTimeout(120_000)
     const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
-    const detailPages = [
-      { source: '/browse/evangelical-protestant', heading: 'Evangelical Protestant', family: 'christianity' },
-      { source: '/browse/catholic', heading: 'Catholic', family: 'christianity' },
-      { source: '/browse/mainline-protestant', heading: 'Mainline Protestant', family: 'christianity' },
-      { source: '/browse/lds-restorationist', heading: 'LDS / Restorationist', family: 'christianity' },
-      { source: '/browse/orthodox', heading: 'Orthodox Christian', family: 'christianity' },
-      { source: '/browse/judaism', heading: 'Judaism', family: 'judaism' },
-      { source: '/browse/islam', heading: 'Islam', family: 'islam' },
-    ] as const
+    const detailPages = DENOMINATIONS.map(({ slug, name, family }) => ({
+      source: `/browse/${slug}`,
+      heading: name,
+      family,
+    }))
+
+    expect(
+      detailPages,
+      'Canonical tradition data must provide at least one detail route for browser coverage',
+    ).not.toHaveLength(0)
 
     const utilityNavigationCases = [
       {
