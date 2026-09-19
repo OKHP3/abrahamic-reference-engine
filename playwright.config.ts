@@ -41,7 +41,7 @@ export default defineConfig({
         {
           name: 'pages-mobile',
           grep: /mobile navigation/,
-          use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } },
+          use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, hasTouch: true },
         },
       ]
     : [
@@ -51,7 +51,7 @@ export default defineConfig({
         },
         {
           name: 'mobile',
-          use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } },
+          use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, hasTouch: true },
         },
       ],
 })

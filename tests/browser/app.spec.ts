@@ -394,6 +394,30 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await expect(openButton).toBeFocused()
   })
 
+  test('opens mobile navigation and follows utility links with touch taps', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.goto(`${pagesBasePath}/browse`)
+
+    const openButton = page.getByRole('button', { name: 'Open navigation' })
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const utilityPages = [
+      { name: /Skill library/, path: '/skills', heading: 'Agent Skills' },
+      { name: /Origin archive/, path: '/origin', heading: 'Origin Archive' },
+    ] as const
+
+    for (const utilityPage of utilityPages) {
+      await openButton.tap()
+      await expect(sidebar).toBeVisible()
+
+      const link = sidebar.getByRole('link', { name: utilityPage.name }).first()
+      await expect(link).toHaveAttribute('href', `${pagesBasePath}${utilityPage.path}`)
+      await link.tap()
+
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${utilityPage.path}`)
+      await expect(page.getByRole('heading', { name: utilityPage.heading, exact: true })).toBeVisible()
+    }
+  })
+
   test('preserves mobile navigation state across browser history', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)
