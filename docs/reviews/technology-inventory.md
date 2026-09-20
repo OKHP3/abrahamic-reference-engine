@@ -1,5 +1,31 @@
 # Technology inventory and update plan
 
+## Current snapshot: September 20, 2026
+
+The [current version report](technology-audit-2026-09-20/technology-versions.md)
+and [machine-readable inventory](technology-audit-2026-09-20/technology-versions.json)
+were regenerated after dependency PR #16. They enumerate 280 lock entries,
+266 distinct package names, and 18 direct dependencies. The live
+scan completed with 0 lookup errors. 78 lock entries, including
+3 direct dependencies, have newer final releases for review.
+
+The scanned lockfile SHA-256 is `0798f77a14c344202d427592f7eddf81a618937e8dfb8dae1df3214c7755d2a4`,
+which matches the dependency state reviewed in PR #17. The report records its
+source commit and retrieval time. Installed-version fields describe only that
+scan's checkout; Replit runtime versions were not remeasured.
+
+PR #16 merged at `5a6c63b717c0807ab50a6261f4326eb33ebad38a` after full CI.
+Its main CI and Pages deployment passed, including hosted browser checks.
+The remaining audit publication is reviewed separately in PR #17. Release
+candidates in this report are proposals, not automatic upgrades.
+
+## Historical review: September 18, 2026
+
+The remainder preserves the earlier review and its host observations. Its
+package counts, version comparisons, validation results, and pending steps
+belong to that date; use the September 20 report above for the updated dependency
+inventory. The original dated reports remain available for comparison.
+
 Audit date: September 18, 2026 (America/Chicago). Release retrieval timestamps
 are UTC in the generated report. Baseline: `0e90bb6f0eecd6e4c75e1201cbbb8b6e579eee5f`.
 
