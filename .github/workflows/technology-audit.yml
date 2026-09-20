@@ -1,0 +1,37 @@
+name: Technology audit
+
+on:
+  schedule:
+    - cron: "43 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: technology-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup current Node.js LTS
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+          check-latest: true
+
+      - name: Test version detection and failure handling
+        run: npm run test:technologies
+
+      - name: Compare the complete lockfile and runtimes with stable releases
+        run: npm run audit:technologies -- --summary "$GITHUB_STEP_SUMMARY"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

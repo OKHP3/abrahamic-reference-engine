@@ -202,6 +202,9 @@ The project favors free, open, public, and API-accessible sources, while respect
 
 ## Tech stack
 
+For exact versions, current stable releases, and the update workflow, see the
+[technology inventory and update plan](docs/reviews/technology-inventory.md).
+
 - Vite 8
 - React 19
 - React Router 7

@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx",
+    "audit:technologies": "node scripts/audit-technologies.js",
+    "test:technologies": "node --test scripts/audit-technologies.test.js",
     "test:unit": "node --import tsx --test tests/api-contracts.test.ts",
     "test:pages": "node scripts/check-pages-artifact.js",
     "test:api": "node scripts/test-api-live.js",
