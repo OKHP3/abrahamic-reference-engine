@@ -20,16 +20,16 @@
     "test:e2e:pages:hosted": "PLAYWRIGHT_PAGES=true PLAYWRIGHT_HOSTED=true playwright test --project=pages --project=pages-mobile --grep \"(GitHub Pages (shared lookup route|public routes)|GitHub Pages and local routes|internal navigation links|mobile navigation)\""
   },
   "dependencies": {
-    "@babel/eslint-parser": "^8.0.5",
+    "@babel/eslint-parser": "^8.0.6",
     "@babel/preset-react": "^8.0.1",
     "@babel/preset-typescript": "^8.0.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
-    "eslint": "^10.10.0",
+    "eslint": "^10.11.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-router-dom": "^7.18.4",
-    "tsx": "^4.23.13"
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
