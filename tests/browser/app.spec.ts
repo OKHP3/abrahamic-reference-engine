@@ -193,8 +193,8 @@ test.describe('route matrix and refresh safety', () => {
     await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
   })
 
-  test('GitHub Pages and local routes recover from an unknown tradition detail URL', async ({ page }) => {
-    const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
+  test('stale tradition bookmark survives hard reload and returns to Browse', async ({ page }) => {
+    const basePath = pagesBasePath
     const unknownTraditionPath = `${basePath}/browse/not-a-real-tradition`
 
     const initialResponse = await page.goto(unknownTraditionPath)
@@ -216,6 +216,7 @@ test.describe('route matrix and refresh safety', () => {
     await expect.poll(() => new URL(page.url()).pathname).toBe(unknownTraditionPath)
     await expect(notFoundHeading).toBeVisible()
     await expect(recoveryRegion).toBeVisible()
+    await expect(recoveryRegion).toContainText('The requested tradition is not available.')
     await expect(returnLink).toBeVisible()
     await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
 

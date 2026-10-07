@@ -40,7 +40,7 @@ export default defineConfig({
         },
         {
           name: 'pages-mobile',
-          grep: /mobile navigation/,
+          grep: /mobile navigation|stale tradition bookmark/,
           use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, hasTouch: true },
         },
       ]
