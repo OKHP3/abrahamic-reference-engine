@@ -379,6 +379,33 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await expect(settingsButton).toBeFocused()
   })
 
+  test('returns focus after dismissing settings through the backdrop', async ({ page }) => {
+    await page.goto(`${pagesBasePath}/browse`)
+    const settingsButton = page.getByRole('button', { name: 'Open settings' })
+    const dialog = page.getByRole('dialog', { name: 'Settings' })
+    const backdrop = dialog.locator('> div[aria-hidden="true"]')
+    await settingsButton.click()
+    await expect(dialog).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Close settings' })).toBeFocused()
+
+    // The panel covers the right-hand side; this point is exposed even on mobile.
+    const position = { x: 2, y: 100 }
+    if (test.info().project.use.hasTouch) {
+      await backdrop.tap({ position })
+    } else {
+      await backdrop.click({ position })
+    }
+    await expect(dialog).toHaveCount(0)
+    await expect(backdrop).toHaveCount(0)
+    await expect(settingsButton).toBeFocused()
+
+    await page.keyboard.press('Enter')
+    await expect(dialog).toBeVisible()
+    await page.getByRole('button', { name: 'Close settings' }).click()
+    await expect(dialog).toHaveCount(0)
+    await expect(settingsButton).toBeFocused()
+  })
+
   test('keeps settings closed when browser history crosses primary pages', async ({ page }) => {
     await page.goto(`${pagesBasePath}/browse`)
 
