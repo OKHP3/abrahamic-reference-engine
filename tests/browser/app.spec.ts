@@ -595,6 +595,57 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     }
   })
 
+  test('keeps every mobile footer contact link reachable at 200% zoom', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto(`${pagesBasePath}/browse`)
+    await page.evaluate(() => {
+      document.documentElement.style.zoom = '200%'
+    })
+    await expect.poll(() => page.evaluate(() => document.documentElement.style.zoom)).toBe('200%')
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const footer = sidebar.locator('footer')
+    const links = [
+      { href: 'https://overkillhill.com/', external: true },
+      { href: 'https://github.com/OKHP3', external: true },
+      { href: 'mailto:contact@overkillhill.com', external: false },
+      { href: 'https://ko-fi.com/overkillhillp3', external: true },
+    ] as const
+
+    for (const { href, external } of links) {
+      const link = footer.locator(`a[href="${href}"]`)
+      await expect(link).toHaveCount(1)
+      await expect(link).toHaveAttribute('href', href)
+      if (external) {
+        await expect(link).toHaveAttribute('target', '_blank')
+        await expect(link).toHaveAttribute('rel', /(?:^|\s)noopener(?:\s|$)/)
+        await expect(link).toHaveAttribute('rel', /(?:^|\s)noreferrer(?:\s|$)/)
+      } else {
+        await expect(link).not.toHaveAttribute('target', '_blank')
+      }
+
+      await link.scrollIntoViewIfNeeded()
+      await link.focus()
+      await expect(link).toBeFocused()
+      await expect(link).toBeVisible()
+      await expect(link).toBeInViewport({ ratio: 1 })
+      const box = await link.boundingBox()
+      const viewport = page.viewportSize()!
+      expect(box).not.toBeNull()
+      expect(box!.x).toBeGreaterThanOrEqual(0)
+      expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width + 1)
+      expect(box!.y).toBeGreaterThanOrEqual(0)
+      expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height + 1)
+      const dimensions = await sidebar.evaluate(element => ({
+        visibleWidth: element.clientWidth,
+        contentWidth: element.scrollWidth,
+      }))
+      expect(dimensions.contentWidth).toBeLessThanOrEqual(dimensions.visibleWidth + 1)
+    }
+  })
+
   test('preserves mobile navigation state across browser history', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
     await page.goto(`${pagesBasePath}/browse`)
