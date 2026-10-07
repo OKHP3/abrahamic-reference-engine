@@ -164,6 +164,26 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('route matrix and refresh safety', () => {
+  test('internal navigation links on Browse expose every canonical tradition exactly once', async ({ page }) => {
+    await page.goto(`${pagesBasePath}/browse`)
+    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+
+    // Scope to the Browse content: sidebar links must not mask a missing card.
+    const browse = page.getByRole('main')
+    for (const tradition of DENOMINATIONS) {
+      const expectedRoute = `${pagesBasePath}/browse/${tradition.slug}`
+      // Count DOM links, including hidden duplicates, before checking usability.
+      const links = browse.locator(`a[href="${expectedRoute}"]`)
+      await expect(
+        links,
+        `Browse must render exactly one link for ${tradition.name} (${expectedRoute}); missing or duplicate tradition links are not allowed`,
+      ).toHaveCount(1)
+      await expect(links, `Browse link for ${tradition.name} (${expectedRoute}) must be visible`).toBeVisible()
+      await expect(links).toHaveAccessibleName(`Browse ${tradition.name}`)
+      await expect(links).toHaveAttribute('href', expectedRoute)
+    }
+  })
+
   test('opens every public route, settings, and a direct deep link', async ({ page }) => {
     const routes = [
       ['/browse', 'Browse Traditions'],
