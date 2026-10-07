@@ -981,6 +981,62 @@ test.describe('deterministic lookup states', () => {
     await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
   })
 
+  test('restores fetched exact-reference passages through Back and Forward', async ({ page }) => {
+    const reference = 'John 3:16'
+    const text = 'Deterministic exact-reference history passage.'
+    const attribution = 'King James Version -- served via bible-api.com. Public domain history fixture.'
+    const sourceUrl = 'https://bible-api.com/John%203%3A16?translation=kjv'
+
+    await page.route('https://bible-api.com/**', async (route) => {
+      expect(route.request().url()).toBe(sourceUrl)
+      await route.fulfill({
+        json: {
+          ...biblePassage(reference, text),
+          translation_note: 'Public domain history fixture.',
+        },
+      })
+    })
+
+    const expectExactLookupState = async () => {
+      await expect.poll(() => {
+        const url = new URL(page.url())
+        return {
+          pathname: url.pathname,
+          tradition: url.searchParams.get('tradition'),
+          reference: url.searchParams.get('ref'),
+        }
+      }).toEqual({
+        pathname: `${pagesBasePath}/lookup`,
+        tradition: 'christianity',
+        reference,
+      })
+      await expect(page.getByRole('heading', { name: 'Verse Lookup', exact: true })).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Christianity', exact: true }))
+        .toHaveAttribute('aria-pressed', 'true')
+      await expect(page.getByRole('textbox', { name: 'Reference', exact: true })).toHaveValue(reference)
+      await expect(page.getByLabel('Translation', { exact: true })).toHaveValue('kjv')
+      const passage = page.getByRole('article', { name: `Verse: ${reference}`, exact: true })
+      await expect(passage).toHaveCount(1)
+      await expect(passage.locator('blockquote')).toHaveText(text)
+      await expect(passage.locator('footer p')).toHaveText(attribution)
+      await expect(passage.getByRole('link', { name: `Open ${reference} on source website` }))
+        .toHaveAttribute('href', sourceUrl)
+    }
+
+    await page.goto(`${pagesBasePath}/lookup?tradition=christianity&ref=John%203%3A16`)
+    await expectExactLookupState()
+    await page.getByRole('link', { name: 'Side-by-side themes' }).click()
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+
+    await page.goBack()
+    await expectExactLookupState()
+    await page.goForward()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/compare`)
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+    await page.goBack()
+    await expectExactLookupState()
+  })
+
   test('GitHub Pages shared lookup route survives direct navigation and hard reload', async ({ page }) => {
     test.skip(test.info().project.name !== 'pages', 'Production base-path check runs in the Pages project')
 
