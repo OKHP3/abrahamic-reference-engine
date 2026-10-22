@@ -12,7 +12,7 @@
  */
 
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { extname, join, relative, sep } from 'node:path';
 
 const MIRRORS_DIR = 'skills';
 const CANONICAL_DIR = '.agents/skills';
@@ -22,9 +22,10 @@ function packageFiles(root) {
   const files = [];
   function walk(current) {
     for (const entry of readdirSync(current, { withFileTypes: true })) {
+      if (entry.name === '__pycache__') continue;
       const fullPath = join(current, entry.name);
       if (entry.isDirectory()) walk(fullPath);
-      else if (entry.isFile()) files.push(relative(root, fullPath));
+      else if (entry.isFile()) files.push(relative(root, fullPath).split(sep).join('/'));
     }
   }
   walk(root);
@@ -52,7 +53,14 @@ function comparePackages(skillName, mirrorPath, canonicalPath) {
       differences.push(`non-file package entry ${file}`);
       continue;
     }
-    if (!readFileSync(mirrorFile).equals(readFileSync(canonicalFile))) {
+    const mirrorContent = readFileSync(mirrorFile);
+    const canonicalContent = readFileSync(canonicalFile);
+    // Git text checkouts can use different line endings on Windows.
+    const textFile = /\.(?:md|json|ya?ml|[cm]?js|tsx?|py|txt|sh|html|css|svg)$/.test(extname(file));
+    const matches = textFile
+      ? mirrorContent.toString('utf8').replace(/\r\n/g, '\n') === canonicalContent.toString('utf8').replace(/\r\n/g, '\n')
+      : mirrorContent.equals(canonicalContent);
+    if (!matches) {
       differences.push(`content drift ${file}`);
     }
   }

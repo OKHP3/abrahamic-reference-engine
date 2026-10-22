@@ -263,6 +263,27 @@ The historical origin materials served by the hidden archive live under
 
 ## Contributing / agents
 
+### Published-site release checks
+
+After each successful Pages deployment, `.github/workflows/deploy-pages.yml`
+runs `npm run test:e2e:pages:hosted` with `PLAYWRIGHT_BASE_URL` set to the
+deployment's reported URL. No local preview server is started in hosted mode.
+
+The desktop and mobile checks include a stale tradition bookmark: directly open
+`browse/not-a-real-tradition`, hard-reload it, require the “Tradition not found”
+heading, recovery message, and “Return to Browse” link to remain visible, then
+follow that link back to Browse within the repository base path. A Pages 404
+response is accepted only when the expected SPA recovery UI renders.
+
+To repeat the hosted checks manually:
+
+```sh
+PLAYWRIGHT_BASE_URL="<verified Pages deployment URL>" npm run test:e2e:pages:hosted
+```
+
+For the local production-build equivalent, run `npm run build` followed by
+`npm run test:e2e:pages`.
+
 See [AGENTS.md](AGENTS.md) for the operating constitution -- conventions, scope rules, and agent guidelines.
 
 ---

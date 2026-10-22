@@ -97,6 +97,7 @@ test('keeps displayed Pew values, categories, and table context aligned with the
 
 test('keeps the README scope table and Pew explanation aligned with the source snapshot', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8')
+    .replace(/\r\n/g, '\n')
   const scopeSection = readme.match(/## Scope\n([\s\S]*?)(?=\n---\n\n## Design principles)/)?.[1]
   assert.ok(scopeSection, 'README scope section is missing or has moved')
 
