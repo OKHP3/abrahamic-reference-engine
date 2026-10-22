@@ -1112,18 +1112,23 @@ test.describe('deterministic compare and observance states', () => {
   })
 
   test('renders the calendar loading and empty states without live providers', async ({ page }) => {
+    let releaseProviders: (() => void) | undefined
+    const providersReady = new Promise<void>(resolve => { releaseProviders = resolve })
     await page.unroute('https://www.hebcal.com/**')
     await page.unroute('https://api.aladhan.com/**')
     await page.route('https://www.hebcal.com/**', async route => {
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await providersReady
       await json(route, { title: 'Empty Hebcal fixture', items: [] })
     })
     await page.route('https://api.aladhan.com/**', async route => {
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await providersReady
       await json(route, { code: 200, status: 'OK', data: [] })
     })
     await page.goto('/observances')
     await expect(page.getByTestId('observances-announcement')).toContainText('Loading')
+    // Christian holidays are generated locally even when both providers return no events.
+    await page.getByRole('button', { name: 'Christianity', exact: true }).click()
+    releaseProviders?.()
     await expect(page.getByText('No events found for the selected filters.')).toBeVisible()
     await expect(page.getByTestId('observances-announcement')).toContainText('Loaded')
   })
