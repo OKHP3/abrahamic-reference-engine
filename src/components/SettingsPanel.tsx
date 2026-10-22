@@ -97,7 +97,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
       <div
         className="fixed inset-0 bg-black/60"
         aria-hidden="true"
-        onClick={onClose}
+        onClick={closePanel}
       />
 
       <div

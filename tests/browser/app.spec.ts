@@ -164,6 +164,26 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('route matrix and refresh safety', () => {
+  test('internal navigation links on Browse expose every canonical tradition exactly once', async ({ page }) => {
+    await page.goto(`${pagesBasePath}/browse`)
+    await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
+
+    // Scope to the Browse content: sidebar links must not mask a missing card.
+    const browse = page.getByRole('main')
+    for (const tradition of DENOMINATIONS) {
+      const expectedRoute = `${pagesBasePath}/browse/${tradition.slug}`
+      // Count DOM links, including hidden duplicates, before checking usability.
+      const links = browse.locator(`a[href="${expectedRoute}"]`)
+      await expect(
+        links,
+        `Browse must render exactly one link for ${tradition.name} (${expectedRoute}); missing or duplicate tradition links are not allowed`,
+      ).toHaveCount(1)
+      await expect(links, `Browse link for ${tradition.name} (${expectedRoute}) must be visible`).toBeVisible()
+      await expect(links).toHaveAccessibleName(`Browse ${tradition.name}`)
+      await expect(links).toHaveAttribute('href', expectedRoute)
+    }
+  })
+
   test('opens every public route, settings, and a direct deep link', async ({ page }) => {
     const routes = [
       ['/browse', 'Browse Traditions'],
@@ -193,8 +213,8 @@ test.describe('route matrix and refresh safety', () => {
     await expect(page.getByRole('heading', { name: 'Browse Traditions', exact: true })).toBeVisible()
   })
 
-  test('GitHub Pages and local routes recover from an unknown tradition detail URL', async ({ page }) => {
-    const basePath = test.info().project.name === 'pages' ? '/abrahamic-reference-engine' : ''
+  test('stale tradition bookmark survives hard reload and returns to Browse', async ({ page }) => {
+    const basePath = pagesBasePath
     const unknownTraditionPath = `${basePath}/browse/not-a-real-tradition`
 
     const initialResponse = await page.goto(unknownTraditionPath)
@@ -216,6 +236,7 @@ test.describe('route matrix and refresh safety', () => {
     await expect.poll(() => new URL(page.url()).pathname).toBe(unknownTraditionPath)
     await expect(notFoundHeading).toBeVisible()
     await expect(recoveryRegion).toBeVisible()
+    await expect(recoveryRegion).toContainText('The requested tradition is not available.')
     await expect(returnLink).toBeVisible()
     await expect(returnLink).toHaveAttribute('href', `${basePath}/browse`)
 
@@ -355,6 +376,33 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
     await expect(page.getByRole('button', { name: 'Catholic' })).toHaveAttribute('aria-pressed', 'true')
     await page.keyboard.press('Escape')
     await expect(dialog).toBeHidden()
+    await expect(settingsButton).toBeFocused()
+  })
+
+  test('returns focus after dismissing settings through the backdrop', async ({ page }) => {
+    await page.goto(`${pagesBasePath}/browse`)
+    const settingsButton = page.getByRole('button', { name: 'Open settings' })
+    const dialog = page.getByRole('dialog', { name: 'Settings' })
+    const backdrop = dialog.locator('> div[aria-hidden="true"]')
+    await settingsButton.click()
+    await expect(dialog).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Close settings' })).toBeFocused()
+
+    // The panel covers the right-hand side; this point is exposed even on mobile.
+    const position = { x: 2, y: 100 }
+    if (test.info().project.use.hasTouch) {
+      await backdrop.tap({ position })
+    } else {
+      await backdrop.click({ position })
+    }
+    await expect(dialog).toHaveCount(0)
+    await expect(backdrop).toHaveCount(0)
+    await expect(settingsButton).toBeFocused()
+
+    await page.keyboard.press('Enter')
+    await expect(dialog).toBeVisible()
+    await page.getByRole('button', { name: 'Close settings' }).click()
+    await expect(dialog).toHaveCount(0)
     await expect(settingsButton).toBeFocused()
   })
 
@@ -571,6 +619,57 @@ test.describe('keyboard, focus, zoom, and motion accessibility', () => {
       await page.keyboard.press('Enter')
       await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}${utilityPage.path}`)
       await expect(page.getByRole('heading', { name: utilityPage.heading, exact: true })).toBeVisible()
+    }
+  })
+
+  test('keeps every mobile footer contact link reachable at 200% zoom', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) >= 768, 'Mobile navigation is hidden on desktop')
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto(`${pagesBasePath}/browse`)
+    await page.evaluate(() => {
+      document.documentElement.style.zoom = '200%'
+    })
+    await expect.poll(() => page.evaluate(() => document.documentElement.style.zoom)).toBe('200%')
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+
+    const sidebar = page.getByRole('complementary', { name: 'Tradition navigation' })
+    const footer = sidebar.locator('footer')
+    const links = [
+      { href: 'https://overkillhill.com/', external: true },
+      { href: 'https://github.com/OKHP3', external: true },
+      { href: 'mailto:contact@overkillhill.com', external: false },
+      { href: 'https://ko-fi.com/overkillhillp3', external: true },
+    ] as const
+
+    for (const { href, external } of links) {
+      const link = footer.locator(`a[href="${href}"]`)
+      await expect(link).toHaveCount(1)
+      await expect(link).toHaveAttribute('href', href)
+      if (external) {
+        await expect(link).toHaveAttribute('target', '_blank')
+        await expect(link).toHaveAttribute('rel', /(?:^|\s)noopener(?:\s|$)/)
+        await expect(link).toHaveAttribute('rel', /(?:^|\s)noreferrer(?:\s|$)/)
+      } else {
+        await expect(link).not.toHaveAttribute('target', '_blank')
+      }
+
+      await link.scrollIntoViewIfNeeded()
+      await link.focus()
+      await expect(link).toBeFocused()
+      await expect(link).toBeVisible()
+      await expect(link).toBeInViewport({ ratio: 1 })
+      const box = await link.boundingBox()
+      const viewport = page.viewportSize()!
+      expect(box).not.toBeNull()
+      expect(box!.x).toBeGreaterThanOrEqual(0)
+      expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width + 1)
+      expect(box!.y).toBeGreaterThanOrEqual(0)
+      expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height + 1)
+      const dimensions = await sidebar.evaluate(element => ({
+        visibleWidth: element.clientWidth,
+        contentWidth: element.scrollWidth,
+      }))
+      expect(dimensions.contentWidth).toBeLessThanOrEqual(dimensions.visibleWidth + 1)
     }
   })
 
@@ -907,6 +1006,62 @@ test.describe('deterministic lookup states', () => {
     await page.goForward()
     await expect.poll(() => new URL(page.url()).pathname).toBe(`${basePath}/compare`)
     await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+  })
+
+  test('restores fetched exact-reference passages through Back and Forward', async ({ page }) => {
+    const reference = 'John 3:16'
+    const text = 'Deterministic exact-reference history passage.'
+    const attribution = 'King James Version -- served via bible-api.com. Public domain history fixture.'
+    const sourceUrl = 'https://bible-api.com/John%203%3A16?translation=kjv'
+
+    await page.route('https://bible-api.com/**', async (route) => {
+      expect(route.request().url()).toBe(sourceUrl)
+      await route.fulfill({
+        json: {
+          ...biblePassage(reference, text),
+          translation_note: 'Public domain history fixture.',
+        },
+      })
+    })
+
+    const expectExactLookupState = async () => {
+      await expect.poll(() => {
+        const url = new URL(page.url())
+        return {
+          pathname: url.pathname,
+          tradition: url.searchParams.get('tradition'),
+          reference: url.searchParams.get('ref'),
+        }
+      }).toEqual({
+        pathname: `${pagesBasePath}/lookup`,
+        tradition: 'christianity',
+        reference,
+      })
+      await expect(page.getByRole('heading', { name: 'Verse Lookup', exact: true })).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Christianity', exact: true }))
+        .toHaveAttribute('aria-pressed', 'true')
+      await expect(page.getByRole('textbox', { name: 'Reference', exact: true })).toHaveValue(reference)
+      await expect(page.getByLabel('Translation', { exact: true })).toHaveValue('kjv')
+      const passage = page.getByRole('article', { name: `Verse: ${reference}`, exact: true })
+      await expect(passage).toHaveCount(1)
+      await expect(passage.locator('blockquote')).toHaveText(text)
+      await expect(passage.locator('footer p')).toHaveText(attribution)
+      await expect(passage.getByRole('link', { name: `Open ${reference} on source website` }))
+        .toHaveAttribute('href', sourceUrl)
+    }
+
+    await page.goto(`${pagesBasePath}/lookup?tradition=christianity&ref=John%203%3A16`)
+    await expectExactLookupState()
+    await page.getByRole('link', { name: 'Side-by-side themes' }).click()
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+
+    await page.goBack()
+    await expectExactLookupState()
+    await page.goForward()
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${pagesBasePath}/compare`)
+    await expect(page.getByRole('heading', { name: 'Cross-Tradition Compare', exact: true })).toBeVisible()
+    await page.goBack()
+    await expectExactLookupState()
   })
 
   test('GitHub Pages shared lookup route survives direct navigation and hard reload', async ({ page }) => {
