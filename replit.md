@@ -41,14 +41,14 @@ Run this before releasing any change that touches `src/api/`.
 
 ---
 
-## Current State (repository audit: 2026-07-13)
+## Current State (documentation alignment: 2026-10-26)
 
-- SPA complete -- four primary modes are implemented
+- Active, bounded public prototype -- four primary modes are implemented
 - TraditionBrowser: browse Judaism, Christianity (5 denominations), Islam with verse cards and Pew explainer (2023-24 U.S. Religious Landscape Study: Christianity 62%, Judaism 2%, Islam 1% of U.S. adults; source: https://www.pewresearch.org/religious-landscape-study/region/united-states/; snapshot: `src/data/pew-religious-composition.snapshot.ts`)
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
-- SkillsGallery: in-app catalog of the five ARE operational skills, accessible at /skills via sidebar "Skill library" link; the repository catalog indexes 23 local skill packages
+- SkillsGallery: in-app catalog of the five ARE operational skills, accessible at /skills via sidebar "Skill library" link; the generated repository catalog is an August 5, 2026 snapshot indexing 23 skills, rather than a complete current inventory
 - OriginArchive: hidden historical archive route backed by static content in `public/origin/` (easter egg -- no nav link in ModeNav)
 - Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar, okhp3-celestial-data
 - SkillsGallery page at /skills: in-app catalog of the five ARE operational skills with descriptions, IN/OUT scope, category badges, GitHub links. The catalog also includes local governance, design, evaluation, and deployment skills used by agents but not exposed as app features.
@@ -157,14 +157,16 @@ versions, with official release sources and explicit unknowns.
 - GitHub Pages: deploy workflow exists but Pages must be enabled in GitHub repo settings (Settings > Pages > Source: GitHub Actions) after pushing to main
 - GitHub push of `.github/workflows/` requires a token with `workflow` scope -- add the file via GitHub web UI if token lacks that scope
 - LDS/Restorationist and Orthodox Christian denomination support is partial -- canon scope notes tracked as a follow-up
-- The current release still lacks deterministic route, accessibility, and
-  provider-contract test coverage.
-- Deterministic API contract coverage and runtime stale-response guards are now
-  present; browser route, accessibility, and race-state tests remain open.
-- GitHub Pages direct-route, favicon, manifest, and subpath behavior still requires a production smoke test.
-- The local Pages artifact check covers generated subpath asset and manifest
-  paths; a hosted production smoke test is still required for direct routes.
-- Paraphrase discovery and commentary-level controls remain origin requirements that are not implemented in the current exact-reference SPA.
+- Deterministic API contracts and Playwright route, interaction, accessibility,
+  and race-state tests are present. Coverage is not a claim of exhaustive testing.
+- The local Pages artifact check covers generated subpath assets and manifest
+  paths. Local and hosted browser smoke commands cover direct routes and hard
+  reloads; the deployment workflow runs the hosted check after deployment.
+  A configured workflow alone does not prove that a particular release passed.
+- Lookup includes bounded literal phrase search over checked-in comparison
+  quotations. Fuzzy/paraphrase discovery and commentary-depth controls are
+  explicitly retired for the current prototype (see the M5 decision in
+  `docs/reviews/are-mitigation-backlog.md`).
 - `node_modules/` is not committed; run `npm ci` or `npm install` before local build validation.
 
 ---

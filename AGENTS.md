@@ -72,23 +72,28 @@ The following are the only items allowed at the repo root:
 .agents/           skills, memory, and skill-scoped support files
 .github/           Actions workflows
 brand-styles/      ARE visual style registry and profiles
-docs/              durable architecture decision records
+docs/              architecture decisions and product/release reviews
 public/            static assets (favicon, etc.)
+screenshots/       existing reviewed UI evidence; new agent captures use attached_assets/
 scripts/           repository-level validation scripts
 skills/            reviewed Agent Skills publication mirrors
 src/               application source
+tests/             deterministic API contracts and browser regression tests
 
 .gitattributes
 .gitignore
 .replitignore
 .replit
 AGENTS.md
+CLAUDE.md
 LICENSE
 README.md
 replit.md
 index.html
 package.json
 package-lock.json
+eslint.config.js
+playwright.config.ts
 postcss.config.js
 tsconfig.json
 tsconfig.app.json
@@ -156,7 +161,8 @@ move them under `.agents/` without updating the publication contract.
 
 ## Section 6: Agent Skills
 
-ARE ships four project-specific `okhp3-*` skills distributed via https://github.com/OKHP3/skillz.
+ARE exposes five operational `okhp3-*` skills in its in-app library. Reusable
+skills are distributed via https://github.com/OKHP3/skillz.
 Read the SKILL.md before using any skill. They are self-contained and work without the SPA.
 
 | Skill | Path | Purpose |
@@ -165,9 +171,10 @@ Read the SKILL.md before using any skill. They are self-contained and work witho
 | `okhp3-tradition-reference` | `.agents/skills/okhp3-tradition-reference/SKILL.md` | Metadata: canon, translations, Pew share, API provider |
 | `okhp3-cross-tradition-compare` | `.agents/skills/okhp3-cross-tradition-compare/SKILL.md` | 20 pre-seeded cross-tradition themes |
 | `okhp3-tradition-observance-calendar` | `.agents/skills/okhp3-tradition-observance-calendar/SKILL.md` | Observance data, Computus, and iCalendar output |
+| `okhp3-celestial-data` | `.agents/skills/okhp3-celestial-data/SKILL.md` | Offline celestial calculations supporting calendar workflows |
 
-The repository also contains reusable tooling skills: `okhp3-celestial-data`,
-`okhp3-skill-cataloger`, and `okhp3-skill-foundry`. The generated inventory is
+The repository also contains reusable tooling skills, including
+`okhp3-skill-cataloger` and `okhp3-skill-foundry`. The generated inventory is
 `.agents/skills/README.md`.
 
 ---
@@ -182,7 +189,7 @@ src/
   data/         Static tradition, knowledge, comparison, theme, and translation data
   hooks/        Client-side usage analytics hook
   lib/          Calendar clients, observance helpers, celestial math, and iCalendar generation
-  pages/        TraditionBrowser, VerseLookup, CrossTraditionCompare, ObservancesCalendar, OriginArchive
+  pages/        TraditionBrowser, VerseLookup, CrossTraditionCompare, ObservancesCalendar, SkillsGallery, OriginArchive
   App.tsx       Root component with BrowserRouter and route definitions
   main.tsx      Entry point and provider composition
   index.css     Tailwind 4 import plus custom color tokens
@@ -193,6 +200,7 @@ src/
   workflows/
     ci.yml              Build check on pull requests and pushes to main
     deploy-pages.yml    Build + deploy to GitHub Pages on push to main
+    technology-audit.yml  Scheduled technology inventory and release comparison
 
 .agents/
   skills/
@@ -214,6 +222,11 @@ src/
 
 docs/
   adr/                         durable architecture decision records
+  reviews/                     product, release, and technology review evidence
+
+tests/
+  api-contracts.test.ts        deterministic provider, provenance, and lookup checks
+  browser/app.spec.ts          route, interaction, accessibility, and Pages checks
 
 brand-styles/
   registry.yaml                ARE style registry
@@ -236,12 +249,25 @@ absent. The command inventory is:
 | `npm run dev` | Start the Vite dev server on port 5000 |
 | `npm run build` | Type-check and create the production bundle in `dist/` |
 | `npm run preview` | Serve the production bundle locally on port 5000 |
-| `npm run lint` | Intended ESLint check; currently unavailable because ESLint is not declared or configured |
+| `npm run lint` | ESLint checks using `eslint.config.js`; TypeScript checks run in the build |
+| `npm run test:unit` | Deterministic API contract, provenance, and lookup tests in `tests/api-contracts.test.ts` |
+| `npm run test:e2e` | Playwright desktop/mobile browser regression tests; requires the Chromium runtime |
+| `npm run test:pages` | Check generated GitHub Pages asset and manifest paths after a build |
+| `npm run test:e2e:pages` | Test the local production artifact with the Pages base path and SPA fallback |
+| `npm run test:e2e:pages:hosted` | Test an existing deployment using `PLAYWRIGHT_BASE_URL`; does not deploy |
+| `npm run test:skill-sync` | Check canonical skill packages against their publication mirrors |
+| `npm run test:mercury-dates` | Validate checked-in Mercury retrograde date coverage |
+| `npm run test:technologies` | Test technology inventory and version-selection logic |
+| `npm run audit:technologies -- --output .local/state/technology-audit` | Refresh the technology report; add `--offline` for source inventory only |
 | `npm run test:api` | Live provider checks in `scripts/test-api-live.js`; use when changing API adapters |
 
-The GitHub Actions workflows run `npm ci` and `npm run build`. The repository
-currently has no unit-test suite. Live API checks require network access and
-are provider-dependent.
+CI installs dependencies and runs the build, lint, deterministic API and browser
+tests, Pages checks, skill sync, technology tests, and Mercury date validation.
+The Pages deployment workflow runs API contract tests, builds and deploys the
+artifact, then runs hosted browser smoke checks. Live API checks require network
+access and are provider-dependent; they are separate from deterministic tests.
+An existing `node_modules/` can be stale after dependency updates. Check it
+against the manifest before treating local runtime results as current.
 
 ---
 
@@ -251,6 +277,11 @@ Confirmed from the source tree and route definitions:
 
 - This is one Git repository containing a static SPA and a reusable skills package. No nested independent application was found.
 - The primary user workflows are browsing five Christian denominations across three tradition families, looking up passages, comparing 20 themes, and reviewing a year-selectable observance calendar with `.ics` downloads.
+- Lookup also offers literal, case-insensitive, contiguous phrase matching over
+  the checked-in comparison quotations. It does not provide fuzzy/paraphrase
+  discovery, full-canon search, or generated commentary/context-depth modes.
+- The `/skills` route displays the five operational skills. The broader local
+  skill catalog also includes agent tooling that is not an application feature.
 - The hidden `/origin` route exposes a historical project archive from `public/origin/`; it is not a primary research workflow.
 - The browser calls public, anonymous providers directly. There is no backend, database, server-side rendering, or authentication layer.
 - `src/api/` owns passage and Hadith retrieval. `src/lib/` owns calendar integrations, local calendar math, Wikipedia descriptions, and `.ics` generation. Static content belongs in `src/data/` or the relevant skill package.
@@ -258,7 +289,8 @@ Confirmed from the source tree and route definitions:
 
 Known gaps and risks:
 
-- `npm run lint` is declared but has no installed or configured ESLint dependency.
+- This is an active, bounded public prototype. Canon and edition coverage,
+  provider provenance, and release limits are tracked in `docs/reviews/`.
 - Provider availability, translation coverage, and calendar results can change independently of the repository. Record confirmed provider gaps in `.agents/skills/okhp3-tradition-reference/knowledge/reserve-02-api-gap-register.md`.
 
 ---
