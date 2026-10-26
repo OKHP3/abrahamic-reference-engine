@@ -98,9 +98,35 @@ and updated document hash. Pass B: PASS after this bounded correction.
 
 ## Final receipt and archive state
 
-Verification and local commit pending. No push, PR, merge, or deployment was
-requested or performed by this task. The original July documentation is
-already remotely preserved in the verified main history; new closeout records
-will be saved and committed locally. Before archive, resolve remaining review
-findings, update this receipt, confirm the intended staged scope, and close the
-independent reviewer so no worker still depends on the task.
+Outcome: COMPLETE -- ARCHIVE PENDING (administrative action follows this receipt).
+Purpose: CLEAR. Original audit delivered; current documentation drift corrected;
+reusable requests, decisions, completion ledger, artifact manifest, integrity
+evidence, and continuation instructions saved in this stable-ID package.
+
+Implementation commit: `6164df6` (`docs: reconcile agent guidance and preserve
+audit closeout`) on `codex/closeout-doc-audit-019f95e0`.
+`git diff HEAD --exit-code` and `git status --short` confirmed the implementation
+was saved with a clean working tree. The committed tree contains all four
+closeout files, and commit whitespace checks passed. This final receipt and
+ledger status update are saved in the following receipt commit on the same
+branch; its identity can be resolved with `git log -1` for this file.
+
+Pass A: PASS for the documentation acceptance criteria, with explicit NOT RUN
+runtime/release checks above. Pass B: PASS after the dated-catalog correction,
+independently challenged by reviewer Confucius. The implementing task verified
+the correction and refreshed its hash. The reviewer was closed through the
+supported agent action after it completed; no background operation launched by
+this task remains. No mandatory substantive failure or missing deliverable
+remains. Long-term business/ownership guarantees are still repository unknowns.
+
+No push, PR, merge, or deployment was requested or performed by this task.
+The original July documentation is already remotely preserved in verified
+main history; the new changes and closeout are local. CI and Pages deployment
+success are not asserted. Publication is optional future owner work, not an
+unfinished obligation of this audit.
+
+Next administrative action: archive task
+`019f95e0-cf3f-7a02-8b96-495c51f68b7f` using the supported app action, then
+inspect its returned state. Do not archive any sibling task. If the action
+cannot be verified, report ARCHIVE REQUESTED -- UNVERIFIED; if unavailable or
+failed, report COMPLETE -- ARCHIVE PENDING and use this same record to resume.

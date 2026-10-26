@@ -1,7 +1,8 @@
 # Project documentation audit closeout
 
 Date: 2026-10-26 (America/Chicago).
-Status: verification in progress; archival has not been requested yet.
+Status: substantive work COMPLETE; both quality passes PASS. Final receipt
+recorded; exact-task archival is the remaining administrative action.
 
 ## Provenance and coverage
 
@@ -82,11 +83,11 @@ optional future publication or business decisions: repository owner.
 | A1 | Original request, sections 1-2 | Inspect repo and deliver a purpose/architecture/lifecycle memo | July final response; current source and history rechecked above | verified complete |
 | A2 | Original request, section 3 | Assess both instruction files independently | AGENTS substantive with factual drift patched; CLAUDE short pointer inspected | verified complete |
 | A3 | Original request, section 4 | Preserve canonical guidance; seed or patch weak sections | July commit 184b090; scoped current doc changes | verified complete |
-| A4 | Original request, section 5 | Report clarity, files, and unknowns | July final response; this record and final closeout receipt | unfinished pending final receipt |
+| A4 | Original request, section 5 | Report clarity, files, and unknowns | July final response; this record and final receipt in validation.md | verified complete |
 | C1 | Closeout request, sections 1-3 | Verify history, identity, destination, and concurrent ownership | supported history exhaustion; clean start, one worktree, no stashes, no other active task in this repo in returned inventory | verified complete |
 | C2 | Closeout request, sections 4-5 | Preserve reusable requests, decisions, artifacts, and resume state | this package and original July changes in Git | verified complete |
-| C3 | Closeout request, sections 6-7 | Scoped commit, privacy review, and two quality passes | validation.md; local commit pending | unfinished |
-| C4 | Closeout request, section 9 | Record receipt, then archive only this exact task after gates pass | final receipt and supported archive result pending | unfinished |
+| C3 | Closeout request, sections 6-7 | Scoped commit, privacy review, and two quality passes | validation.md; local implementation commit 6164df6; clean saved tree verified | verified complete |
+| C4 | Closeout request, section 9 | Record receipt, then archive only this exact task after gates pass | final receipt below; archive call is the remaining administrative action | unfinished (administrative only) |
 
 No requested feature, test implementation, PR, deployment, or publication was
 promised by the original task. Remote publication is not required for this
@@ -118,6 +119,10 @@ excluded. Treat the repository as public for privacy review.
 
 Resume using this same stable-ID folder. Recheck `git status`, this branch,
 the ledger, and validation before writing. Do not duplicate this package or
-resurrect the obsolete root `context/` layout. Finish Pass A and Pass B, commit
-only the intended documentation, save the final receipt, then use the supported
-archive action for this exact task. No push, merge, or deployment is needed.
+resurrect the obsolete root `context/` layout. The implementation is committed
+at `6164df6`; both quality passes are complete, with the independent reviewer's
+one correction applied and rechecked. The reviewer is closed, and no background
+operation launched by this task remains. After committing this final receipt,
+use the supported archive action for this exact task. No push, merge, or
+deployment is needed. If archive fails, keep the substantive status COMPLETE
+and record the administrative failure rather than repeating completed work.
