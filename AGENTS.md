@@ -74,21 +74,26 @@ The following are the only items allowed at the repo root:
 brand-styles/      ARE visual style registry and profiles
 docs/              durable architecture decision records
 public/            static assets (favicon, etc.)
+screenshots/       tracked accessibility review evidence
 scripts/           repository-level validation scripts
 skills/            reviewed Agent Skills publication mirrors
 src/               application source
+tests/             automated API and browser tests
 
 .gitattributes
 .gitignore
 .replitignore
 .replit
 AGENTS.md
+CLAUDE.md
 LICENSE
 README.md
 replit.md
+eslint.config.js
 index.html
 package.json
 package-lock.json
+playwright.config.ts
 postcss.config.js
 tsconfig.json
 tsconfig.app.json
@@ -115,7 +120,8 @@ move them under `.agents/` without updating the publication contract.
 - No scratch files, transcripts, or one-off scripts at root
 - No loose `.py`, `.json` (except package files), or stray `.md` at root
 - `scripts/` may contain only intentional, documented validation tooling
-- Agent-generated screenshots go in `attached_assets/` (gitignored)
+- Scratch agent-generated screenshots go in `attached_assets/` (gitignored);
+  tracked accessibility evidence remains in `screenshots/`.
 - `dist/` is gitignored -- never commit build output
 - The historical origin archive under `public/origin/` is intentional static
   content. Do not recreate unrelated legacy artifacts at the root.
@@ -236,12 +242,14 @@ absent. The command inventory is:
 | `npm run dev` | Start the Vite dev server on port 5000 |
 | `npm run build` | Type-check and create the production bundle in `dist/` |
 | `npm run preview` | Serve the production bundle locally on port 5000 |
-| `npm run lint` | Intended ESLint check; currently unavailable because ESLint is not declared or configured |
+| `npm run lint` | Run ESLint checks on the application source |
+| `npm run test:unit` | Run deterministic API contract tests |
+| `npm run test:skill-sync` | Check complete skill publication mirrors against canonical packages |
+| `npm run test:e2e` | Run deterministic browser checks |
 | `npm run test:api` | Live provider checks in `scripts/test-api-live.js`; use when changing API adapters |
 
-The GitHub Actions workflows run `npm ci` and `npm run build`. The repository
-currently has no unit-test suite. Live API checks require network access and
-are provider-dependent.
+The GitHub Actions workflows install dependencies and run the build and relevant
+checks. Live API checks require network access and are provider-dependent.
 
 ---
 
@@ -258,7 +266,7 @@ Confirmed from the source tree and route definitions:
 
 Known gaps and risks:
 
-- `npm run lint` is declared but has no installed or configured ESLint dependency.
+- Local checks require dependencies installed for the current lockfile.
 - Provider availability, translation coverage, and calendar results can change independently of the repository. Record confirmed provider gaps in `.agents/skills/okhp3-tradition-reference/knowledge/reserve-02-api-gap-register.md`.
 
 ---

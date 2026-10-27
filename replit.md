@@ -48,7 +48,7 @@ Run this before releasing any change that touches `src/api/`.
 - VerseLookup: fetch live verse from Sefaria / bible-api.com / Quran.com by reference
 - CrossTraditionCompare: 20 pre-seeded themes, side-by-side three-panel layout
 - ObservancesCalendar: year-selectable holiday calendar for all three traditions; .ics download per event or full year
-- SkillsGallery: in-app catalog of the five ARE operational skills, accessible at /skills via sidebar "Skill library" link; the repository catalog indexes 23 local skill packages
+- SkillsGallery: in-app catalog of the five ARE operational skills, accessible at /skills via sidebar "Skill library" link; the generated repository catalog indexes local skill packages
 - OriginArchive: hidden historical archive route backed by static content in `public/origin/` (easter egg -- no nav link in ModeNav)
 - Agent skills package complete: okhp3-verse-lookup, okhp3-tradition-reference, okhp3-cross-tradition-compare, okhp3-tradition-observance-calendar, okhp3-celestial-data
 - SkillsGallery page at /skills: in-app catalog of the five ARE operational skills with descriptions, IN/OUT scope, category badges, GitHub links. The catalog also includes local governance, design, evaluation, and deployment skills used by agents but not exposed as app features.

@@ -77,6 +77,29 @@ def _minimal_skills() -> list[dict]:
 
 # ── Tests ────────────────────────────────────────────────────────────────────
 
+class TestFrontmatterBlockScalars(unittest.TestCase):
+    def test_description_block_chomping_indicators(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "SKILL.md"
+            for indicator in ("|", "|-", "|+", ">", ">-", ">+"):
+                with self.subTest(indicator=indicator):
+                    path.write_text(
+                        f"---\nname: example\ndescription: {indicator}\n"
+                        "  First line.\n  Second line.\nlicense: MIT\n---\n",
+                        encoding="utf-8",
+                    )
+                    parsed = parse_frontmatter(path)
+                    self.assertEqual(parsed["description"], "First line. Second line.")
+                    self.assertEqual(parsed["license"], "MIT")
+
+    def test_project_catalog_uses_repo_language_conventions(self):
+        skill = _minimal_skills()[0]
+        skill.update(description="Normalise organisation \u2014 carefully.", version="\u2014", category="\u2014", path="example/SKILL.md")
+        table = mod._project_table([skill])
+        self.assertIn("Normalize organization -- carefully.", table)
+        self.assertNotIn("\u2014", table)
+
+
 class TestWriteFamilyMdDisplayName(unittest.TestCase):
 
     def test_display_name_preserved_on_regeneration(self):
