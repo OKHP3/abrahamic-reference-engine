@@ -1,6 +1,37 @@
 # Repository organization thread closeout
 
-**Status:** BLOCKED -- NOT READY TO ARCHIVE. The requested organization work
+## Resolution addendum -- 2026-10-27
+
+The commit-graph hold recorded below is resolved. The other task, `Repair
+application CI failures`, was confirmed archived and its worktree was no
+longer listed. The owner explicitly requested a graph repair without pruning.
+
+Before the repair, the split graph was copied to
+`.git/objects/info/commit-graphs-backup-019fd432/`; the original graph
+directory was then preserved as
+`.git/objects/info/commit-graphs-original-019fd432/`. Git rebuilt the derived
+graph from reachable commits without running garbage collection or pruning.
+An initial attempt with `core.commitGraph=false` produced a warning and did
+not write a graph; the successful rebuild ran after the old graph directory
+was preserved separately.
+
+Afterward, `git commit-graph verify` and `git fsck --no-reflogs` both exited
+zero. The SHA-256 of the sorted dangling-object listing remained
+`091190ad9d782baa22d8f4b4b0f77fd4ef353434da2220b15b678e4d372775aa`;
+the SHA-256 of the ref listing remained
+`1239371bfafd63533e0f39c09133252528af4820efe67ca5391bdc86740c5af7`;
+object counts and pack counts were unchanged. Dangling objects remain and
+must be reviewed before any future garbage collection. The seven-package skill
+mirror check, five cataloger tests, and `git diff --check` also passed again.
+
+The earlier organization commit `51fc558aa2dd754b615fc2ec7538fa0da1a2a05a`
+was observed on the live remote's `main` before this addendum. This addendum
+is a local follow-up; no deployment or push is authorized by this task. The
+task is eligible for archival once this addendum is committed and verified.
+The earlier blocked status and continuation instructions are retained below
+as historical context, superseded by this resolution.
+
+**Historical status (superseded):** BLOCKED -- NOT READY TO ARCHIVE. The requested organization work
 is implemented and checked, but a Git commit-graph integrity warning remains
 unresolved while another task uses a separate worktree of the same repository.
 
